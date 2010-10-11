@@ -1,0 +1,42 @@
+#{extends 'main-partner.html' /}
+#{set title:'Home' /}
+
+
+
+
+
+<div class="wizard-assistent">
+    <h1> Precisa de Ajuda?</h1>
+    <ul>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+    </ul>
+</div>
+
+
+<div class="wizard-form">
+    <h1>Torne-se nosso parceiro</h1>
+    <p>Por favor preencha os dados para o registo da sua clínica ou consultório.</p>
+    <p>Após recepção deste formulário, um dos nossos colaboradores irá enviar rever toda a informação e entrar em contacto consigo para 
+    esclarecimento de qualquer dúvida. Posteriormente o seu registo é aprovado e pode começar a usar o sistema.</p>
+    <p class="spacer"></p>
+    <p>O que melhor define o seu negócio?</p>
+        
+    #{form @savePreRegister()}
+        <h2>Informação sobre consultório</h2>
+        <p>some information<p>
+        <p class="spacer"></p>
+        
+        #{field 'partner.name'}
+            <p class="${field.errorClass}">
+                <strong>Nome do consultório ou Clínica:</strong> <input type="text" name="${field.name}" size="16" value="${partner?.name}"> *
+                <span class="error">${field.error}</span>
+            </p>
+        #{/field}
+        
+        <p>
+            <input type="submit" value="Register"> <a href="@{index()}">Cancel</a>    
+        </p>
+    #{/form}
+</div>
