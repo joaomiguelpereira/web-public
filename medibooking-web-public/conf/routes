@@ -5,6 +5,16 @@
 # Home page
 GET     /                                       Application.index
 
+#Home page for Clinics
+GET /clinics                                    Clinics.index
+
+
+#Home page for parners
+GET /partners                                   partners.Partners.index
+GET /partners/pre-register                      partners.Partners.preRegister
+
+
+
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 

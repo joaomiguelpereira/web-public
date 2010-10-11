@@ -4,7 +4,7 @@
     <head>
         <title>#{get 'title' /}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <link rel="stylesheet" type="text/css" media="screen"href="@{'public/stylesheets/main.css'}">
+        <link rel="stylesheet" type="text/css" media="screen"href="@{'public/stylesheets/main-partner.css'}">
         
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
@@ -21,13 +21,6 @@
                 <div id="login">
                     Login here
                 </div> <!-- End Login -->
-                
-                <div id="menu" class="clearfix">
-                    <ul>
-                        <li class="selected">Marcar Consulta</li>
-                        <li><a href="">Como funciona</a></li>
-                    </ul>
-                </div><!-- End Menu -->
             </div> <!-- End Page Header -->
         </div><!-- End Page Header Wrapper -->
     	<div id="content" class="clearfix">
@@ -36,26 +29,7 @@
     	
     	<div id="page-footer-wrapper">
     	   <div id="page-footer">
-    	       <div id="containers">
-    	           
-    	           <div id="first">
-    	               <a href="@{Clinics.index}">Consultórios e clínicas</a>
-    	               <a href="@{partners.Partners.preRegister}">Tornar-se parceiro</a>
-    	               
-    	           </div><!-- End first-->
-    	           <div id="second">
-    	               Second COntainer
-    	           </div><!--End second-->
-    	           <div id="third">
-    	               Third COntainer
-                   </div><!--End third-->
-                   
-                   <div id="fourth">
-                        Fourth COntainer
-                   </div><!--end fourth-->
-               
-               </div><!--End containers-->
-               <div id="end" class="clearfix">
+    	       <div id="end" class="clearfix">
                     Copy
                </div> <!--End end-->
     	   </div><!--End page-footer-->
