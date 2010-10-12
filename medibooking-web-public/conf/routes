@@ -6,7 +6,7 @@
 GET     /                                       Application.index
 
 #Home page for Clinics
-GET /clinics                                    Clinics.index
+GET /offices                                    Offices.index
 
 
 #Home page for parners

@@ -1,3 +1,4 @@
 # You can specialize this file for each language.
 # For example, for French create a messages.fr file
 #
+validation.required=Este campo é obrigatório e não pode ser deixado em branco!
