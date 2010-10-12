@@ -1,9 +1,44 @@
-
 /* General styles*/
 .clearfix {
-    clear: both;
+	clear: both;
 }
+
 .spacer {
-    height: 4px;
+	height: 4px;
 }
-	
+
+a {
+	color: #0066cf;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* Left Helper Boxes*/
+.helper-box {
+    width:30%;
+    min-width:180px;
+    float: left;
+    padding: 5px;
+    border: solid 1px #becfd4;
+    margin-right:10px;
+    background-color: #fff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.helper-box h1 {
+    font-size: 1.2em;
+    border-bottom: solid 1px #becfd4;
+}
+.helper-box ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.helper-box ul li{
+    margin-top: 7px;
+}
+/* End Left Helper Boxes*/
