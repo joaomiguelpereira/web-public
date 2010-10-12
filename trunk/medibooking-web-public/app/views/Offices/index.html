@@ -1,0 +1,9 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<h1>Todos os consultóris e Clínicas</h1>
+
+#{list offices, as:'office'}
+<p>${office.name}</p> 
+<p>${office.businessType}</p> 
+
+#{/list}
