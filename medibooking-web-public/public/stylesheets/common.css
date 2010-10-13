@@ -1,3 +1,50 @@
+/*Floating Page Messages*/
+#floating-message-wrapper {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: auto;
+	height: 30px;
+	padding: 10px;
+	filter: alpha(opacity = 90);
+	-moz-opacity: 0.9;
+	-khtml-opacity: 0.9;
+	opacity: 0.9;
+}
+
+#floating-message-wrapper.error {
+	background-color: red;
+	color: #fff;
+}
+
+#floating-message-wrapper #page-message {
+	width: 100%;
+	text-align: center;
+}
+
+
+#floating-message-wrapper #page-message-close a{
+    color: #fff;
+    font-weight: normal;
+    font-size: 0.7em;
+    padding:3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border: dashed 1px #fff;
+}
+
+
+#floating-message-wrapper #page-message-close a:hover {
+    background-color: #888;
+}
+	
+
+#floating-message-wrapper #page-message-close {
+	float: right;
+	margin-top: -20px;
+	
+}
+
 /* General styles*/
 .clearfix {
 	clear: both;
@@ -18,27 +65,28 @@ a:hover {
 
 /* Left Helper Boxes*/
 .helper-box {
-    width:30%;
-    min-width:180px;
-    float: left;
-    padding: 5px;
-    border: solid 1px #becfd4;
-    margin-right:10px;
-    background-color: #fff;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+	width: 30%;
+	min-width: 180px;
+	float: left;
+	padding: 5px;
+	border: solid 1px #becfd4;
+	margin-right: 10px;
+	background-color: #fff;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .helper-box h1 {
-    font-size: 1.2em;
-    border-bottom: solid 1px #becfd4;
-}
-.helper-box ul {
-    list-style: none;
-    padding-left: 10px;
+	font-size: 1.2em;
+	border-bottom: solid 1px #becfd4;
 }
 
-.helper-box ul li{
-    margin-top: 7px;
+.helper-box ul {
+	list-style: none;
+	padding-left: 10px;
+}
+
+.helper-box ul li {
+	margin-top: 7px;
 }
 /* End Left Helper Boxes*/

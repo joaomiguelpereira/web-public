@@ -6,13 +6,16 @@
 
 
 $(window).load(function () {
-	//In case of reload from validation errors, select the correct type and show the form
+	//focus the first field with errors
+
 	
+	//In case of reload from validation errors, select the correct type and show the form
 	if ( $("input[name=partner.businessType]").val() != "" ) {
 		var type = $("input[name=partner.businessType]").val();
-		if ( $("#"+type) ) {
-			$("#"+type).attr('checked', true );
+		if ( $("#"+type+"Choice") ) {
+			$("#"+type+"Choice").attr('checked', true );
 			updateForm(type);
+			FormUtils.focusFirstErrorField();
 		}
 	}
 	
@@ -25,12 +28,6 @@ $(window).load(function () {
 });
 
 
-/**
- * On load the page in case of erros, focus on the first field with errors
- */
-function focusFirstErrorField() {
-	
-}
 
 /**
  * Show and update the form
@@ -43,8 +40,5 @@ function updateForm(type) {
 	$('.businessTypeWithPreposition').html(names[type][2]);
 	$('.businessType').html(names[type][0]);
 	$('.businessTypeWithPronoum').html(names[type][1]);
-	$("input[name=partner.businessType]").val(type);
-	window.alert($("input[name=partner.businessType]").val());
-	
-	
+	$("input[name=partner.businessType]").val(type);	
 }
