@@ -3,29 +3,41 @@
  */
 var FormUtils = {
 	focusFirstErrorField : function() {
-		// find all elements with class=hasError
-		hasErrorElement = $('.hasError').find('input');
-
-		if (hasErrorElement) {
-
-			hasErrorElement.focus();
-
-		}
+		// find all elements with class=hasError		
+		hasErrorElements = $('.hasError').eq(0).find('input').focus();
 	}
 };
 
 var FloatingMessagesUtils = {
-		close : function() {
-			$('#floating-message-wrapper').hide();
-			return false;
-		}
+	close : function() {
+		$('#floating-message-wrapper').hide();
+		return false;
+	},
+	
+	autoClose : function() {
+		
+	}
 };
 
+//Add common windo onLoad events
+$(window).load(function() {
+
+	if ( $('#floating-message-wrapper') ) {
+		
+		var t = setTimeout ( "$('#floating-message-wrapper').fadeOut()", 10000);
+		
+		
+	}
+});
+
 $(window).scroll(function() {
-	
-	$('#floating-message-wrapper').animate({
-		top : $(window).scrollTop() + "px"
-	}, { "duration": 100, "easing": "easeInCubic"});
-	
-	
+	if ($('#floating-message-wrapper')) {
+		$('#floating-message-wrapper').animate({
+			top : $(window).scrollTop() + "px"
+		}, {
+			"duration" : 100,
+			"easing" : "easeInCubic"
+		});
+	}
+
 });
