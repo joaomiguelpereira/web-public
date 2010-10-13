@@ -1,11 +1,23 @@
 #{extends 'main-partner.html' /}
+
 #{set title:'Home' /}
 
+#{set 'moreScripts'}
+    #{script 'preregister_partner.js' /}
+#{/set}
+
+
+#{set 'inlineScripts'}
+<script type="text/javascript">
+    var clinicNames = ['clínica','a clínica', 'da clínica'];
+    var officeNames = ['consultório','o consultório', 'do consultório'];
+    var names = {'${clinicBusinessTypeLiteral}': clinicNames, '${officeBusinessTypeLiteral}': officeNames};
+</script>
+#{/set}
 
 
 
-
-<div class="wizard-assistent">
+<div class="helper-box">
     <h1> Precisa de Ajuda?</h1>
     <ul>
         <li><a href="#">O que é o mediBooking.com</a></li>
@@ -21,22 +33,45 @@
     <p>Após recepção deste formulário, um dos nossos colaboradores irá enviar rever toda a informação e entrar em contacto consigo para 
     esclarecimento de qualquer dúvida. Posteriormente o seu registo é aprovado e pode começar a usar o sistema.</p>
     <p class="spacer"></p>
-    <p>O que melhor define o seu negócio?</p>
+    <!--Start first question-->
+    <div class="question">O que melhor define o seu negócio?</div>
+    <ul class="answer-multiple-choice">
+        <li><input id="${clinicBusinessTypeLiteral}Choice" type="radio" name="businessTypeChoice" value="${clinicBusinessTypeLiteral}" /> <label for="${clinicBusinessTypeLiteral}Choice">Clínica</label></li>
+        <li><input id="${officeBusinessTypeLiteral}Choice" type="radio" name="businessTypeChoice" value="${officeBusinessTypeLiteral}" /> <label for="${officeBusinessTypeLiteral}Choice">Consultório</label></li>
+    </ul>
+    
+    
+    
+    
+    
+    #{form @savePreRegister(), id:'preRegisterPartnerForm', style:'display:none'}
         
-    #{form @savePreRegister()}
-        <h2>Informação sobre consultório</h2>
-        <p>some information<p>
-        <p class="spacer"></p>
-        
-        #{field 'partner.name'}
-            <p class="${field.errorClass}">
-                <strong>Nome do consultório ou Clínica:</strong> <input type="text" name="${field.name}" size="16" value="${partner?.name}"> *
-                <span class="error">${field.error}</span>
-            </p>
+        #{field 'partner.businessType'}
+            <input type="hidden" name="${field.name}" id="${field.name}" value="${partner?.businessType}" />
         #{/field}
-        
+     
+        <fieldset>
+            <legend>Informação sobre <span class="businessTypeWithPronoum"></span></legend>
+            <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
+            
+            #{field 'partner.name'}
+                <div class="${field.errorClass}">
+                    <label for="first_name">Nome <span class="businessTypeWithPreposition"></span>:<span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="100" value="${partner?.name}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                    
+                    
+                    <span class="info">O nome pelo qual o seu negócio vai ser conhecido.</span>
+                </div>
+            
+            #{/field}
+        </fieldset>
         <p>
             <input type="submit" value="Register"> <a href="@{index()}">Cancel</a>    
         </p>
     #{/form}
+    
+    
 </div>

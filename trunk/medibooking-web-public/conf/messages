@@ -1,4 +1,7 @@
 # You can specialize this file for each language.
 # For example, for French create a messages.fr file
 #
-validation.required=Este campo é obrigatório e não pode ser deixado em branco!
+validation.required= Este campo é obrigatório e não pode ser deixado em branco!
+
+#messages for partners
+partner.register.error = Não é possível continuar. Verifique os errors!

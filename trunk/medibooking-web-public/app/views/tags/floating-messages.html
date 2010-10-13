@@ -1,0 +1,17 @@
+ #{if flash.error}
+            <div id="floating-message-wrapper" class="error">
+                <div id="page-message">
+                    <strong>${flash.error}</strong>
+                </div>
+                
+                <div id="page-message-close">
+                    <a href="#" onClick="FloatingMessagesUtils.close()">fechar</a>
+                </div>
+            </div>
+        #{/if}
+        
+        #{if flash.success}
+                <p class="fSuccess">
+                    <strong>${flash.success}</strong>
+                </p>
+        #{/if}

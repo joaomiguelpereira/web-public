@@ -5,18 +5,32 @@
         <title>#{get 'title' /}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" media="screen"href="@{'public/stylesheets/main-partner.css'}">
-        
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/jquery.easing.1.3.js'}" type="text/javascript" charset="utf-8"></script>
+        
+        
+        
+        <script src="@{'/public/javascripts/common.js'}" type="text/javascript" charset="utf-8"></script>
+      
+        
+        
         #{get 'moreScripts' /}
+        
+        #{get 'inlineScripts' /}
+        
+               
+        
     </head>
     <body>
+       #{floating-messages /}
+        
         <div id="page-header-wrapper">
             
             <div id="page-header">
                 <div id="logo">
-                    <a href="#"><img src="@{'/public/images/logo.png'}"/></a>
+                    <a href="@{Application.index}"><img src="@{'/public/images/logo.png'}"/></a>
                 </div> <!-- End Logo -->
                 <div id="login">
                     Login here
@@ -25,7 +39,10 @@
         </div><!-- End Page Header Wrapper -->
     	<div id="content" class="clearfix">
     	   #{doLayout /}
+    	   <div class="clearfix"></div>
     	</div><!--End content-->
+    	
+    	<div class="clearfix"></div>
     	
     	<div id="page-footer-wrapper">
     	   <div id="page-footer">
