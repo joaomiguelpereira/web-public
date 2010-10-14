@@ -3,8 +3,11 @@
  */
 var FormUtils = {
 	focusFirstErrorField : function() {
-		// find all elements with class=hasError		
-		hasErrorElements = $('.hasError').eq(0).find('input').focus();
+		// Try first as input
+		$('.hasError').eq(0).find('input').focus();
+
+		$('.hasError').eq(0).find('textarea').focus();
+
 	}
 };
 
@@ -13,20 +16,18 @@ var FloatingMessagesUtils = {
 		$('#floating-message-wrapper').hide();
 		return false;
 	},
-	
+
 	autoClose : function() {
-		
+		var t = setTimeout("$('#floating-message-wrapper').fadeOut()", 10000);
 	}
 };
 
-//Add common windo onLoad events
+// Add common windo onLoad events
 $(window).load(function() {
 
-	if ( $('#floating-message-wrapper') ) {
-		
-		var t = setTimeout ( "$('#floating-message-wrapper').fadeOut()", 10000);
-		
-		
+	if ($('#floating-message-wrapper')) {
+		FloatingMessagesUtils.autoClose();
+
 	}
 });
 

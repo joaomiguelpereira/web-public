@@ -17,6 +17,11 @@
 	color: #fff;
 }
 
+#floating-message-wrapper.success {
+    background-color: green;
+    color: #fff;
+}
+
 #floating-message-wrapper #page-message {
 	width: 100%;
 	text-align: center;
@@ -35,7 +40,8 @@
 
 
 #floating-message-wrapper #page-message-close a:hover {
-    background-color: #888;
+    background-color: #FFF;
+    color: #000;
 }
 	
 
