@@ -5,13 +5,21 @@
                 </div>
                 
                 <div id="page-message-close">
-                    <a href="#" onClick="FloatingMessagesUtils.close()">fechar</a>
+                    <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
+                    
                 </div>
             </div>
         #{/if}
         
         #{if flash.success}
-                <p class="fSuccess">
+            <div id="floating-message-wrapper" class="success">
+                <div id="page-message">
                     <strong>${flash.success}</strong>
-                </p>
+                </div>
+                
+                <div id="page-message-close">
+                    <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
+                    
+                </div>
+            </div>    
         #{/if}

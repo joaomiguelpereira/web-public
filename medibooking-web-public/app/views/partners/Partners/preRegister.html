@@ -57,7 +57,7 @@
             #{field 'partner.name'}
                 <div class="${field.errorClass}">
                     <label for="first_name">Nome <span class="businessTypeWithPreposition"></span>:<span class="required-sybmol">*</span></label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="100" value="${partner?.name}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.name}" />
                     #{ifErrors}
                         <span class="error">${field.error}</span>
                     #{/ifErrors}
@@ -65,8 +65,34 @@
                     
                     <span class="info">O nome pelo qual o seu negócio vai ser conhecido.</span>
                 </div>
-            
             #{/field}
+            
+            #{field 'partner.address.addressLineOne'}
+                <div class="${field.errorClass}">
+                    <label for="first_name">Morada :<span class="required-sybmol">*</span></label>
+                    <textarea  name="${field.name}" id="${field.name}">${partner?.address?.addressLineOne}</textarea>
+                    
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                    <span class="info">Morada <span class="businessTypeWithPreposition"></span></span>
+                </div>
+            #{/field}
+
+
+            #{field 'partner.address.postalCode'}
+                <div class="${field.errorClass}">
+                    <label for="first_name">Código Postal :<span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.address?.postalCode}" />
+                    
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                    <span class="info">Código Postal <span class="businessTypeWithPreposition"></span></span>
+                </div>
+            #{/field}
+
+
         </fieldset>
         <p>
             <input type="submit" value="Register"> <a href="@{index()}">Cancel</a>    

@@ -1,5 +1,6 @@
 package controllers.partners;
 
+import controllers.Offices;
 import models.Partner;
 import models.enums.BusinessType;
 import play.Logger;
@@ -31,18 +32,21 @@ public class Partners extends Controller {
 	}
 
 	public static void savePreRegister(@Valid Partner partner) {		
-		Logger.debug("business enum name: " + partner.getBusinessType());
-		Logger.debug("partner name: " + partner.getName());
+	
+		//validation.valid(partner.getAddress());
+		Logger.debug(partner.getAddress().getAddressLineOne());
 		if (validation.hasErrors()) {
-			Logger.debug("ERRORS");
+			
 			//params.flash(); // add http parameters to the flash scope
 			//validation.keep();
 			//preRegister();
 			flash.error(Messages.get("partner.register.error"));
 			render("@preRegister", partner);
 		}
-
+		
 		partner.save();
+		flash.success(Messages.get("partner.register.success"));
+		Offices.index();
 		
 	}
 }
