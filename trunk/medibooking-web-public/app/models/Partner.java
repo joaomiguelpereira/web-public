@@ -1,10 +1,17 @@
 package models;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import models.enums.BusinessType;
 
 import play.data.validation.MaxSize;
 import play.data.validation.MinSize;
 import play.data.validation.Required;
+import play.data.validation.Valid;
 import play.db.jpa.Model;
 
 @Entity
@@ -15,10 +22,20 @@ public class Partner extends Model {
     @MinSize(4)
 	private String name;
 	
+	@Required
+	@Enumerated(EnumType.STRING)
+	private BusinessType businessType;
 	
-	public Partner(String name) {
+	@Required
+	@Embedded
+	@Valid
+	private Address address;
+	
+	public Partner(String name, BusinessType businessType, Address address) {
 		super();
+		this.address = address;
 		this.name = name;
+		this.setBusinessType(businessType);
 	}
 
 	public void setName(String name) {
@@ -27,6 +44,22 @@ public class Partner extends Model {
 
 	public String getName() {
 		return name;
+	}
+
+	public void setBusinessType(BusinessType businessType) {
+		this.businessType = businessType;
+	}
+
+	public BusinessType getBusinessType() {
+		return businessType;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public Address getAddress() {
+		return address;
 	}
 	
 

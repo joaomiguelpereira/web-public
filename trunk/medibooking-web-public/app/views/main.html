@@ -10,12 +10,16 @@
         #{get 'moreStyles' /}
         <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
         <script src="@{'/public/javascripts/jquery-1.4.2.min.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/common.js'}" type="text/javascript" charset="utf-8"></script>
+        <script src="@{'/public/javascripts/jquery.easing.1.3.js'}" type="text/javascript" charset="utf-8"></script> 
         #{get 'moreScripts' /}
+        
          
        
         
     </head>
     <body>
+        #{floating-messages /}
         <div id="page-header-wrapper">
             
             <div id="page-header">
