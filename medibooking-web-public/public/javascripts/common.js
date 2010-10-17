@@ -5,9 +5,8 @@ var FormUtils = {
 	focusFirstErrorField : function() {
 		// Try first as input
 		$('.hasError').eq(0).find('input').focus();
-
 		$('.hasError').eq(0).find('textarea').focus();
-
+		
 	}
 };
 
@@ -27,8 +26,8 @@ $(window).load(function() {
 
 	if ($('#floating-message-wrapper')) {
 		FloatingMessagesUtils.autoClose();
-
 	}
+	
 });
 
 $(window).scroll(function() {
