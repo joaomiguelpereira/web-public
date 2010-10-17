@@ -5,13 +5,9 @@
 # Home page
 GET     /                                       Application.index
 
-#Home page for Clinics
+#Routes for Offices
 GET /offices                                    Offices.index
-
-
-#Home page for parners
-GET /partners                                   partners.Partners.index
-GET /partners/pre-register                      partners.Partners.preRegister
+GET /offices/pre-register                       Offices.preRegister
 
 
 
