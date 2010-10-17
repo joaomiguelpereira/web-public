@@ -20,7 +20,7 @@ public class UniqueCheck extends AbstractAnnotationCheck<Unique> {
 	public boolean isSatisfied(Object validatedObject, Object value,
 			OValContext context, Validator validator) throws OValException {
 
-		boolean satisfied = false;
+		boolean satisfied = true;
 		// Check if the value of the field is null or empty and assume that the
 		// validation is satisfied in this case
 		
@@ -34,9 +34,9 @@ public class UniqueCheck extends AbstractAnnotationCheck<Unique> {
 			Query query = JPA.em().createQuery(queryStr.toString());
 			query.setParameter("value", value);
 			
-			if (query.getResultList().size() == 0) {
-				satisfied = true;
-			}
+			if (query.getResultList().size() != 0) {
+				satisfied = false;
+			} 
 		}
 		
 		return satisfied;
