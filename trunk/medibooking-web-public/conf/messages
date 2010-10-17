@@ -1,6 +1,7 @@
 # You can specialize this file for each language.
 # For example, for French create a messages.fr file
 
+
 # For use in JavaExtensions.since tag
 since.seconds = %s second%s ago
 since.minutes = %s minute%s ago
@@ -14,7 +15,7 @@ since.format  = MMM d, yyyy
 validation.required=Este campo é obrigatório e não pode ser deixado em branco!
 validation.minSize=O tamanho mínimo para este campo é %2$d
 validation.maxSize=O tamanho máximo para este campo é %2$d
-validation.email=Invalid email address
+validation.email= O email não é válido 
 validation.range=Not in the range %2$d through %3$d
 validation.min=Cannot be lower than %2$d
 validation.max=Cannot be greater than %2$d
@@ -28,7 +29,8 @@ validation.past=Must be in the past
 validation.before=Must be before %2$s
 validation.object=Validation failed
 validation.notFound=Object not found for id %2$s
-validation.url=Not a valid URL
+validation.url=Este URL não é válido
+validation.phone=O número não é válido
 
 
 #messages for partners
