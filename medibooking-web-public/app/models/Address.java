@@ -3,10 +3,9 @@ package models;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
-import net.sf.oval.constraint.MinSize;
-
 import play.data.validation.Max;
 import play.data.validation.MaxSize;
+import play.data.validation.MinSize;
 import play.data.validation.Required;
 import play.db.jpa.Model;
 
@@ -32,7 +31,7 @@ public class Address{
 	@MinSize(4)
 	private String city;
 	
-	@Required
+	
 	@MaxSize(50)
 	@MinSize(2)
 	private String country;
