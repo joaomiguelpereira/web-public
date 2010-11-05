@@ -1,0 +1,17 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+<h1>Todos os Users</h1>
+
+#{list users, as:'user'}
+<p>${user.name}</p> 
+<p>${user.email}</p>
+<p>${user.userType}</p>
+#{/list}
+
+<h1>Todos os Office admins</h1>
+
+#{list officeAdmins, as:'admin'}
+<p>${admin.name}</p> 
+<p>${admin.email}</p>
+
+#{/list}
