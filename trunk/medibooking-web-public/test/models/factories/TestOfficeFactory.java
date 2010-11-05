@@ -1,9 +1,11 @@
-package models;
+package models.factories;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import models.Address;
+import models.Office;
 import models.enums.BusinessType;
 
 import org.junit.Ignore;
