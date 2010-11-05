@@ -7,7 +7,8 @@ public class StringUtils {
 	/**
 	 * Given an object, this convenience method converts it to CamelCase
 	 * Ex: CAMEL_CASE is tranformed in CamelCase
-	 * 
+	 * @param arg the object which will be converted to cammel case. a toString is performed first
+	 * @param firstLetterCapitalized if true, the first letter will also be capitalized
 	 * @return
 	 */
 	public static String camelize(Object arg, boolean firstLetterCapitalized) {
