@@ -44,6 +44,7 @@ public class Offices extends Application {
 	}
 
 	public static void savePreRegistration(@Valid Office partner) {		
+		
 		if (validation.hasErrors()) {
 			flash.error(Messages.get("partner.register.error"));
 			render("@preRegister", partner);
