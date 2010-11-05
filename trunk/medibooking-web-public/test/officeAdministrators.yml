@@ -1,0 +1,5 @@
+OfficeAdministrator(bob):
+  name: Bob administartor
+  email: bob@gmail.com
+  passwordHash: 11111
+  
