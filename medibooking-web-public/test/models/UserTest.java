@@ -1,47 +1,55 @@
 package models;
 
-import org.junit.*;
-import java.util.*;
-import play.test.*;
-import models.*;
+import models.enums.UserType;
+import models.factories.TestUserFactory;
 
-public class UserTest extends UnitTest {
+import org.junit.Before;
+import org.junit.Test;
+
+import play.Logger;
+import play.test.Fixtures;
+import play.test.UnitTest;
+
+public class UserTest extends ModelUnitTest {
 
 	@Before
 	public void setup() {
 		Fixtures.deleteAll();
-		Fixtures.load("users.yml");
-	}
-	
-	
-
-	@Test
-	public void createAndRetrieveUser() {
-		
-		final String email = "joaomiguel.pereira@gmail.com";
-		final String fullName = "João Pereira";
-		// Create new user
-		new User(fullName, email, "mypassword").save();
-
-		// Retrieve the user with eamil=email
-		User user = User.find("email='" + email + "'").first();
-		assertNotNull(user);
-		assertEquals(fullName, user.fullName);
+		// Fixtures.load("partners.yml");
 	}
 
 	@Test
-	public void tryConnectAsUser() {
-		final String email = "joaomiguel.pereira@gmail.com";
-		final String fullName = "João Pereira";
-		final String password = "myPasswod";
-		// Create new user
-		new User(fullName, email, password).save();
+	public void dontCreateDuplicatedEmail() {
+		User user = TestUserFactory.createUser();
+		assertTrue(user.validateAndSave());
+		assertNotNull(User.find("name=?", user.getName()).first());
 
-		// test it can connect
-		assertNotNull(User.connect(email, password));
-
-		// test can't connect
-		assertNull(User.connect(email, "badpassword"));
+		User person2 = TestUserFactory.createUser();
+		person2.setEmail(user.getEmail());
+		assertFalse(person2.validateAndSave());
 	}
 
+	@Test
+	public void testDifferentUUID() {
+		User user = TestUserFactory.createUser();
+		assertTrue(user.validateAndSave());
+
+		User user2 = TestUserFactory.createUser();
+		assertTrue(user2.validateAndSave());
+
+		assertNotSame(user.getActivationUUID(), user2.getActivationUUID());
+
+	}
+
+	@Test
+	public void createAndRetrievePerson() {
+		User user = TestUserFactory.createUser();
+		assertTrue(user.validateAndSave());	
+
+		assertNotNull(user.getPasswordHash());
+		assertFalse(user.isActive());
+		assertEquals(UserType.USER, user.getUserType());
+		assertNotNull(user.getActivationUUID());
+		assertNotNull(User.find("name=?", user.getName()).first());
+	}
 }

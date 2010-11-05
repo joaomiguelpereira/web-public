@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import models.enums.BusinessType;
+import models.factories.TestOfficeFactory;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,11 +15,11 @@ import play.data.validation.Validation;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
-public class OfficeTest extends UnitTest {
+public class OfficeTest extends ModelUnitTest{
 
 	@Before
 	public void setup() {
-		// Fixtures.deleteAll();
+		Fixtures.deleteAll();
 		// Fixtures.load("partners.yml");
 	}
 
@@ -29,8 +30,11 @@ public class OfficeTest extends UnitTest {
 		admin.setEmail("joao@email.com");
 		admin.setName("Some fancy name");
 		admin.setPassword("123456");
-
-		assertTrue(admin.validateAndSave());
+		boolean saved = admin.validateAndSave();
+		
+		
+		assertEntitySaved();
+		//assertTrue(admin.validateAndSave());
 		
 		Office office = TestOfficeFactory.createOffice(null);
 		TreeSet<OfficeAdministrator> admins = new TreeSet<OfficeAdministrator>();
