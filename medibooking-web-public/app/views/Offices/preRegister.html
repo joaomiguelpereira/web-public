@@ -1,4 +1,4 @@
-#{extends 'main-partner.html' /}
+#{extends 'main.html' /}
 
 #{set title:'Home' /}
 
@@ -16,15 +16,13 @@
 #{/set}
 
 
-
-<div class="helper-box">
-    <h1> Precisa de Ajuda?</h1>
+#{helperBox title:Precisa de Ajuda?}
     <ul>
         <li><a href="#">O que é o mediBooking.com</a></li>
         <li><a href="#">O que é o mediBooking.com</a></li>
         <li><a href="#">O que é o mediBooking.com</a></li>
     </ul>
-</div>
+#{/helperBox}
 
 
 <div class="wizard-form">
@@ -151,6 +149,7 @@
                     #{/ifErrors}                    
                 </div>
             #{/field}
+            
 
         </fieldset>
         <fieldset>
