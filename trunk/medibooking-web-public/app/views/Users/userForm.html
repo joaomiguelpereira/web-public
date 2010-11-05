@@ -1,0 +1,101 @@
+ 
+%{	
+	//Sanity check to use this template
+	if (!userType) {
+		throw new Exception("Could not found the variable userType setted");
+	}
+	
+%} 
+
+
+<div class="wizard-form">
+    <h1>Registar &{'views.users.type.'+userType}</h1>
+    
+    #{include 'Users/new'+utils.StringUtils.camelize(userType, true)+'HelpText.html'/}
+    
+    <p class="spacer"></p>
+	#{form @save(), id:'registerUserForm'}
+		<fieldset>
+			<legend>Informação sobre o novo &{'views.users.type.'+userType}</legend>
+            <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
+           
+            #{field 'user.name'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Nome: <span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.name}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>
+                
+                
+            #{/field}
+
+
+            #{field 'user.email'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Email: <span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.email}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                    <span class="info">O seu email é a sua identificação no serviço. Apenas usamos o seu email para assuntos relacionados com o serviço e não fazemos spam!</span>
+                </div>
+            #{/field}
+
+            #{field 'emailConfirmation'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Repita o Email: <span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${emailConfirmation}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                
+            		<span class="info">Repita o seu Email para assegurar que este foi correctamente introduzido.</span>
+            	</div>
+            #{/field}
+            
+
+            #{field 'user.password'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Password: <span class="required-sybmol">*</span></label>
+                    <input type="password" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.password}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+            		<span class="info">A sua password tem de ter mais de 5 caractéres.</span>
+            	</div>
+            #{/field}
+            
+
+            #{field 'passwordConfirmation'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Repita a password: <span class="required-sybmol">*</span></label>
+                    <input type="password" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${passwordConfirmation}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+            	</div>
+            #{/field}
+            
+			#{field 'termsAgreement'}
+                <div class="${field.errorClass}">
+                    <input type="checkbox" name="${field.name}" value="true" ${(params[field.name] ? params.getAll(field.name)[0] == 'true' : _value) ? 'checked="true"'.raw() : ''} id="${field.name}"/>
+                    <label class="checkbox" for="${field.name}">Li e aceito os <a href="javascript:alert('yeagg');">termos e condições.</a> </label>
+                    <div class="clearfix"></div>
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+            	</div>
+            #{/field}
+			
+       		#{field 'userType'}
+            	<input type="hidden" name="${field.name}" id="${field.name}" value="${userType}" />
+        	#{/field}
+            <div class="clearfix"></div>
+		<input type="submit" value="Register"> <a href="@{index()}">Cancel</a>                
+		</fieldset>
+	 
+	#{/form}
+    
+ </div>

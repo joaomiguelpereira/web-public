@@ -1,0 +1,38 @@
+#{extends 'main.html' /}
+#{set title: play.i18n.Messages.get('user.register.success') /}
+#{if user}
+<p>O utilizador foi criado com sucesso e foi enviado um email para ${user.email} de modo a confirmar o registo</p>
+#{/if}
+
+<p>Verifique o seu email pela nossa mensagem que o irá guiar para completar o seu registo. O email contem um link que pode usar
+para activar a sua conta.</p>
+<p>Em alternativa, poderá copiar o código de activação da sua conta, enviado por email, e colar em baixo para proceder á activação da conta</p>
+<div class="wizard-form">
+#{form @activateUser()}
+ 
+ 	<fieldset>
+		<legend>Introduza o código de activação</legend>
+ 	
+		#{field 'activationCode'}
+			<div class="${field.errorClass}">
+		    	<label for="${field.name}">Código de activação: <span class="required-sybmol">*</span></label>
+		        <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${activationCode}" />
+		        #{ifErrors}
+		           <span class="error">${field.error}</span>
+		        #{/ifErrors}
+		        <span class="info">O código de activação foi enviado por email durante o seu registo. Tem o formato: xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx</span>     
+		         </div>
+		   #{/field}
+			
+			
+			#{field 'userType'}
+		    	<input type="hidden" name="${field.name}" id="${field.name}" value="${userType}" />
+		    #{/field}
+			<div class="clearfix"></div>
+			<input type="submit" value="Activar"> <a href="@{index()}">Cancel</a>
+	</fieldset>            	
+#{/form} 
+</div>
+ 
+ 
+ 
