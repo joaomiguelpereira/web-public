@@ -41,9 +41,26 @@ public class Users extends Application {
 		render(userType);
 	}
 
-	public static void activateUser(UserType userType, String activationCode) {
+	public static void activateUser(String activationKey) {
 		
+		// find the user
+		User user = User.find("activationUUID=?", activationKey.trim()).first();
+		if (null != user) {
+			if (user.isActive()) {
+				flashWarning("user.already.activated");
+			} else {
+				user.setActive(true);
+				user.save();
+				flashSuccess("user.activated");
+			}
+		} else {
+			flashError("user.invalid.activation.key");
+		}
+		
+		Application.index();
+
 	}
+
 	/**
 	 * List all users
 	 */
@@ -57,6 +74,7 @@ public class Users extends Application {
 
 	/**
 	 * Save the user
+	 * 
 	 * @param user
 	 * @param userType
 	 * @param emailConfirmation
@@ -66,8 +84,7 @@ public class Users extends Application {
 	public static void save(@Valid User user, UserType userType,
 			String emailConfirmation, String passwordConfirmation,
 			boolean termsAgreement) {
-		//WA
-		flash.clear();
+		// WA
 		validation.equals(emailConfirmation, user.getEmail()).message(
 				Messages.get("validation.emails.notMatch"));
 		validation.equals(passwordConfirmation, user.getPassword()).message(
@@ -75,26 +92,25 @@ public class Users extends Application {
 		validation.isTrue(termsAgreement).message(
 				"validation.accept.termsAndConditions");
 
-		
 		if (validation.hasErrors()) {
-			flash.error(Messages.get("partner.register.error"));
+			flashError("partner.register.error");
 			render("@blank", user, userType, termsAgreement, emailConfirmation);
 		}
-
+		User savedUser = null;
 		switch (userType) {
 
 		case OFFICE_ADMIN:
-			new OfficeAdministrator(user).save();
+			savedUser = new OfficeAdministrator(user).save();
 			break;
 
 		default:
-			user.save();
+			savedUser = user.save();
 			break;
 		}
-		//send activation email to user's email
-		UserMailer.activateAccount(user);
-		flash.success(Messages.get("user.register.success"));
-		render("@userCreatedConfirmation", userType, user);
+		// send activation email to user's email
+		UserMailer.activateAccount(savedUser);
+		flashSuccess("user.register.success");
+		render("@userCreatedConfirmation", userType, savedUser);
 
 	}
 
