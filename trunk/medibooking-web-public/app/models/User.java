@@ -25,48 +25,49 @@ public class User extends Model {
 	{
 		setUserType(UserType.USER);
 		setActive(false);
-		
+
 	}
-	
+
 	@Required
 	@MaxSize(60)
 	@MinSize(6)
 	private String name;
-	
+
 	@Required
 	private Boolean active;
-	
+
 	@Required
 	@Email
-	@Unique(message="validation.email.unique")
+	@Unique(message = "validation.email.unique")
 	private String email;
-	
+
 	@Transient
 	@Required
 	@MinSize(5)
 	private String password;
-	
+
 	private String passwordHash;
-	
+
 	@PhoneNumber
 	private String phone;
-	
+
 	@PhoneNumber
 	private String mobile;
-	
+
 	private UserType userType;
-	
+
 	private String activationUUID;
-	
-		
-	
+
 	@SuppressWarnings("unused")
 	@PrePersist
 	private void prepareNewUser() {
-		this.passwordHash = Codec.hexMD5(this.password+this.email);
-		this.activationUUID = UUID.randomUUID().toString();
+		// do it if it's a new entity
+		if (!this.isPersistent()) {
+			this.passwordHash = Codec.hexMD5(this.password + this.email);
+			this.setActivationUUID(UUID.randomUUID().toString());
+		}
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -114,24 +115,29 @@ public class User extends Model {
 	public String getPasswordHash() {
 		return passwordHash;
 	}
+
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
+
 	public UserType getUserType() {
 		return userType;
 	}
+
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
 	public Boolean isActive() {
 		return active;
 	}
 
-	public void setActivationUUID(String activationUID) {
-		this.activationUUID = activationUID;
+	public void setActivationUUID(String activationUUID) {
+		this.activationUUID = activationUUID;
 	}
 
 	public String getActivationUUID() {
 		return activationUUID;
 	}
+
 }
