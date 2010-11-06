@@ -93,7 +93,13 @@
             	<input type="hidden" name="${field.name}" id="${field.name}" value="${userType}" />
         	#{/field}
             <div class="clearfix"></div>
-		<input type="submit" value="Register"> <a href="@{index()}">Cancel</a>                
+            <div class="buttons">
+        		<input type="submit" value="&{'forms.register.button.label'}">
+        		<a href="@{Application.index()}">&{'forms.cancel.label'}</a>
+            	 
+            </div>
+            
+		                
 		</fieldset>
 	 
 	#{/form}
