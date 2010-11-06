@@ -18,6 +18,26 @@
 	border: solid 1px #becfd4;
 }
 
+
+.wizard-form form fieldset div.buttons input[type='submit'], .wizard-form form fieldset div.buttons input[type='button']{
+	
+	padding: 5px;
+	padding-left:7px;
+	padding-right:7px;
+	cursor: pointer;
+}
+
+.wizard-form form fieldset div.buttons a{
+	
+	padding: 5px;
+	padding-left:7px;
+	padding-right:7px;
+	cursor: pointer;
+}
+
+
+
+	
 .wizard-form form fieldset {
 	clear: both;
 	font-size: 100%;
@@ -106,6 +126,7 @@
 	margin: 0 0 0 0;
 }
 
+
 .wizard-form form div textarea {
 	width: 300px;
 	padding: 3px 4px;
@@ -114,6 +135,23 @@
 
 form div.hasError input[type='text'], form div.hasError textarea {
 	border-color: red;
+}
+
+.wizard-form form div input[type='checkbox'] {
+	
+	padding: 3px 4px;
+	margin: 0 0 0 0;
+	margin-left: 250px;
+	float: left;
+		
+}
+.wizard-form form div label.checkbox {
+	
+	padding: 0;
+	margin-left:10px;
+	text-align: left;
+	width: auto;
+
 }
 
 /* Start not touched*/
