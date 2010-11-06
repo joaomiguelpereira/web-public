@@ -9,6 +9,15 @@ GET     /                                       Application.index
 GET /offices                                    Offices.index
 GET /offices/pre-register                       Offices.preRegister
 
+#Users
+
+GET /user/{userType}/new						Users.blank
+POST /user/{userType}				     		Users.save
+GET /users							     		Users.index
+GET /user/registrationConfirmation				Users.userCreatedConfirmation
+GET /user/activate/{activationKey}				Users.activateUser
+
+
 
 
 # Map static resources from the /app/public folder to the /public path
