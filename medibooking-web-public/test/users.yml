@@ -1,4 +1,13 @@
+User(gus):
+  name: Active user
+  email: active@gmail.com
+  password: 11111
+  active: true
+  
+  
 User(bob):
+  name: Bob administartor
   email: bob@gmail.com
-  password: secret
-  fullname: Bob
+  password: 11111
+  active: false
+  
