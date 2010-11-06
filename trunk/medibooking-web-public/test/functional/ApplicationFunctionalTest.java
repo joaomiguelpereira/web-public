@@ -7,8 +7,10 @@ import java.util.Map;
 import org.junit.Ignore;
 
 import controllers.Users;
+import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Http.Response;
+import play.mvc.Scope.Flash;
 import play.mvc.Router;
 import play.test.FunctionalTest;
 
@@ -28,6 +30,22 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		return GET(calculateRouteURL());
 	}
 
+	protected void assertSuccessFlashed(String i18nKey) {
+		assertEquals(Messages.get(i18nKey), Flash.current().get("success"));
+	}
+	
+	protected void assertErrorFlash(String i18nKey) {
+		assertEquals(Messages.get(i18nKey), Flash.current().get("error"));
+	}
+	
+	protected void assertWarningFlashed(String i18nKey) {
+		assertEquals(Messages.get(i18nKey), Flash.current().get("warning"));
+	}
+	
+	protected void assertNoErrorFlashed() {
+		assertNull(Flash.current().get("error"));
+		
+	}
 	/**
 	 * Calculate reverse route and return a URL as String
 	 * @return The URL reversed from controllerClass, actionName and args
