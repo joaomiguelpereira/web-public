@@ -13,7 +13,7 @@ para activar a sua conta.</p>
  	<fieldset>
 		<legend>Introduza o código de activação</legend>
  	
-		#{field 'activationCode'}
+		#{field 'activationKey'}
 			<div class="${field.errorClass}">
 		    	<label for="${field.name}">Código de activação: <span class="required-sybmol">*</span></label>
 		        <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${activationCode}" />
@@ -29,7 +29,10 @@ para activar a sua conta.</p>
 		    	<input type="hidden" name="${field.name}" id="${field.name}" value="${userType}" />
 		    #{/field}
 			<div class="clearfix"></div>
-			<input type="submit" value="Activar"> <a href="@{index()}">Cancel</a>
+			<div class="buttons">
+        		<input type="submit" value="&{'forms.activate.account.button.label'}">            	 
+            </div>
+            
 	</fieldset>            	
 #{/form} 
 </div>
