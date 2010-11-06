@@ -2,67 +2,72 @@
 @import url(common.css);
 @import url(header.css);
 @import url(footer.css);
+@import url(forms.css);
+@import url(header-menu.css);
+
+
+
+
+
 body {
 	margin: 0px;
 	padding: 0px;
 	font-family: Arial,Helvetica,sans-serif;
 }
 
-
-/* Header Menu Stuff */
-#page-header #menu {
-	display: inline;
-	float: left;
-	padding: 0;
-	margin: 0;
-	margin-top: 8px;
+/*Page Header Overrides*/
+#page-header-wrapper {
+    width: auto;
+    height: 115px;
+    margin: 0px;
+    padding: 0px;
+    background: url(../images/headerbg.png) repeat-x;
+    min-width: 480px;
+}
+#page-header {
+	width: auto;
+	margin: auto;
+	padding:20px;
+	min-width: 480px;
 }
 
-#page-header #menu ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+#page-header #logo {
+    padding-top: 5px;
+ 
 }
 
-#page-header #menu ul li {
-	display: inline;
+#page-header #login {
+	float: right;
+	padding-top: 5px;
+	margin-left:0;
 }
 
-#page-header #menu ul li a {
-	padding: 7px;
-	background-color: #DDE8EB;
-	color: #0C516B;
-	font-weight: bold;
-	border: solid 1px #becfd4;
-	text-decoration: none;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-}
+/*end Header Overrides*/
 
-#page-header #menu ul li a:hover {
-	background-color: #fff;
-	padding-bottom: 8px;
-	border-bottom: none;
+/*footer overrides*/
+#page-footer-wrapper {
+    width: auto;
+    height: 80px;
+    min-width: 480px;
+    background-color: #344349;
 }
-
-#page-header #menu ul li.selected {
-    padding: 7px;
-    background-color: #fff;
-    color: #0C516B;
-    font-weight: bold;
-    border: solid 1px #becfd4;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    
-    padding-bottom: 8px;
-    border-bottom: none;
-    
+#page-footer {
+    width: auto;
+    margin: auto;
+    color: #fff;
 }
+/* end footer overrides*/
 
 /*Start Content stuff*/
 #content {
-	width: 960px;
+	width: auto;
     margin: auto;
+    height:100%;
     min-height: 500px;
+    
+    min-width: 480px;
+    padding: 20px;
+    background-color: #f4f5f6;
 }
 
+/*end forms stuff*/

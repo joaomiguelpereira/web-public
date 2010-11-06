@@ -16,6 +16,16 @@
 	background-color: red;
 	color: #fff;
 }
+#floating-message-wrapper.warning {
+	background-color: #f5ea00;
+	color: #000;
+}
+
+#floating-message-wrapper.warning #page-message-close a{
+	color: #000;
+	border: dashed 1px #000;
+}
+
 
 #floating-message-wrapper.success {
     background-color: green;
