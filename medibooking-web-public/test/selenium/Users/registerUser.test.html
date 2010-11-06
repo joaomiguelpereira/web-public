@@ -5,6 +5,6 @@
     //Open the Register User for an OFFICE_ADMIN
     open('@{Users.blank('OFFICE_ADMIN')}')
     waitForPageToLoad(1000)
-   
     assertNotTitle('Application error')
+	assertTitle(${play.i18n.Messages.get('views.users.register.title')})
 #{/selenium}
