@@ -4,11 +4,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import models.User;
+
 import org.junit.Ignore;
 
+import constants.CookieValuesConstants;
 import controllers.Users;
 import play.i18n.Messages;
 import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.Scope;
 import play.mvc.Http.Response;
 import play.mvc.Scope.Flash;
 import play.mvc.Router;
@@ -29,12 +34,28 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 	protected Response get() {
 		return GET(calculateRouteURL());
 	}
+	
+	protected void authenticateUser(String email, String password, boolean keepLogged) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("email", email);
+		params.put("password", password);
+		params.put("keepLogged", keepLogged);
+		Http.Response response = POST(Router.reverse("Users.authenticate", params));
+		assertSuccessFlashed("login.successful");
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertEquals(Long.valueOf(1L), user.getLoginInformation()
+				.getSuccessfulLoginCount());
+		assertEquals(Scope.Session.current().get(CookieValuesConstants.LOGIN_EMAIL), "active@gmail.com");
+		assertEquals(Scope.Session.current().get(CookieValuesConstants.LOGIN_TOKEN), user.getLoginInformation().getLoginToken());
+		Flash.current().clear();
+		
+	}
 
 	protected void assertSuccessFlashed(String i18nKey) {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("success"));
 	}
 	
-	protected void assertErrorFlash(String i18nKey) {
+	protected void assertErrorFlashed(String i18nKey) {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("error"));
 	}
 	
