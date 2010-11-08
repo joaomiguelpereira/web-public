@@ -1,0 +1,16 @@
+
+%{
+	play.test.Fixtures.load("users.yml");
+	models.User bob = models.User.find("email=?","bob@gmail.com").first();
+}%
+
+ 
+#{selenium}
+    //Open the Register User for an OFFICE_ADMIN
+    open('@{Users.userCreatedConfirmation('OFFICE_ADMIN')}')
+    waitForPageToLoad(1000)
+    assertNotTitle('Application error')
+	assertTitle(${play.i18n.Messages.get('user.activate')})
+	assertTitle(${play.i18n.Messages.get('user.afterRegistration.nextSteps')})
+	type('validationKey', ${bob.activationKey})
+#{/selenium}

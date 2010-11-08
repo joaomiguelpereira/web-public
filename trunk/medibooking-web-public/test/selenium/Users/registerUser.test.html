@@ -7,4 +7,13 @@
     waitForPageToLoad(1000)
     assertNotTitle('Application error')
 	assertTitle(${play.i18n.Messages.get('views.users.register.title')})
+	type('user.name', 'some client name')
+	type('user.email', 'somemail@gmail.com')
+	type('emailConfirmation','somemail@gmail.com')
+	type('user.password', '12345')
+	type('passwordConfirmation', '12345')
+	click('termsAgreement')
+	clickAndWait('css=input[type=submit]')
+	assertTextPresent(${play.i18n.Messages.get('user.register.success')})
+	
 #{/selenium}
