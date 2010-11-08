@@ -24,6 +24,8 @@ user.register.success = O utilizador foi criado com sucesso.
 user.activated = O utilizador está agora activo
 user.invalid.activation.key = O código de activação é inválido
 user.already.activated = O utilizador já se encontra activo
+user.afterRegistration.nextSteps = O que fazer agora?
+user.activate = Active a sua conta.
 
 # Validation messages (custom)
 validation.passwords.notMatch = As passwords não coincidem
