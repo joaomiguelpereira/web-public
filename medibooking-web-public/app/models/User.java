@@ -2,6 +2,7 @@ package models;
 
 import java.util.UUID;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 import javax.persistence.Transient;
@@ -32,6 +33,9 @@ public class User extends Model {
 	@MaxSize(60)
 	@MinSize(6)
 	private String name;
+
+	@Embedded
+	private LoginInformation loginInformation;
 
 	@Required
 	private Boolean active;
@@ -65,6 +69,7 @@ public class User extends Model {
 		if (!this.isPersistent()) {
 			this.passwordHash = Codec.hexMD5(this.password + this.email);
 			this.setActivationUUID(UUID.randomUUID().toString());
+			this.setLoginInformation(new LoginInformation());
 		}
 	}
 
@@ -138,6 +143,66 @@ public class User extends Model {
 
 	public String getActivationUUID() {
 		return activationUUID;
+	}
+
+	/**
+	 * Authenticate a user based on password
+	 * 
+	 * @param password
+	 *            The password
+	 * @param clientIP
+	 *            The ip where the request was made
+	 * @return an authentication token if everything went ok, null otherwise
+	 */
+	public String authenticate(String password, String clientIP) {
+		// verify if the password is the same
+		String loginToken = null;
+		Logger.debug("Trying to authenticate user: " + this.email
+				+ " from IP: " + clientIP);
+		String passwordHash = Codec.hexMD5(password + this.email);
+		
+		if (this.passwordHash.equals(passwordHash) && this.isActive()) {
+			// create new authentication token
+			loginToken = UUID.randomUUID().toString();
+			this.loginInformation.setLoginToken(loginToken);
+			this.loginInformation.setLastSuccessfulLogin(System
+					.currentTimeMillis());
+			
+			this.loginInformation.setSuccessfulLoginCount(this.loginInformation
+					.getSuccessfulLoginCount() + 1);
+			
+			this.loginInformation
+					.setUnsuccessfullLoginCountBeforeSuccessfulLogin(0);
+			Logger.debug("Authentication successful");
+		} else {
+			this.loginInformation.setLoginToken(null);
+			this.loginInformation
+					.setUnsuccessfullLoginCount(this.loginInformation
+							.getUnsuccessfullLoginCount() + 1);
+			this.loginInformation
+					.setUnsuccessfullLoginCountBeforeSuccessfulLogin(this.loginInformation
+							.getUnsuccessfullLoginCountBeforeSuccessfulLogin() + 1);
+			this.loginInformation.setLastUnsuccessfulLogin(System
+					.currentTimeMillis());
+			Logger.debug("Authentication unsuccessful");
+		}
+		this.loginInformation.setLastLoginClientIP(clientIP);
+		this.save();
+		return loginToken;
+	}
+
+	public void setLoginInformation(LoginInformation loginInformation) {
+		this.loginInformation = loginInformation;
+	}
+
+	public LoginInformation getLoginInformation() {
+		return loginInformation;
+	}
+
+	public void invalidateLoginToken() {
+		this.loginInformation.setLoginToken(null);
+		this.save();
+		
 	}
 
 }
