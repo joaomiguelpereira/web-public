@@ -1,0 +1,10 @@
+<!-- Start inline login -->
+<div id="inlineLogin">#{form @Users.authenticate(),
+id:'inlineLoginForm'} #{field 'email'} <label for="${field.name}">Email:</label>
+<input type="text" name="${field.name}" id="${field.name}" size="20"
+	maxlength="60" value="${email}" /> #{/field} #{field 'password'} <label
+	for="${field.name}">Password:</label> <input type="password"
+	name="${field.name}" id="${field.name}" size="20" maxlength="60"
+	value="" /> #{/field} <input type="submit"
+	value="&{'forms.login.authenticate'}"> #{/form}</div>
+<!-- End Login -->
