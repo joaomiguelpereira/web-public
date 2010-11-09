@@ -1,7 +1,7 @@
 
 %{
 	play.test.Fixtures.load("users.yml");
-	models.User bob = models.User.find("email=?","bob@gmail.com").first();
+	bob = models.User.find("email=?","bob@gmail.com").first();
 }%
 
  
@@ -11,6 +11,7 @@
     waitForPageToLoad(1000)
     assertNotTitle('Application error')
 	assertTitle(${play.i18n.Messages.get('user.activate')})
+	type('activationKey', ${bob.activationUUID})
+	clickAndWait('css=input[type=submit]')
 	assertTitle(${play.i18n.Messages.get('user.afterRegistration.nextSteps')})
-	type('validationKey', ${bob.activationKey})
 #{/selenium}
