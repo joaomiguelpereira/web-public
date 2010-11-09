@@ -16,6 +16,8 @@ since.format  = MMM d, yyyy
 forms.register.button.label = Registar
 forms.cancel.label = Cancelar
 forms.activate.account.button.label = Activar conta
+forms.login.authenticate = Login
+
 #emails
 
 email.user.activation.subject = %s, active a sua conta em MediBooking.com
