@@ -1,0 +1,45 @@
+#{extends 'main.html' /}
+#{set title: play.i18n.Messages.get('views.login.title') /}
+
+
+<div class="wizard-form">
+    <h1>Autenticar utilizador</h1>
+    
+    
+    <p class="spacer"></p>
+	#{form @Users.authenticate(), id:'loginForm'}
+		<fieldset>
+			<legend>Introduza o seu email e password</legend>
+          
+           
+            #{field 'email'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Email: </label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${email}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>
+                
+                
+            #{/field}
+
+
+            #{field 'password'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Password: </label>
+                    <input type="password" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+            	</div>
+            #{/field}
+                        
+		    <div class="buttons">
+		    	<input type="submit" value="&{'forms.login.authenticate'}"> 
+            </div>        
+		</fieldset>
+	 
+	#{/form}
+    
+ </div>
