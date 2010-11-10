@@ -3,16 +3,21 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import annotations.authorization.RequiresUserSession;
+
 
 
 
 import models.Office;
 import models.enums.BusinessType;
+import models.enums.UserType;
 
 import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.With;
+
 
 public class Offices extends Application {
 
@@ -39,6 +44,7 @@ public class Offices extends Application {
 	/**
 	 * Index action
 	 */
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
 	public static void preRegister() {
 		render();
 	}

@@ -1,15 +1,21 @@
 package controllers;
 
+import annotations.authorization.RequiresUserSession;
 import models.User;
+import models.enums.UserType;
 import constants.CookieValuesConstants;
 import play.Logger;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Scope;
 import play.mvc.With;
 import play.mvc.Http.Cookie;
 
 public class BaseController extends Controller {
+
+	protected static User currentUser = null;
+
 	/**
 	 * Check if a valid session exists
 	 * 
@@ -20,15 +26,20 @@ public class BaseController extends Controller {
 				&& session.contains(CookieValuesConstants.LOGIN_EMAIL);
 	}
 
+	@Before
+	protected static void setGlobalRenderArgs() {
+		renderArgs.put("hasSession", hasSession());
+	}
+
 	/**
 	 * check if a "remember me" cookie exists in client and login user if yes
 	 */
 	@Before
 	protected static void doAutoLogin() {
 
-		// Get the cookie
 		boolean authenticationSuccessfull = false;
 
+		// Do it only if there's no session
 		if (!hasSession()) {
 
 			Cookie cookieEmail = request.cookies
@@ -60,6 +71,7 @@ public class BaseController extends Controller {
 							&& user.getLoginInformation().getLoginToken()
 									.equals(lgToken)) {
 						authenticateUser(user);
+						Logger.debug("Auto Login done");
 						authenticationSuccessfull = true;
 
 					}
@@ -67,22 +79,74 @@ public class BaseController extends Controller {
 
 			}
 			if (!authenticationSuccessfull) {
-				removeAutoLoginCookies();
+				clearUserSessionData();
 			}
 
+	}
+	}
+
+@Before
+	protected static void setCurrentUser() {
+		if (hasSession()) {
+			currentUser = User.find("byEmail",
+					session.get(CookieValuesConstants.LOGIN_EMAIL)).first();
+			
+			if (currentUser != null
+					&& !currentUser
+							.getLoginInformation()
+							.getLoginToken()
+							.equals(session
+									.get(CookieValuesConstants.LOGIN_TOKEN))) {
+				currentUser = null;
+			}
 		}
 	}
 
+	@Before
+	protected static void checkAuthorization() {
+		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
+		boolean authorized = false;
+		if (rus != null && currentUser != null) {
+			
+			// check if user has what it needs
+			for (UserType ut : rus.userTypes()) {
+				if (ut.equals(currentUser.getUserType())) {
+					authorized = true;
+					break;
+				}
+			}
+
+		} else if (rus == null) {
+			authorized = true;
+		}
+
+		if (!authorized) {
+			flashError("user.not.authorized");
+			Logger.info("An attempt to access a forbiden resource from IP:"
+					+ request.remoteAddress);
+			if (currentUser!=null) {
+				Application.index();
+			} else {
+				Users.login();
+			}
+			
+		}
+	}
+
+	
 	/**
 	 * Remove all auto login cookies from client
 	 */
-	protected static void removeAutoLoginCookies() {
-
+	protected static void clearUserSessionData() {
+		
 		response.removeCookie(CookieValuesConstants.REMEMBER_ME);
 		response.removeCookie(CookieValuesConstants.REMEMBER_ME_TOKEN);
 		response.cookies.remove(CookieValuesConstants.REMEMBER_ME);
 		response.cookies.remove(CookieValuesConstants.REMEMBER_ME_TOKEN);
-
+		session.remove(CookieValuesConstants.LOGIN_EMAIL);
+		session.remove(CookieValuesConstants.LOGIN_TOKEN);
+		
+		currentUser = null;
 	}
 
 	protected static void authenticateUser(User user) {

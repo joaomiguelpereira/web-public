@@ -22,9 +22,6 @@ import models.enums.UserType;
 
 public class Users extends Application {
 
-	@Inject
-	private static UserService userService;
-
 	/**
 	 * Blank form to create a new user
 	 * 
@@ -52,8 +49,8 @@ public class Users extends Application {
 			if (user != null) {
 				user.invalidateLoginToken();
 			}
-			session.clear();
-			removeAutoLoginCookies();
+			
+			clearUserSessionData();
 
 			flashSuccess("logout.successfull");
 			Application.index();
