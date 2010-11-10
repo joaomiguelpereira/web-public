@@ -1,73 +1,77 @@
 /* CSS Document */
 @import url(common.css);
+
 @import url(header.css);
+
 @import url(footer.css);
+
 @import url(forms.css);
+
 @import url(header-menu.css);
-
-
-
-
 
 body {
 	margin: 0px;
 	padding: 0px;
-	font-family: Arial,Helvetica,sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 /*Page Header Overrides*/
 #page-header-wrapper {
-    width: auto;
-    height: 115px;
-    margin: 0px;
-    padding: 0px;
-    background: url(../images/headerbg.png) repeat-x;
-    min-width: 480px;
+	width: auto;
+	height: 115px;
+	margin: 0px;
+	padding: 0px;
+	background: url(../images/headerbg.png) repeat-x;
+	min-width: 480px;
 }
+
 #page-header {
 	width: auto;
 	margin: auto;
-	padding:20px;
+	padding: 20px;
 	min-width: 480px;
 }
 
 #page-header #logo {
-    padding-top: 5px;
- 
+	padding-top: 5px;
 }
 
-#page-header #login {
+#page-header #inlineLogin {
 	float: right;
 	padding-top: 5px;
-	margin-left:0;
+	margin-left: 0;
+}
+
+#inlineLogin #inlineLoginPanel {
+	position: absolute;
+	height: 200px;
+	
 }
 
 /*end Header Overrides*/
-
 /*footer overrides*/
 #page-footer-wrapper {
-    width: auto;
-    height: 80px;
-    min-width: 480px;
-    background-color: #344349;
+	width: auto;
+	height: 80px;
+	min-width: 480px;
+	background-color: #344349;
 }
-#page-footer {
-    width: auto;
-    margin: auto;
-    color: #fff;
-}
-/* end footer overrides*/
 
+#page-footer {
+	width: auto;
+	margin: auto;
+	color: #fff;
+}
+
+/* end footer overrides*/
 /*Start Content stuff*/
 #content {
 	width: auto;
-    margin: auto;
-    height:100%;
-    min-height: 500px;
-    
-    min-width: 480px;
-    padding: 20px;
-    background-color: #f4f5f6;
+	margin: auto;
+	height: 100%;
+	min-height: 500px;
+	min-width: 480px;
+	padding: 20px;
+	background-color: #f4f5f6;
 }
-
 /*end forms stuff*/

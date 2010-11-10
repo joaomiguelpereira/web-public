@@ -23,10 +23,3 @@
     border: none;
     padding: 0;
 }
-
-#page-header #login {
-    width: 593px;
-    float: left;
-    padding-top: 20px;
-    text-align: right;
-}

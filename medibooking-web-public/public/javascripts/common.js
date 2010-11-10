@@ -10,6 +10,7 @@ var FormUtils = {
 	}
 };
 
+
 var FloatingMessagesUtils = {
 	close : function() {
 		$('#floating-message-wrapper').hide();
@@ -21,7 +22,7 @@ var FloatingMessagesUtils = {
 	}
 };
 
-// Add common windo onLoad events
+// Add common window onLoad events
 $(window).load(function() {
 
 	if ($('#floating-message-wrapper')) {
@@ -39,5 +40,4 @@ $(window).scroll(function() {
 			"easing" : "easeInCubic"
 		});
 	}
-
 });
