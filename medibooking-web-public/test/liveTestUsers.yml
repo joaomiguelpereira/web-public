@@ -3,4 +3,11 @@ User(joao):
   email: joaomiguel.pereira@gmail.com
   password: 12345
   active: true
+
+User(oadmin):
+  name: Office Admin Pereira
+  email: oadmin@gmail.com
+  password: 12345
+  active: true
+  userType: models.enums.UserType.OFFICE_ADMIN
   

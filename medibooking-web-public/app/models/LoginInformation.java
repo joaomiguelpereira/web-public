@@ -10,6 +10,7 @@ public class LoginInformation {
 		unsuccessfullLoginCount = 0;
 		successfulLoginCount = 0L;
 		unsuccessfullLoginCountBeforeSuccessfulLogin = 0;
+		loginToken = "";
 	}
 	
 	private String loginToken;

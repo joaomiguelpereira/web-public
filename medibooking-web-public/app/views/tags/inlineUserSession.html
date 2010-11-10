@@ -1,9 +1,10 @@
-#{if !session.contains(constants.CookieValuesConstants.LOGIN_TOKEN) }
-  #{if request.action!="Users.login" && request.action!="Users.authenticate" && request.action!= "Users.blank" } 
+#{if !_hasSession }
+
+  #{if request.action!="Users.login" && request.action!="Users.authenticate"  } 
     #{inlineLoginForm/} 
   #{/if}
 #{/if}
-#{if session.contains(constants.CookieValuesConstants.LOGIN_TOKEN) }
+#{if _hasSession }
 	#{inlineUserSessionOptions/} 
 #{/if}
 
