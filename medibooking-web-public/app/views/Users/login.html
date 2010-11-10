@@ -34,6 +34,20 @@
                     #{/ifErrors}
             	</div>
             #{/field}
+            
+			#{field 'keepLogged'}
+                <div class="${field.errorClass}">
+                    <input type="checkbox" name="${field.name}" value="true" ${(params[field.name] ? params.getAll(field.name)[0] == 'true' : _value) ? 'checked="true"'.raw() : ''} id="${field.name}"/>
+                    <label class="checkbox" for="${field.name}">Manter a sessão activa durante 30 dias</label>
+                    <div class="clearfix"></div>
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+            	</div>
+            #{/field}
+
+            
+            
                         
 		    <div class="buttons">
 		    	<input type="submit" value="&{'forms.login.authenticate'}"> 
