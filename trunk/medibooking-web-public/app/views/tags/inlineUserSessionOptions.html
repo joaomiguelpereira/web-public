@@ -1,0 +1,6 @@
+<div id="inlineLogin">
+${session.get(constants.CookieValuesConstants.LOGIN_EMAIL)}
+#{form @Users.logout(), id:'logoutForm'}
+	<input type="submit" value="&{'forms.logout'}"> 
+#{/form}
+</div>

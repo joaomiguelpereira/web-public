@@ -6,27 +6,13 @@ import play.mvc.*;
 
 import java.util.*;
 
+import constants.CookieValuesConstants;
+
 import models.*;
 
-public class Application extends Controller {
+public class Application extends BaseController {
 
 	
-	protected static void flashError(String i18nKey) {
-		flash.clear();
-		flash.error(Messages.get(i18nKey));
-	}
-	
-
-	protected static void flashSuccess(String i18nKey) {
-		flash.clear();
-		flash.success(Messages.get(i18nKey));
-	}
-	
-	
-	protected static void flashWarning(String i18nKey) {
-		flash.clear();
-		flash.put("warning",Messages.get(i18nKey));
-	}
 	
     public static void index() {
         

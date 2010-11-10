@@ -31,7 +31,14 @@ public class Users extends Application {
 	 * @param userType
 	 */
 	public static void blank(UserType userType) {
-		render(userType);
+
+		if (!hasSession()) {
+			render(userType);
+		} else {
+			flashWarning("login.session.exists");
+			Application.index();
+		}
+
 	}
 
 	public static void logout() {
@@ -46,10 +53,11 @@ public class Users extends Application {
 				user.invalidateLoginToken();
 			}
 			session.clear();
-			response.cookies.clear();
+			removeAutoLoginCookies();
+
 			flashSuccess("logout.successfull");
-			render("@Application.index");
-			
+			Application.index();
+
 		}
 	}
 
@@ -65,6 +73,7 @@ public class Users extends Application {
 	 */
 	public static void authenticate(String email, String password,
 			boolean keepLogged) {
+		Logger.debug("Keeplogged:" + keepLogged);
 		// verify the presence of email
 		validation.required(email, Messages.get("login.invalid.email"));
 		validation.required(password, Messages.get("login.invalid.password"));
@@ -87,30 +96,45 @@ public class Users extends Application {
 				response.status = 401;
 				render("@login", email);
 			} else {
-				// set user login in session
-				session.put(CookieValuesConstants.LOGIN_TOKEN, loginToken);
-				session.put(CookieValuesConstants.LOGIN_EMAIL, user.getEmail());
+				authenticateUser(user);
+
 				if (keepLogged) {
+
 					response.setCookie(
 							CookieValuesConstants.REMEMBER_ME,
-							Crypto.sign(user.getEmail()) + "-"
+							Crypto.sign(user.getEmail())
+									+ CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
 									+ user.getEmail(),
 							CookieValuesConstants.REMEMBER_ME_DURATION);
+
+					response.setCookie(
+							CookieValuesConstants.REMEMBER_ME_TOKEN,
+							Crypto.sign(user.getLoginInformation()
+									.getLoginToken())
+									+ CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
+									+ user.getLoginInformation()
+											.getLoginToken(),
+							CookieValuesConstants.REMEMBER_ME_DURATION);
+
 				}
 
 				flashSuccess("login.successful");
-				render("@Application.index");
+				Application.index();
 			}
 		} else {
 			flashError("login.innactive.user");
-			response.status = 401;
-			render("@Application.index");
+			Application.index();
 
 		}
 	}
 
 	public static void login() {
-		render();
+		if (!hasSession()) {
+			render();
+		} else {
+			flashWarning("login.session.exists");
+			Application.index();
+		}
 	}
 
 	/**
