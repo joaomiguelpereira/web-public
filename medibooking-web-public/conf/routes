@@ -16,6 +16,7 @@ POST /user/{userType}				     		Users.save
 GET /users							     		Users.index
 GET /user/registrationConfirmation				Users.userCreatedConfirmation
 GET /user/activate/{activationKey}				Users.activateUser
+GET /login										Users.login
 
 
 
