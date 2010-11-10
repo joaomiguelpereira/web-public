@@ -12,6 +12,6 @@
     assertNotTitle('Application error')
 	assertTitle(${play.i18n.Messages.get('user.activate')})
 	type('activationKey', ${bob.activationUUID})
-	clickAndWait('css=input[type=submit]')
+	clickAndWait(//input[@value="${play.i18n.Messages.get('forms.activate.account.button.label')}"])
 	assertTitle(${play.i18n.Messages.get('user.afterRegistration.nextSteps')})
 #{/selenium}
