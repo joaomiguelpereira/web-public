@@ -1,11 +1,14 @@
-#{if !_hasSession }
-
+#{mb.auth.requireNoUser}
   #{if request.action!="Users.login" && request.action!="Users.authenticate"  } 
     #{inlineLoginForm/} 
   #{/if}
-#{/if}
-#{if _hasSession }
+#{/mb.auth.requireNoUser}
+    	
+
+#{mb.auth.requireUser}
 	#{inlineUserSessionOptions/} 
-#{/if}
+#{/mb.auth.requireUser}
+    	
+
 
 
