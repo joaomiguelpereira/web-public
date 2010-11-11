@@ -15,6 +15,7 @@
         
         
         #{get 'moreScripts' /}
+        #{get 'inlineScripts' /}
         
          
        
@@ -22,61 +23,61 @@
     </head>
     <body>
     	
-    	
-        #{floating-messages /}
-        <div id="page-header-wrapper">
-            
-            <div id="page-header">
-                <div id="logo">
-                    <a href="@{Application.index}"><img src="@{'/public/images/logo.png'}"/></a>
-                </div> <!-- End Logo -->
-                
-               
-               #{inlineUserSession hasSession:hasSession/}
-               
-                <div id="menu" class="clearfix">
-                    <ul>
-                        <li class="selected">Marcar Consulta</li>
-                        <li><a href="">Como funciona</a></li>
-                    </ul>
-                </div><!-- End Menu -->
-            </div> <!-- End Page Header -->
-        </div><!-- End Page Header Wrapper -->
-    	<div id="content" class="clearfix">
-    	   #{doLayout /}
-    	</div><!--End content-->
-    	<div class="clearfix"></div>
-    	<div id="page-footer-wrapper">
-    	   <div id="page-footer">
-    	       <div id="containers">
-    	           
-    	           <div id="first">
-    	               <a href="@{Offices.index}">Consultórios e clínicas</a>
-    	               <a href="@{Offices.preRegister}">Tornar-se parceiro</a>
-    	               <a href="@{Users.blank(models.enums.UserType.OFFICE_ADMIN)}">Criar conta de dono</a>
-    	               <a href="@{Users.blank(models.enums.UserType.USER)}">Criar conta normal</a>
-    	               
-    	           </div><!-- End first-->
-    	           <div id="second">
-    	               Second COntainer
-    	           </div><!--End second-->
-    	           <div id="third">
-    	               Third COntainer
-                   </div><!--End third-->
-                   
-                   <div id="fourth">
-                        Fourth COntainer
-                   </div><!--end fourth-->
-               
-               </div><!--End containers-->
-               <div id="end" class="clearfix">
-                    Copy
-               </div> <!--End end-->
-    	   </div><!--End page-footer-->
-    	</div> <!--page-footer-wrapper-->
-
-    	
-    	
-        
+    	<div id="page-main-wrapper">
+	        #{floating-messages /}
+	        <div id="page-header-wrapper">
+	            
+	            <div id="page-header">
+	                <div id="logo">
+	                    <a href="@{Application.index}"><img src="@{'/public/images/logo.png'}"/></a>
+	                </div> <!-- End Logo -->
+	                
+	               
+	               #{inlineUserSession hasSession:hasSession/}
+	               
+	                <div id="menu" class="clearfix">
+	                    <ul>
+	                        <li class="selected">Marcar Consulta</li>
+	                        <li><a href="">Como funciona</a></li>
+	                    </ul>
+	                </div><!-- End Menu -->
+	            </div> <!-- End Page Header -->
+	        </div><!-- End Page Header Wrapper -->
+	    	<div id="content" class="clearfix">
+	    	   #{doLayout /}
+	    	</div><!--End content-->
+	    	<div class="clearfix"></div>
+	    	<div id="page-footer-wrapper">
+	    	   <div id="page-footer">
+	    	       <div id="containers">
+	    	           
+	    	           <div id="first">
+	    	               <a href="@{Offices.index}">Consultórios e clínicas</a>
+	    	               <a href="@{Offices.preRegister}">Tornar-se parceiro</a>
+	    	               <a href="@{Users.blank(models.enums.UserType.OFFICE_ADMIN)}">Criar conta de dono</a>
+	    	               <a href="@{Users.blank(models.enums.UserType.USER)}">Criar conta normal</a>
+	    	               
+	    	           </div><!-- End first-->
+	    	           <div id="second">
+	    	               Second COntainer
+	    	           </div><!--End second-->
+	    	           <div id="third">
+	    	               Third COntainer
+	                   </div><!--End third-->
+	                   
+	                   <div id="fourth">
+	                        Fourth COntainer
+	                   </div><!--end fourth-->
+	               
+	               </div><!--End containers-->
+	               <div id="end" class="clearfix">
+	                    Copy
+	               </div> <!--End end-->
+	    	   </div><!--End page-footer-->
+	    	</div> <!--page-footer-wrapper-->
+	
+	    	
+	    	
+     </div>
     </body>
 </html>

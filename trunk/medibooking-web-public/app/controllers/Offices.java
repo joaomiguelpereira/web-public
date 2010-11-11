@@ -31,7 +31,7 @@ public class Offices extends Application {
 	}
 	
 	@SuppressWarnings("unused")
-	@Before(only = { "preRegister", "savePreRegister" })
+	@Before(only = { "preRegister", "savePreRegistration" })
 	private static void setRenderArgs() {
 		// Pass the literals of the enum to the template
 		renderArgs.put("clinicBusinessTypeLiteral",
