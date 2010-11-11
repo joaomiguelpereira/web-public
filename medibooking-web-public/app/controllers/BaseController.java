@@ -14,26 +14,27 @@ import play.mvc.Http.Cookie;
 
 public class BaseController extends Controller {
 
-	protected static User currentUser = null;
+	/**
+	 * Current logged in user. Each Thread has its own copy
+	 */
+	protected static ThreadLocal<User> currentUser = new ThreadLocal<User>();
 
 	/**
 	 * Check if a valid session exists
-	 * 
 	 * @return True if a valid session exists, false otherwise
 	 */
 	protected static boolean hasSession() {
 		return session.contains(CookieValuesConstants.LOGIN_TOKEN)
-				&& session.contains(CookieValuesConstants.LOGIN_EMAIL);
+				&& session.contains(CookieValuesConstants.LOGIN_EMAIL)
+				&& session.contains(CookieValuesConstants.USER_TYPE);
 	}
-
-	
 
 	/**
 	 * check if a "remember me" cookie exists in client and login user if yes
 	 */
 	@Before
 	protected static void doAutoLogin() {
-
+		Logger.debug("doAutoLogin");
 		boolean authenticationSuccessfull = false;
 
 		// Do it only if there's no session
@@ -67,7 +68,7 @@ public class BaseController extends Controller {
 							&& user.getLoginInformation().getLoginToken() != null
 							&& user.getLoginInformation().getLoginToken()
 									.equals(lgToken)) {
-						authenticateUser(user);
+						createAuthenticateUserSessionData(user);
 						Logger.debug("Auto Login done");
 						authenticationSuccessfull = true;
 
@@ -76,38 +77,52 @@ public class BaseController extends Controller {
 
 			}
 			if (!authenticationSuccessfull) {
-				clearUserSessionData();
+				clearAuthenticatedUserSessionData();
 			}
 
 		}
 	}
 
+	/**
+	 * Set the current user
+	 */
 	@Before
 	protected static void setCurrentUser() {
+		Logger.debug("setCurrentUser");
 		if (hasSession()) {
-			currentUser = User.find("byEmail",
+
+			User aCurrentUser = User.find("byEmail",
 					session.get(CookieValuesConstants.LOGIN_EMAIL)).first();
 
-			if (currentUser != null
+			currentUser.set(aCurrentUser);
+
+			if (currentUser.get() != null
 					&& !currentUser
+							.get()
 							.getLoginInformation()
 							.getLoginToken()
 							.equals(session
 									.get(CookieValuesConstants.LOGIN_TOKEN))) {
-				currentUser = null;
+				
+				//Also clear login data
+				clearAuthenticatedUserSessionData();
 			}
 		}
 	}
 
+	/**
+	 * Check authorization to the action
+	 */
 	@Before
-	protected static void checkAuthorization() {
+	protected static void checkActionAuthorization() {
+		Logger.debug("checkAuthorization");
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
 		boolean authorized = false;
-		if (rus != null && currentUser != null) {
+		if (rus != null && currentUser.get() != null) {
 
 			// check if user has what it needs
 			for (UserType ut : rus.userTypes()) {
-				if (ut.equals(currentUser.getUserType())) {
+				if (ut.equals(currentUser.get().getUserType())) {
 					authorized = true;
 					break;
 				}
@@ -121,7 +136,7 @@ public class BaseController extends Controller {
 			flashError("user.not.authorized");
 			Logger.info("An attempt to access a forbiden resource from IP:"
 					+ request.remoteAddress);
-			if (currentUser != null) {
+			if (currentUser.get() != null) {
 				Application.index();
 			} else {
 				Users.login();
@@ -131,39 +146,57 @@ public class BaseController extends Controller {
 	}
 
 	/**
-	 * Remove all auto login cookies from client
+	 * Remove all auto login cookies from client and clear current user
 	 */
-	protected static void clearUserSessionData() {
+	protected static void clearAuthenticatedUserSessionData() {
 
-		response.removeCookie(CookieValuesConstants.REMEMBER_ME);
-		response.removeCookie(CookieValuesConstants.REMEMBER_ME_TOKEN);
-		response.cookies.remove(CookieValuesConstants.REMEMBER_ME);
-		response.cookies.remove(CookieValuesConstants.REMEMBER_ME_TOKEN);
+		response.removeCookie(CookieValuesConstants.REMEMBER_ME); //set the cookie value to ""
+		response.removeCookie(CookieValuesConstants.REMEMBER_ME_TOKEN); //set the cookie value to ""
+		response.cookies.remove(CookieValuesConstants.REMEMBER_ME); //remove the key from the map
+		response.cookies.remove(CookieValuesConstants.REMEMBER_ME_TOKEN); //remove the key from the map
 		session.remove(CookieValuesConstants.LOGIN_EMAIL);
 		session.remove(CookieValuesConstants.LOGIN_TOKEN);
 		session.remove(CookieValuesConstants.USER_TYPE);
-		
 
-		currentUser = null;
+		//Let me be here, please!!!!???
+		currentUser.set(null);
 	}
 
-	protected static void authenticateUser(User user) {
+	/**
+	 * Create required session data for authenticated user
+	 * @param user
+	 */
+	protected static void createAuthenticateUserSessionData(User user) {
 		// set user login in session
 		session.put(CookieValuesConstants.LOGIN_TOKEN, user
 				.getLoginInformation().getLoginToken());
 		session.put(CookieValuesConstants.LOGIN_EMAIL, user.getEmail());
-		session.put(CookieValuesConstants.USER_TYPE, user.getUserType().toString());
+		session.put(CookieValuesConstants.USER_TYPE, user.getUserType()
+				.toString());
 	}
 
+	/**
+	 * Shortcut to put a message into error flash
+	 * @param i18nKey the i18nKey containing the message
+	 */ 
 	protected static void flashError(String i18nKey) {
 		flash.clear();
 		flash.error(Messages.get(i18nKey));
 	}
 
+	/**
+	 * Shortcut to put a message into success flash
+	 * @param i18nKey the i18nKey containing the message
+	 */ 
 	protected static void flashSuccess(String i18nKey) {
 		flash.clear();
 		flash.success(Messages.get(i18nKey));
 	}
+
+	/**
+	 * Shortcut to put a message into warning flash
+	 * @param i18nKey the i18nKey containing the message
+	 */ 
 
 	protected static void flashWarning(String i18nKey) {
 		flash.clear();

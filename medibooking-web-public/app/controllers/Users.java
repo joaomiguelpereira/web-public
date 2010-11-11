@@ -50,7 +50,7 @@ public class Users extends Application {
 				user.invalidateLoginToken();
 			}
 			
-			clearUserSessionData();
+			clearAuthenticatedUserSessionData();
 
 			flashSuccess("logout.successfull");
 			Application.index();
@@ -93,7 +93,7 @@ public class Users extends Application {
 				response.status = 401;
 				render("@login", email);
 			} else {
-				authenticateUser(user);
+				createAuthenticateUserSessionData(user);
 
 				if (keepLogged) {
 
