@@ -13,14 +13,11 @@ public class Bootstrap extends Job<String> {
 	@Override
 	public void doJob() throws Exception {
 
-		org.hsqldb.util.DatabaseManagerSwing.main(new String[] { "--url",
-				"jdbc:hsqldb:mem:playembed", "--noexit" });
-
+		//loadHSQLConsole();
 		// load dummy users
-		
 		prepareTestData();
 	}
-	
+
 	private void prepareTestData() {
 		Fixtures.load("liveTestUsers.yml");
 		User u = User.find("byEmail", "oadmin@gmail.com").first();
@@ -28,4 +25,9 @@ public class Bootstrap extends Job<String> {
 		u.save();
 	}
 
+	private void loadHSQLConsole() {
+		org.hsqldb.util.DatabaseManagerSwing.main(new String[] { "--url",
+				"jdbc:hsqldb:mem:playembed", "--noexit" });
+
+	}
 }
