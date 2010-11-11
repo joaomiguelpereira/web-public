@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import constants.CookieValuesConstants;
+import constants.SessionValuesConstants;
 import controllers.Users;
 
 import play.Logger;
@@ -70,16 +70,16 @@ public class UsersTest extends ApplicationFunctionalTest {
 		User user = User.find("byEmail", "active@gmail.com").first();
 		assertNull(user.getLoginInformation().getLoginToken());
 		assertNull(Scope.Session.current().get(
-				CookieValuesConstants.LOGIN_EMAIL));
+				SessionValuesConstants.LOGIN_EMAIL));
 		assertNull(Scope.Session.current().get(
-				CookieValuesConstants.LOGIN_TOKEN));
+				SessionValuesConstants.LOGIN_TOKEN));
 		
 		
 		Http.Cookie cookieRM = response.cookies
-				.get(CookieValuesConstants.REMEMBER_ME);
+				.get(SessionValuesConstants.REMEMBER_ME);
 		
 		Http.Cookie cookieLgTokenValue = response.cookies
-				.get(CookieValuesConstants.REMEMBER_ME_TOKEN);
+				.get(SessionValuesConstants.REMEMBER_ME_TOKEN);
 		assertNull(cookieLgTokenValue);
 		assertNull(cookieRM);
 	}
@@ -141,10 +141,10 @@ public class UsersTest extends ApplicationFunctionalTest {
 				.getSuccessfulLoginCount());
 
 		assertEquals(
-				Scope.Session.current().get(CookieValuesConstants.LOGIN_EMAIL),
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_EMAIL),
 				"active@gmail.com");
 		assertEquals(
-				Scope.Session.current().get(CookieValuesConstants.LOGIN_TOKEN),
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_TOKEN),
 				user.getLoginInformation().getLoginToken());
 
 	}
@@ -162,23 +162,23 @@ public class UsersTest extends ApplicationFunctionalTest {
 		assertEquals(Long.valueOf(1L), user.getLoginInformation()
 				.getSuccessfulLoginCount());
 		assertEquals(
-				Scope.Session.current().get(CookieValuesConstants.LOGIN_EMAIL),
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_EMAIL),
 				"active@gmail.com");
 		assertEquals(
-				Scope.Session.current().get(CookieValuesConstants.LOGIN_TOKEN),
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_TOKEN),
 				user.getLoginInformation().getLoginToken());
 		
 		Http.Cookie cookieEmail = response.cookies
-				.get(CookieValuesConstants.REMEMBER_ME);
+				.get(SessionValuesConstants.REMEMBER_ME);
 		
-		assertEquals(Crypto.sign(user.getEmail()) + CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR + user.getEmail(),
+		assertEquals(Crypto.sign(user.getEmail()) + SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR + user.getEmail(),
 				cookieEmail.value);
 
 	
 		Http.Cookie cookieLgToken = response.cookies
-		.get(CookieValuesConstants.REMEMBER_ME_TOKEN);
+		.get(SessionValuesConstants.REMEMBER_ME_TOKEN);
 
-assertEquals(Crypto.sign(user.getLoginInformation().getLoginToken()) + CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR + user.getLoginInformation().getLoginToken(),
+assertEquals(Crypto.sign(user.getLoginInformation().getLoginToken()) + SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR + user.getLoginInformation().getLoginToken(),
 		cookieLgToken.value);
 
 	

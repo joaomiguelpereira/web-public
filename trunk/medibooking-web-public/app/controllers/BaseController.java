@@ -3,7 +3,8 @@ package controllers;
 import annotations.authorization.RequiresUserSession;
 import models.User;
 import models.enums.UserType;
-import constants.CookieValuesConstants;
+import constants.Constants;
+import constants.SessionValuesConstants;
 import play.Logger;
 import play.i18n.Messages;
 import play.mvc.Before;
@@ -21,12 +22,13 @@ public class BaseController extends Controller {
 
 	/**
 	 * Check if a valid session exists
+	 * 
 	 * @return True if a valid session exists, false otherwise
 	 */
 	protected static boolean hasSession() {
-		return session.contains(CookieValuesConstants.LOGIN_TOKEN)
-				&& session.contains(CookieValuesConstants.LOGIN_EMAIL)
-				&& session.contains(CookieValuesConstants.USER_TYPE);
+		return session.contains(SessionValuesConstants.LOGIN_TOKEN)
+				&& session.contains(SessionValuesConstants.LOGIN_EMAIL)
+				&& session.contains(SessionValuesConstants.USER_TYPE);
 	}
 
 	/**
@@ -34,30 +36,30 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void doAutoLogin() {
-		Logger.debug("doAutoLogin");
+
 		boolean authenticationSuccessfull = false;
 
 		// Do it only if there's no session
 		if (!hasSession()) {
 
 			Cookie cookieEmail = request.cookies
-					.get(CookieValuesConstants.REMEMBER_ME);
+					.get(SessionValuesConstants.REMEMBER_ME);
 			Cookie cookieLgToken = request.cookies
-					.get(CookieValuesConstants.REMEMBER_ME_TOKEN);
+					.get(SessionValuesConstants.REMEMBER_ME_TOKEN);
 
 			if (cookieEmail != null && cookieLgToken != null) {
 
 				// get the value for email
 				String cookieEmailValue = cookieEmail.value;
 				String[] tmpTokens = cookieEmailValue
-						.split(CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
+						.split(SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
 				String email = tmpTokens.length == 2 ? tmpTokens[1] : null;
 
 				// get the value for login token
 				String cookieLgTokenValue = cookieLgToken.value;
 
 				tmpTokens = cookieLgTokenValue
-						.split(CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
+						.split(SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
 
 				String lgToken = tmpTokens.length == 2 ? tmpTokens[1] : null;
 
@@ -69,7 +71,6 @@ public class BaseController extends Controller {
 							&& user.getLoginInformation().getLoginToken()
 									.equals(lgToken)) {
 						createAuthenticateUserSessionData(user);
-						Logger.debug("Auto Login done");
 						authenticationSuccessfull = true;
 
 					}
@@ -88,11 +89,11 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void setCurrentUser() {
-		Logger.debug("setCurrentUser");
+
 		if (hasSession()) {
 
 			User aCurrentUser = User.find("byEmail",
-					session.get(CookieValuesConstants.LOGIN_EMAIL)).first();
+					session.get(SessionValuesConstants.LOGIN_EMAIL)).first();
 
 			currentUser.set(aCurrentUser);
 
@@ -102,9 +103,9 @@ public class BaseController extends Controller {
 							.getLoginInformation()
 							.getLoginToken()
 							.equals(session
-									.get(CookieValuesConstants.LOGIN_TOKEN))) {
-				
-				//Also clear login data
+									.get(SessionValuesConstants.LOGIN_TOKEN))) {
+
+				// Also clear login data
 				clearAuthenticatedUserSessionData();
 			}
 		}
@@ -116,6 +117,8 @@ public class BaseController extends Controller {
 	@Before
 	protected static void checkActionAuthorization() {
 		Logger.debug("checkAuthorization");
+		// Get requested Action/Controller
+
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
 		boolean authorized = false;
 		if (rus != null && currentUser.get() != null) {
@@ -136,13 +139,29 @@ public class BaseController extends Controller {
 			flashError("user.not.authorized");
 			Logger.info("An attempt to access a forbiden resource from IP:"
 					+ request.remoteAddress);
+			
 			if (currentUser.get() != null) {
-				Application.index();
+				forbidden(Messages.get("insufficent.privileges"));
 			} else {
+				// save current location
+				flash.put(Constants.FLASH_LAST_URL,
+						request.method == "GET" ? request.url : "/");
 				Users.login();
 			}
 
 		}
+	}
+
+	
+
+	protected static void redirectToLastRequestedResource() {
+		String url = flash.get(Constants.FLASH_LAST_URL);
+		Logger.debug("Saved URR: " + url);
+		if (url == null) {
+			url = "/";
+		}
+		redirect(url);
+
 	}
 
 	/**
@@ -150,56 +169,70 @@ public class BaseController extends Controller {
 	 */
 	protected static void clearAuthenticatedUserSessionData() {
 
-		response.removeCookie(CookieValuesConstants.REMEMBER_ME); //set the cookie value to ""
-		response.removeCookie(CookieValuesConstants.REMEMBER_ME_TOKEN); //set the cookie value to ""
-		response.cookies.remove(CookieValuesConstants.REMEMBER_ME); //remove the key from the map
-		response.cookies.remove(CookieValuesConstants.REMEMBER_ME_TOKEN); //remove the key from the map
-		session.remove(CookieValuesConstants.LOGIN_EMAIL);
-		session.remove(CookieValuesConstants.LOGIN_TOKEN);
-		session.remove(CookieValuesConstants.USER_TYPE);
+		// set the cookie value to ""
+		response.removeCookie(SessionValuesConstants.REMEMBER_ME);
+		// set the cookie value to ""
 
-		//Let me be here, please!!!!???
+		response.removeCookie(SessionValuesConstants.REMEMBER_ME_TOKEN);
+		// remove the cookie from map
+		response.cookies.remove(SessionValuesConstants.REMEMBER_ME);
+
+		// remove the cookie from map
+		response.cookies.remove(SessionValuesConstants.REMEMBER_ME_TOKEN);
+		session.remove(SessionValuesConstants.LOGIN_EMAIL);
+		session.remove(SessionValuesConstants.LOGIN_TOKEN);
+		session.remove(SessionValuesConstants.USER_TYPE);
+
+		// Let me be here, please!!!!???
 		currentUser.set(null);
 	}
 
 	/**
 	 * Create required session data for authenticated user
+	 * 
 	 * @param user
 	 */
 	protected static void createAuthenticateUserSessionData(User user) {
 		// set user login in session
-		session.put(CookieValuesConstants.LOGIN_TOKEN, user
+		session.put(SessionValuesConstants.LOGIN_TOKEN, user
 				.getLoginInformation().getLoginToken());
-		session.put(CookieValuesConstants.LOGIN_EMAIL, user.getEmail());
-		session.put(CookieValuesConstants.USER_TYPE, user.getUserType()
+		session.put(SessionValuesConstants.LOGIN_EMAIL, user.getEmail());
+		session.put(SessionValuesConstants.USER_TYPE, user.getUserType()
 				.toString());
 	}
 
+	
+	
 	/**
 	 * Shortcut to put a message into error flash
-	 * @param i18nKey the i18nKey containing the message
-	 */ 
+	 * 
+	 * @param i18nKey
+	 *            the i18nKey containing the message
+	 */
 	protected static void flashError(String i18nKey) {
-		flash.clear();
 		flash.error(Messages.get(i18nKey));
 	}
 
 	/**
 	 * Shortcut to put a message into success flash
-	 * @param i18nKey the i18nKey containing the message
-	 */ 
+	 * 
+	 * @param i18nKey
+	 *            the i18nKey containing the message
+	 */
 	protected static void flashSuccess(String i18nKey) {
-		flash.clear();
+
 		flash.success(Messages.get(i18nKey));
 	}
 
 	/**
 	 * Shortcut to put a message into warning flash
-	 * @param i18nKey the i18nKey containing the message
-	 */ 
+	 * 
+	 * @param i18nKey
+	 *            the i18nKey containing the message
+	 */
 
 	protected static void flashWarning(String i18nKey) {
-		flash.clear();
+
 		flash.put("warning", Messages.get(i18nKey));
 	}
 
