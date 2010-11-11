@@ -7,5 +7,6 @@ public interface CookieValuesConstants {
 	public static final String REMEMBER_ME_DURATION = "30d";
 	public static final String REMEMBER_ME_TOKEN = "rmLgToken";
 	public static final String COOKIE_SIGNED_VAL_SEPARATOR = ":";
+	public static final String USER_TYPE = "uType";
 
 }

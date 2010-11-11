@@ -26,10 +26,7 @@ public class BaseController extends Controller {
 				&& session.contains(CookieValuesConstants.LOGIN_EMAIL);
 	}
 
-	@Before
-	protected static void setGlobalRenderArgs() {
-		renderArgs.put("hasSession", hasSession());
-	}
+	
 
 	/**
 	 * check if a "remember me" cookie exists in client and login user if yes
@@ -82,15 +79,15 @@ public class BaseController extends Controller {
 				clearUserSessionData();
 			}
 
-	}
+		}
 	}
 
-@Before
+	@Before
 	protected static void setCurrentUser() {
 		if (hasSession()) {
 			currentUser = User.find("byEmail",
 					session.get(CookieValuesConstants.LOGIN_EMAIL)).first();
-			
+
 			if (currentUser != null
 					&& !currentUser
 							.getLoginInformation()
@@ -107,7 +104,7 @@ public class BaseController extends Controller {
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
 		boolean authorized = false;
 		if (rus != null && currentUser != null) {
-			
+
 			// check if user has what it needs
 			for (UserType ut : rus.userTypes()) {
 				if (ut.equals(currentUser.getUserType())) {
@@ -124,28 +121,29 @@ public class BaseController extends Controller {
 			flashError("user.not.authorized");
 			Logger.info("An attempt to access a forbiden resource from IP:"
 					+ request.remoteAddress);
-			if (currentUser!=null) {
+			if (currentUser != null) {
 				Application.index();
 			} else {
 				Users.login();
 			}
-			
+
 		}
 	}
 
-	
 	/**
 	 * Remove all auto login cookies from client
 	 */
 	protected static void clearUserSessionData() {
-		
+
 		response.removeCookie(CookieValuesConstants.REMEMBER_ME);
 		response.removeCookie(CookieValuesConstants.REMEMBER_ME_TOKEN);
 		response.cookies.remove(CookieValuesConstants.REMEMBER_ME);
 		response.cookies.remove(CookieValuesConstants.REMEMBER_ME_TOKEN);
 		session.remove(CookieValuesConstants.LOGIN_EMAIL);
 		session.remove(CookieValuesConstants.LOGIN_TOKEN);
+		session.remove(CookieValuesConstants.USER_TYPE);
 		
+
 		currentUser = null;
 	}
 
@@ -154,6 +152,7 @@ public class BaseController extends Controller {
 		session.put(CookieValuesConstants.LOGIN_TOKEN, user
 				.getLoginInformation().getLoginToken());
 		session.put(CookieValuesConstants.LOGIN_EMAIL, user.getEmail());
+		session.put(CookieValuesConstants.USER_TYPE, user.getUserType().toString());
 	}
 
 	protected static void flashError(String i18nKey) {
