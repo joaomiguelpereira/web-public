@@ -1,8 +1,9 @@
 /*Floating Page Messages*/
 #floating-message-wrapper {
-	position: relative;
+	position: absolute;
 	top: 0;
 	left: 0;
+	right: 0;
 	width: auto;
 	height: 30px;
 	padding: 10px;
