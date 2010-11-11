@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import constants.CookieValuesConstants;
+import constants.Constants;
+import constants.SessionValuesConstants;
 
 import notifiers.UserMailer;
 
@@ -40,11 +41,11 @@ public class Users extends Application {
 
 	public static void logout() {
 		// if the user is not currently logged in
-		if (session.get(CookieValuesConstants.LOGIN_EMAIL) == null) {
+		if (session.get(SessionValuesConstants.LOGIN_EMAIL) == null) {
 			flashWarning("logout.nologinsession");
 			render("@Application.index");
 		} else {
-			String email = session.get(CookieValuesConstants.LOGIN_EMAIL);
+			String email = session.get(SessionValuesConstants.LOGIN_EMAIL);
 			User user = User.find("byEmail", email).first();
 			if (user != null) {
 				user.invalidateLoginToken();
@@ -71,11 +72,13 @@ public class Users extends Application {
 	public static void authenticate(String email, String password,
 			boolean keepLogged) {
 		Logger.debug("Keeplogged:" + keepLogged);
+		Logger.debug("URL HERE NOW IS: "+flash.get(Constants.FLASH_LAST_URL));
 		// verify the presence of email
 		validation.required(email, Messages.get("login.invalid.email"));
 		validation.required(password, Messages.get("login.invalid.password"));
 		if (validation.hasErrors()) {
 			flashError("login.invalid.data");
+			flash.keep(Constants.FLASH_LAST_URL);
 			render("@login");
 		}
 
@@ -84,6 +87,7 @@ public class Users extends Application {
 		if (user == null) {
 			response.status = 401;
 			flashError("login.user.notFound");
+			flash.keep(Constants.FLASH_LAST_URL);
 			render("@login", email);
 		} else if (user.isActive()) {
 			String loginToken = user.authenticate(password,
@@ -91,6 +95,7 @@ public class Users extends Application {
 			if (loginToken == null) {
 				flashError("login.unsuccessful");
 				response.status = 401;
+				flash.keep(Constants.FLASH_LAST_URL);
 				render("@login", email);
 			} else {
 				createAuthenticateUserSessionData(user);
@@ -98,35 +103,41 @@ public class Users extends Application {
 				if (keepLogged) {
 
 					response.setCookie(
-							CookieValuesConstants.REMEMBER_ME,
+							SessionValuesConstants.REMEMBER_ME,
 							Crypto.sign(user.getEmail())
-									+ CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
+									+ SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
 									+ user.getEmail(),
-							CookieValuesConstants.REMEMBER_ME_DURATION);
+							SessionValuesConstants.REMEMBER_ME_DURATION);
 
 					response.setCookie(
-							CookieValuesConstants.REMEMBER_ME_TOKEN,
+							SessionValuesConstants.REMEMBER_ME_TOKEN,
 							Crypto.sign(user.getLoginInformation()
 									.getLoginToken())
-									+ CookieValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
+									+ SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR
 									+ user.getLoginInformation()
 											.getLoginToken(),
-							CookieValuesConstants.REMEMBER_ME_DURATION);
+							SessionValuesConstants.REMEMBER_ME_DURATION);
 
 				}
 
+				
 				flashSuccess("login.successful");
-				Application.index();
+				//Redirect to last requested location
+				redirectToLastRequestedResource();
+				
 			}
 		} else {
 			flashError("login.innactive.user");
-			Application.index();
-
+			redirectToLastRequestedResource();
 		}
 	}
 
+
 	public static void login() {
+		
 		if (!hasSession()) {
+			Logger.debug("URL HER IS: "+flash.get(Constants.FLASH_LAST_URL));
+			flash.keep(Constants.FLASH_LAST_URL);
 			render();
 		} else {
 			flashWarning("login.session.exists");

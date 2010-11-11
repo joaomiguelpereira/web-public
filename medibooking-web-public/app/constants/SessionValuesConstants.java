@@ -1,6 +1,6 @@
 package constants;
 
-public interface CookieValuesConstants {
+public interface SessionValuesConstants {
 	public static final String LOGIN_TOKEN = "lgToken";
 	public static final String LOGIN_EMAIL = "lgEmail";
 	public static final String REMEMBER_ME = "remember";

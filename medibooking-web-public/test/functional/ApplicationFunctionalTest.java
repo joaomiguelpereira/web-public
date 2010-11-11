@@ -8,7 +8,7 @@ import models.User;
 
 import org.junit.Ignore;
 
-import constants.CookieValuesConstants;
+import constants.SessionValuesConstants;
 import controllers.Users;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -45,8 +45,8 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		User user = User.find("byEmail", "active@gmail.com").first();
 		assertEquals(Long.valueOf(1L), user.getLoginInformation()
 				.getSuccessfulLoginCount());
-		assertEquals(Scope.Session.current().get(CookieValuesConstants.LOGIN_EMAIL), "active@gmail.com");
-		assertEquals(Scope.Session.current().get(CookieValuesConstants.LOGIN_TOKEN), user.getLoginInformation().getLoginToken());
+		assertEquals(Scope.Session.current().get(SessionValuesConstants.LOGIN_EMAIL), "active@gmail.com");
+		assertEquals(Scope.Session.current().get(SessionValuesConstants.LOGIN_TOKEN), user.getLoginInformation().getLoginToken());
 		Flash.current().clear();
 		
 	}

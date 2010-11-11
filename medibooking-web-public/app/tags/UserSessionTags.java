@@ -10,7 +10,7 @@ import java.util.Set;
 
 import models.enums.UserType;
 
-import constants.CookieValuesConstants;
+import constants.SessionValuesConstants;
 
 import play.Logger;
 import play.mvc.Scope.Session;
@@ -18,7 +18,7 @@ import play.templates.FastTags;
 import play.templates.JavaExtensions;
 import play.templates.GroovyTemplate.ExecutableTemplate;
 
-@FastTags.Namespace("mb.auth")
+@FastTags.Namespace("session")
 public class UserSessionTags extends FastTags {
 
 	/**
@@ -26,6 +26,22 @@ public class UserSessionTags extends FastTags {
 	 */
 	private static String USER_TYPES_KEY = "userTypes";
 
+	/**
+	 * Render the current user email, if any
+	 * @param args
+	 * @param body
+	 * @param out
+	 * @param template
+	 * @param fromLine
+	 */
+	public static void _userEmail(Map<?, ?> args, Closure body,
+			PrintWriter out, ExecutableTemplate template, int fromLine) {
+		String userEmail = Session.current().get(SessionValuesConstants.LOGIN_EMAIL);
+		if ( userEmail!=null ) {
+			out.println(userEmail);	
+		}
+	}
+	
 	/**
 	 * Tag require user
 	 * 
@@ -39,13 +55,13 @@ public class UserSessionTags extends FastTags {
 			PrintWriter out, ExecutableTemplate template, int fromLine) {
 
 		boolean render = false;
-		if (Session.current().contains(CookieValuesConstants.LOGIN_EMAIL)
+		if (Session.current().contains(SessionValuesConstants.LOGIN_EMAIL)
 				&& Session.current()
-						.contains(CookieValuesConstants.LOGIN_TOKEN)
-				&& Session.current().contains(CookieValuesConstants.USER_TYPE)) {
+						.contains(SessionValuesConstants.LOGIN_TOKEN)
+				&& Session.current().contains(SessionValuesConstants.USER_TYPE)) {
 
 			UserType currentUserType = UserType.valueOf(Session.current().get(
-					CookieValuesConstants.USER_TYPE));
+					SessionValuesConstants.USER_TYPE));
 			Object userTypes = args.get(USER_TYPES_KEY);
 
 			if (userTypes != null) {
@@ -83,10 +99,10 @@ public class UserSessionTags extends FastTags {
 	public static void _requireNoUser(Map<?, ?> args, Closure body,
 			PrintWriter out, ExecutableTemplate template, int fromLine) {
 
-		if (!Session.current().contains(CookieValuesConstants.LOGIN_EMAIL)
+		if (!Session.current().contains(SessionValuesConstants.LOGIN_EMAIL)
 				|| !Session.current().contains(
-						CookieValuesConstants.LOGIN_TOKEN)
-				|| !Session.current().contains(CookieValuesConstants.USER_TYPE)) {
+						SessionValuesConstants.LOGIN_TOKEN)
+				|| !Session.current().contains(SessionValuesConstants.USER_TYPE)) {
 			out.println(JavaExtensions.toString(body));
 
 		}
