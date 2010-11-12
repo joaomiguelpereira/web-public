@@ -8,6 +8,7 @@ import constants.Constants;
 import constants.SessionValuesConstants;
 import play.Logger;
 import play.i18n.Messages;
+import play.libs.Crypto;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Scope;
@@ -27,20 +28,24 @@ public class BaseController extends Controller {
 	 * @return True if a valid session exists, false otherwise
 	 */
 	protected static boolean hasSession() {
+
 		return session.contains(SessionValuesConstants.LOGIN_TOKEN)
 				&& session.contains(SessionValuesConstants.LOGIN_EMAIL)
 				&& session.contains(SessionValuesConstants.USER_TYPE);
 	}
 
 	protected static OfficeOwnable getCurrentOfficeOwner() {
-		
-		if (currentUser.get() instanceof OfficeOwnable ) {
-			return (OfficeOwnable)currentUser.get();
+
+		if (currentUser.get() instanceof OfficeOwnable) {
+			return (OfficeOwnable) currentUser.get();
 		} else {
-			throw new RuntimeException("Expecting current user to be an "+OfficeOwnable.class.getName()+" but is "+currentUser.get().getClass().getName());
+			throw new RuntimeException("Expecting current user to be an "
+					+ OfficeOwnable.class.getName() + " but is "
+					+ currentUser.get().getClass().getName());
 		}
-		
+
 	}
+
 	/**
 	 * check if a "remember me" cookie exists in client and login user if yes
 	 */
@@ -64,7 +69,8 @@ public class BaseController extends Controller {
 				String[] tmpTokens = cookieEmailValue
 						.split(SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
 				String email = tmpTokens.length == 2 ? tmpTokens[1] : null;
-
+				String emailSigned = tmpTokens.length == 2 ? tmpTokens[0]
+						: null;
 				// get the value for login token
 				String cookieLgTokenValue = cookieLgToken.value;
 
@@ -72,7 +78,15 @@ public class BaseController extends Controller {
 						.split(SessionValuesConstants.COOKIE_SIGNED_VAL_SEPARATOR);
 
 				String lgToken = tmpTokens.length == 2 ? tmpTokens[1] : null;
+				String lgTokenSigned = tmpTokens.length == 2 ? tmpTokens[0]
+						: null;
 
+				if (!Crypto.sign(lgToken).equals(lgTokenSigned)
+						|| !Crypto.sign(email).equals(emailSigned)) {
+					clearAuthenticatedUserSessionData();
+					error("Invalid Cookie signature");
+
+				}
 				if (email != null) {
 					// try to find the user
 					User user = User.find("byEmail", email).first();
@@ -99,7 +113,7 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void setCurrentUser() {
-
+		
 		if (hasSession()) {
 
 			User aCurrentUser = User.find("byEmail",
@@ -108,12 +122,16 @@ public class BaseController extends Controller {
 			currentUser.set(aCurrentUser);
 
 			if (currentUser.get() != null
-					&& !currentUser
+					&& (!currentUser
+							.get()
+							.getUserType()
+							.equals(UserType.valueOf(session
+									.get(SessionValuesConstants.USER_TYPE))) || !currentUser
 							.get()
 							.getLoginInformation()
 							.getLoginToken()
 							.equals(session
-									.get(SessionValuesConstants.LOGIN_TOKEN))) {
+									.get(SessionValuesConstants.LOGIN_TOKEN)))) {
 
 				// Also clear login data
 				clearAuthenticatedUserSessionData();
@@ -126,7 +144,7 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void checkActionAuthorization() {
-		
+
 		// Get requested Action/Controller
 
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
@@ -149,9 +167,12 @@ public class BaseController extends Controller {
 			flashError("user.not.authorized");
 			Logger.info("An attempt to access a forbiden resource from IP:"
 					+ request.remoteAddress);
-			
+
 			if (currentUser.get() != null) {
-				forbidden(Messages.get("insufficent.privileges"));
+				
+				flashError("user.not.authorized");
+				Application.index();
+				//forbidden(Messages.get("insufficent.privileges"));
 			} else {
 				// save current location
 				flash.put(Constants.FLASH_LAST_URL,
@@ -161,8 +182,6 @@ public class BaseController extends Controller {
 
 		}
 	}
-
-	
 
 	protected static void redirectToLastRequestedResource() {
 		String url = flash.get(Constants.FLASH_LAST_URL);
@@ -208,10 +227,9 @@ public class BaseController extends Controller {
 		session.put(SessionValuesConstants.LOGIN_EMAIL, user.getEmail());
 		session.put(SessionValuesConstants.USER_TYPE, user.getUserType()
 				.toString());
+
 	}
 
-	
-	
 	/**
 	 * Shortcut to put a message into error flash
 	 * 
