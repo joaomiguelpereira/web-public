@@ -19,7 +19,7 @@ import play.templates.JavaExtensions;
 import play.templates.GroovyTemplate.ExecutableTemplate;
 
 @FastTags.Namespace("session")
-public class UserSessionTags extends FastTags {
+public class UserSessionTags extends BaseFastTags{
 
 	/**
 	 * Constant to avoid the magic values
@@ -55,10 +55,7 @@ public class UserSessionTags extends FastTags {
 			PrintWriter out, ExecutableTemplate template, int fromLine) {
 
 		boolean render = false;
-		if (Session.current().contains(SessionValuesConstants.LOGIN_EMAIL)
-				&& Session.current()
-						.contains(SessionValuesConstants.LOGIN_TOKEN)
-				&& Session.current().contains(SessionValuesConstants.USER_TYPE)) {
+		if (hasSession()) {
 
 			UserType currentUserType = UserType.valueOf(Session.current().get(
 					SessionValuesConstants.USER_TYPE));
