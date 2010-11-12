@@ -15,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Scope;
 import play.mvc.Http.Response;
+import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Flash;
 import play.mvc.Router;
 import play.test.FunctionalTest;
@@ -29,50 +30,77 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 
 	/**
 	 * Call FunctionalTest.GET
+	 * 
 	 * @return
 	 */
 	protected Response get() {
 		return GET(calculateRouteURL());
 	}
-	
-	protected void authenticateUser(String email, String password, boolean keepLogged) {
+
+	/**
+	 * 
+	 * @param url
+	 *            Url to test
+	 * @param expectedUrl
+	 *            The expected URL
+	 * @param expectedUrlparams
+	 *            The params to construct the expected URL. Must have even
+	 * 
+	 */
+	protected void assertRedirectedTo(String url, String expectedUrl,
+			Map<String, Object> expectedUrlparams) {
+		ActionDefinition ad = Router.reverse(expectedUrl, expectedUrlparams);
+		ad.absolute();
+		assertEquals(ad.url, url);
+	}
+
+	protected void authenticateUser(String email, String password,
+			boolean keepLogged) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("email", email);
 		params.put("password", password);
 		params.put("keepLogged", keepLogged);
-		Http.Response response = POST(Router.reverse("Users.authenticate", params));
+		Http.Response response = POST(Router.reverse("Users.authenticate",
+				params));
 		assertSuccessFlashed("login.successful");
-		User user = User.find("byEmail", "active@gmail.com").first();
+		User user = User.find("byEmail", email).first();
 		assertEquals(Long.valueOf(1L), user.getLoginInformation()
 				.getSuccessfulLoginCount());
-		assertEquals(Scope.Session.current().get(SessionValuesConstants.LOGIN_EMAIL), "active@gmail.com");
-		assertEquals(Scope.Session.current().get(SessionValuesConstants.LOGIN_TOKEN), user.getLoginInformation().getLoginToken());
+		assertEquals(
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_EMAIL),
+				email);
+		assertEquals(
+				Scope.Session.current().get(SessionValuesConstants.LOGIN_TOKEN),
+				user.getLoginInformation().getLoginToken());
 		Flash.current().clear();
-		
+
 	}
 
 	protected void assertSuccessFlashed(String i18nKey) {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("success"));
 	}
-	
+
 	protected void assertErrorFlashed(String i18nKey) {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("error"));
 	}
-	
+
 	protected void assertWarningFlashed(String i18nKey) {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("warning"));
 	}
-	
+
 	protected void assertNoErrorFlashed() {
 		assertNull(Flash.current().get("error"));
-		
+
 	}
+
 	/**
 	 * Calculate reverse route and return a URL as String
+	 * 
 	 * @return The URL reversed from controllerClass, actionName and args
 	 */
 	protected String calculateRouteURL() {
-		return Router.reverse(this.controllerClass.getName()+"."+this.methodName, this.args).url;
+		return Router.reverse(this.controllerClass.getName() + "."
+				+ this.methodName, this.args).url;
 	}
 
 	/**
@@ -84,8 +112,10 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		this.args.clear();
 		this.argTypes = null;
 	}
+
 	/**
 	 * Add the action (methodName)
+	 * 
 	 * @param actionName
 	 * @return
 	 */
@@ -106,24 +136,25 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 			throw e;
 		} catch (NoSuchMethodException e) {
 			StringBuffer argumentsError = new StringBuffer();
-			if ( this.argTypes == null ) {
+			if (this.argTypes == null) {
 				argumentsError.append("no args");
 			} else {
 				argumentsError.append("args ");
-				int i=0;
-				for (Class clazz: this.argTypes) {
+				int i = 0;
+				for (Class clazz : this.argTypes) {
 					argumentsError.append("<");
 					argumentsError.append(clazz);
 					argumentsError.append(">");
-					if (i<this.argTypes.length-1 ) {
+					if (i < this.argTypes.length - 1) {
 						argumentsError.append(",");
 					}
 					i++;
-					
+
 				}
 			}
 			throw new IllegalArgumentException("No such method: " + actionName
-					+ " for class: " + this.controllerClass.getName()+ " with "+argumentsError.toString());
+					+ " for class: " + this.controllerClass.getName()
+					+ " with " + argumentsError.toString());
 		}
 
 		this.methodName = actionName;
@@ -133,6 +164,7 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 
 	/**
 	 * Add the params
+	 * 
 	 * @param args
 	 * @return
 	 */
@@ -153,10 +185,12 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 
 	/**
 	 * Set the controller to test
+	 * 
 	 * @param controllerClass
 	 * @return
 	 */
-	protected ApplicationFunctionalTest withController(Class<Users> controllerClass) {
+	protected ApplicationFunctionalTest withController(
+			Class<Users> controllerClass) {
 		this.controllerClass = controllerClass;
 		return this;
 	}

@@ -20,6 +20,7 @@ forms.cancel.label = Cancelar
 forms.activate.account.button.label = Activar conta
 forms.login.authenticate = Login
 forms.logout = Logout
+forms.create.button = Criar
 #emails
 
 email.user.activation.subject = %s, active a sua conta em MediBooking.com
@@ -61,8 +62,8 @@ validation.phone=O número não é válido
 
 
 #messages for partners
-partner.register.error = Não é possível continuar. Verifique os errors!
-partner.register.success = O registo foi concluído com sucesso.
+office.register.error = Não é possível continuar. Verifique os errors!
+office.register.success = O registo foi concluído com sucesso.
 
 
 #Messages for Users

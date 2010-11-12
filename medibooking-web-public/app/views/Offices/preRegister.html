@@ -3,7 +3,7 @@
 #{set title:'Home' /}
 
 #{set 'moreScripts'}
-    #{script 'preregister_partner.js' /}
+    #{script 'preregister_office.js' /}
 #{/set}
 
 
@@ -39,21 +39,21 @@
     </ul>
     
     
-    #{form @savePreRegistration(), id:'preRegisterPartnerForm', style:'display:none'}
+    #{form @savePreRegistration(), id:'preRegisterOfficeForm', style:'display:none'}
 
         
-        #{field 'partner.businessType'}
-            <input type="hidden" name="${field.name}" id="${field.name}" value="${partner?.businessType}" />
+        #{field 'office.businessType'}
+            <input type="hidden" name="${field.name}" id="${field.name}" value="${office?.businessType}" />
         #{/field}
      
         <fieldset>
             <legend>Informação sobre <span class="businessTypeWithPronoum"></span></legend>
             <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
             
-            #{field 'partner.name'}
+            #{field 'office.name'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Nome <span class="businessTypeWithPreposition"></span>:<span class="required-sybmol">*</span></label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.name}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${office?.name}" />
                     #{ifErrors}
                         <span class="error">${field.error}</span>
                     #{/ifErrors}
@@ -63,10 +63,10 @@
                 </div>
             #{/field}
             
-            #{field 'partner.address.addressLineOne'}
+            #{field 'office.address.addressLineOne'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Morada :<span class="required-sybmol">*</span></label>
-                    <textarea  name="${field.name}" id="${field.name}">${partner?.address?.addressLineOne}</textarea>
+                    <textarea  name="${field.name}" id="${field.name}">${office?.address?.addressLineOne}</textarea>
                     
                     #{ifErrors}
                         <span class="error">${field.error}</span>
@@ -76,10 +76,10 @@
             #{/field}
 
 
-            #{field 'partner.address.postalCode'}
+            #{field 'office.address.postalCode'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Código Postal :<span class="required-sybmol">*</span></label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.address?.postalCode}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${office?.address?.postalCode}" />
                     
                     #{ifErrors}
                         <span class="error">${field.error}</span>
@@ -87,10 +87,10 @@
                 </div>
             #{/field}
 
-            #{field 'partner.address.city'}
+            #{field 'office.address.city'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Localidade :<span class="required-sybmol">*</span></label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.address?.city}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${office?.address?.city}" />
                     
                     #{ifErrors}
                         <span class="error">${field.error}</span>
@@ -99,10 +99,10 @@
             #{/field}
 
 
-            #{field 'partner.phone1'}
+            #{field 'office.phone1'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Telefone <span class="required-sybmol">*</span></label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${partner?.phone1}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${office?.phone1}" />
                     
                     #{ifErrors}
                         <span class="error">${field.error}</span>
@@ -110,10 +110,10 @@
                 </div>
             #{/field}
 
-            #{field 'partner.mobile1'}
+            #{field 'office.mobile1'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Telemóvel :</label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${partner?.mobile1}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${office?.mobile1}" />
                     #{ifErrors}
                         <span class="error">${field.error}</span>
                     #{/ifErrors}                    
@@ -121,20 +121,20 @@
             #{/field}
 
 
-            #{field 'partner.email'}
+            #{field 'office.email'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Email :</label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.email}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${office?.email}" />
                     #{ifErrors}
                         <span class="error">${field.error}</span>
                     #{/ifErrors}                    
                 </div>
             #{/field}
 
-            #{field 'partner.url'}
+            #{field 'office.url'}
                 <div class="${field.errorClass}">
                     <label for="${field.name}">Página web :</label>
-                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${partner?.url}" />
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${office?.url}" />
                     #{ifErrors}
                         <span class="error">${field.error}</span>
                     #{/ifErrors}                    
@@ -142,13 +142,12 @@
             #{/field}
             
 
-        </fieldset>
-        <fieldset>
-            <legend>Informação sobre <span class="businessTypeWithPronoum"></span></legend>
-        </fieldset>  
-        <p>
-            <input type="submit" value="Register"> <a href="@{index()}">Cancel</a>    
-        </p>
+        
+	        <div class="buttons">
+	            <input type="submit" value="&{'forms.create.button'}"> 
+	            <a href="@{index()}">&{'forms.cancel.label'}</a>    
+	        </div>
+    	</fieldset>
     #{/form}
     
     

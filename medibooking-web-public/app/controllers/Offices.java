@@ -9,6 +9,9 @@ import annotations.authorization.RequiresUserSession;
 
 
 import models.Office;
+import models.OfficeAdministrator;
+import models.OfficeOwnable;
+import models.User;
 import models.enums.BusinessType;
 import models.enums.UserType;
 
@@ -24,6 +27,7 @@ public class Offices extends Application {
 	/**
 	 * List all clinics
 	 */
+	@RequiresUserSession(userTypes=UserType.ADMIN)
 	public static void index() {
 		//retrieve all Partners (Just for testing purpose)
 		List<Office> offices = Office.findAll();
@@ -49,17 +53,32 @@ public class Offices extends Application {
 		render();
 	}
 
-	public static void savePreRegistration(@Valid Office partner) {		
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
+	public static void listUserOffices(Long userId) {
+		//try to find the user
+	}
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
+	public static void savePreRegistration(@Valid Office office) {		
+		//get the current user
+		
+		if ( currentUser.get() == null ) {
+			notFound(Messages.get("user.not.found"));
+		} 
 		
 		if (validation.hasErrors()) {
-			flash.error(Messages.get("partner.register.error"));
-			render("@preRegister", partner);
+			flash.error(Messages.get("office.register.error"));
+			render("@preRegister", office);
 		}
-		partner.save();
-		flash.success(Messages.get("partner.register.success"));
-		Offices.index();
+		getCurrentOfficeOwner().addOffice(office);
+		office.save();
+		currentUser.get().save();
+		
+		flash.success(Messages.get("office.register.success"));
+		Offices.listUserOffices(currentUser.get().id);
 		
 	}
+
+	
 	
 
 }

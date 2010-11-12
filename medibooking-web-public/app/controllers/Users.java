@@ -136,7 +136,7 @@ public class Users extends Application {
 	public static void login() {
 		
 		if (!hasSession()) {
-			Logger.debug("URL HER IS: "+flash.get(Constants.FLASH_LAST_URL));
+			
 			flash.keep(Constants.FLASH_LAST_URL);
 			render();
 		} else {
