@@ -10,8 +10,8 @@ $(window).load(function () {
 
 	
 	//In case of reload from validation errors, select the correct type and show the form
-	if ( $("input[name=partner.businessType]").val() != "" ) {
-		var type = $("input[name=partner.businessType]").val();
+	if ( $("input[name=office.businessType]").val() != "" ) {
+		var type = $("input[name=office.businessType]").val();
 		if ( $("#"+type+"Choice") ) {
 			$("#"+type+"Choice").attr('checked', true );
 			updateForm(type);
@@ -37,10 +37,10 @@ $(window).load(function () {
  */
 function updateForm(type) {
 	//show the form
-	$('#preRegisterPartnerForm').show();
+	$('#preRegisterOfficeForm').show();
 	//change occurences
 	$('.businessTypeWithPreposition').html(names[type][2]);
 	$('.businessType').html(names[type][0]);
 	$('.businessTypeWithPronoum').html(names[type][1]);
-	$("input[name=partner.businessType]").val(type);	
+	$("input[name=office.businessType]").val(type);	
 }
