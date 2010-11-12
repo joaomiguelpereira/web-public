@@ -57,5 +57,10 @@ public class OfficeAdministrator extends User implements OfficeOwnable{
 		this.administeredOffices.add(office);
 		
 	}
+	@Override
+	public Set<Office> getOffices() {
+		// TODO Auto-generated method stub
+		return this.administeredOffices;
+	}
 
 }
