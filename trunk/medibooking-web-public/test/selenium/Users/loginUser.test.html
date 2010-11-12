@@ -1,0 +1,20 @@
+
+%{
+	play.test.Fixtures.load("users.yml");
+	gus = models.User.find("email=?","active@gmail.com").first();
+}%
+
+ 
+#{selenium}
+
+    //Open the login form
+    open('@{Users.login()}')
+    waitForPageToLoad(1000)
+    assertNotTitle('Application error')
+	assertTitle(${play.i18n.Messages.get('views.login.title')})
+	type('email', ${gus.email})
+	type('password', "11111")
+	
+	clickAndWait(//input[@value="${play.i18n.Messages.get('forms.login.authenticate')}"])
+	assertTextPresent("active@gmail.com") 
+#{/selenium}

@@ -11,7 +11,7 @@ import javax.persistence.ManyToMany;
 import models.enums.UserType;
 
 @Entity
-public class OfficeAdministrator extends User {
+public class OfficeAdministrator extends User implements OfficeOwnable{
 
 	/**
 	 * Instance initialization block. Run after all super constructors and
@@ -50,6 +50,12 @@ public class OfficeAdministrator extends User {
 	 */
 	public Set<Office> getAdministeredOffices() {
 		return administeredOffices;
+	}
+	
+	@Override
+	public void addOffice(Office office) {
+		this.administeredOffices.add(office);
+		
 	}
 
 }

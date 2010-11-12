@@ -1,6 +1,7 @@
 package controllers;
 
 import annotations.authorization.RequiresUserSession;
+import models.OfficeOwnable;
 import models.User;
 import models.enums.UserType;
 import constants.Constants;
@@ -31,6 +32,15 @@ public class BaseController extends Controller {
 				&& session.contains(SessionValuesConstants.USER_TYPE);
 	}
 
+	protected static OfficeOwnable getCurrentOfficeOwner() {
+		
+		if (currentUser.get() instanceof OfficeOwnable ) {
+			return (OfficeOwnable)currentUser.get();
+		} else {
+			throw new RuntimeException("Expecting current user to be an "+OfficeOwnable.class.getName()+" but is "+currentUser.get().getClass().getName());
+		}
+		
+	}
 	/**
 	 * check if a "remember me" cookie exists in client and login user if yes
 	 */
@@ -116,7 +126,7 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void checkActionAuthorization() {
-		Logger.debug("checkAuthorization");
+		
 		// Get requested Action/Controller
 
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
@@ -156,7 +166,6 @@ public class BaseController extends Controller {
 
 	protected static void redirectToLastRequestedResource() {
 		String url = flash.get(Constants.FLASH_LAST_URL);
-		Logger.debug("Saved URR: " + url);
 		if (url == null) {
 			url = "/";
 		}
