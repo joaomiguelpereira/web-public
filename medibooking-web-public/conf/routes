@@ -8,7 +8,7 @@ GET     /                                       Application.index
 #Routes for Offices
 GET /offices                                    Offices.index
 GET /offices/pre-register                       Offices.preRegister
-GET /offices/{userId}							Offices.listUserOffices
+GET /myoffices									Offices.listUserOffices
 #Users
 
 GET /user/{userType}/new						Users.blank

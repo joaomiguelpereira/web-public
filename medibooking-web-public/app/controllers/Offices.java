@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import annotations.authorization.RequiresUserSession;
 
@@ -54,9 +55,14 @@ public class Offices extends Application {
 	}
 
 	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
-	public static void listUserOffices(Long userId) {
+	public static void listUserOffices() {
+		//get current user
 		//try to find the user
+		OfficeOwnable oa = getCurrentOfficeOwner();
+		Set<Office> offices = oa.getOffices();
+		render(offices);
 	}
+	
 	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
 	public static void savePreRegistration(@Valid Office office) {		
 		//get the current user
@@ -74,7 +80,7 @@ public class Offices extends Application {
 		currentUser.get().save();
 		
 		flash.success(Messages.get("office.register.success"));
-		Offices.listUserOffices(currentUser.get().id);
+		Offices.listUserOffices();
 		
 	}
 

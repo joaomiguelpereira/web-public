@@ -37,6 +37,13 @@ public class Bootstrap extends Job<String> {
 		oAdmin.setPassword("12345");
 		oAdmin.save();
 		
+		OfficeAdministrator oAdmin2 = new OfficeAdministrator();
+		oAdmin2.setName("Office admin2");
+		oAdmin2.setActive(true);
+		oAdmin2.setEmail("oadmin2@gmail.com");
+		oAdmin2.setPassword("12345");
+		oAdmin2.save();
+		
 		Administrator admin = new Administrator();
 		admin.setName("Service Admin");
 		admin.setActive(true);
