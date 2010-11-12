@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import annotations.authorization.RequiresUserSession;
+
 import constants.Constants;
 import constants.SessionValuesConstants;
 
@@ -188,6 +190,7 @@ public class Users extends Application {
 	/**
 	 * List all users
 	 */
+	@RequiresUserSession(userTypes=UserType.ADMIN)
 	public static void index() {
 		List<User> users = User.find("userType=?", UserType.USER).fetch();
 		List<OfficeAdministrator> officeAdmins = OfficeAdministrator.findAll();
