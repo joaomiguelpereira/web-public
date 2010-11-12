@@ -123,6 +123,7 @@
 .wizard-form form div input[type='text'] {
 	width: 300px;
 	padding: 3px 4px;
+	border: solid 1px #000;
 	margin: 0 0 0 0;
 }
 
@@ -131,6 +132,7 @@
 	width: 300px;
 	padding: 3px 4px;
 	margin: 0 0 0 0;
+	border: solid 1px #000;
 }
 
 form div.hasError input[type='text'], form div.hasError textarea {
