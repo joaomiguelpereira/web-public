@@ -1,1 +1,11 @@
-office admin menu
+
+<div id="menu" class="clearfix">
+
+	<ul>
+		<li>
+			<a href="@{Offices.listUserOffices}" class="${currentAction.equals('Offices.listUserOffices')?"selected":""}">As minha Clínicas/Consultórios</a>
+			<a href="@{Users.userCreatedConfirmation}" class="${currentAction.equals('Users.userCreatedConfirmation')?"selected":""}">Os meus dados</a>
+		
+		</li>
+	</ul>
+</div>

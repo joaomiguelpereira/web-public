@@ -11,6 +11,7 @@ import constants.SessionValuesConstants;
 import models.enums.UserType;
 
 import play.Logger;
+import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
 import play.templates.FastTags;
 import play.templates.JavaExtensions;
@@ -41,12 +42,15 @@ public class MenuTags extends BaseFastTags {
 			templateName.append("defaultMainMenu.html");
 			
 		}
-		Logger.debug("Template Name is:" +templateName.toString());
+		
 		// Get user type
 		Template menuTemplate = TemplateLoader.load(templateName.toString());
 		
+		//Current action
+		final String currentAction = Request.current().action;
+		Logger.debug("Current action is:" +currentAction);
 		menuTemplate.compile();
-		String templateStr = menuTemplate.render(new HashMap<String, Object>());
+		String templateStr = menuTemplate.render(new HashMap<String, Object>(){{put("currentAction",currentAction);}});
 		out.println(JavaExtensions.raw(templateStr));
 		
 	}

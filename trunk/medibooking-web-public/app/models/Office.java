@@ -1,7 +1,8 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -32,6 +33,10 @@ import validators.UniqueCheck;
 
 @Entity
 public class Office extends Model {
+	
+	{
+		this.administrators = new ArrayList<OfficeAdministrator>();
+	}
 	
 	@Required
 	@Unique
@@ -70,14 +75,15 @@ public class Office extends Model {
 	
 	private Boolean active;
 	
-	@ManyToMany(cascade=CascadeType.PERSIST)
-	private Set<OfficeAdministrator> administrators;
+	@ManyToMany
+	private List<OfficeAdministrator> administrators;
 	
 	@Required
 	@Embedded
 	@Valid
 	private Address address;
 	
+	@SuppressWarnings("unused")
 	@PrePersist
 	private void beforeSave() {
 		this.setActive(false);
@@ -176,11 +182,15 @@ public class Office extends Model {
 	public Boolean isActive() {
 		return active;
 	}
-	public void setAdministrators(Set<OfficeAdministrator> administrators) {
+	public void setAdministrators(List<OfficeAdministrator> administrators) {
 		this.administrators = administrators;
 	}
-	public Set<OfficeAdministrator> getAdministrators() {
+	public List<OfficeAdministrator> getAdministrators() {
 		return administrators;
+	}
+	public void addAdministrator(OfficeAdministrator oa) {
+		this.administrators.add(oa);
+		
 	}
 	
 	

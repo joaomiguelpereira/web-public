@@ -11,7 +11,7 @@ import annotations.authorization.RequiresUserSession;
 
 import models.Office;
 import models.OfficeAdministrator;
-import models.OfficeOwnable;
+
 import models.User;
 import models.enums.BusinessType;
 import models.enums.UserType;
@@ -49,7 +49,7 @@ public class Offices extends Application {
 	/**
 	 * Index action
 	 */
-	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN})
 	public static void preRegister() {
 		render();
 	}
@@ -58,12 +58,12 @@ public class Offices extends Application {
 	public static void listUserOffices() {
 		//get current user
 		//try to find the user
-		OfficeOwnable oa = getCurrentOfficeOwner();
-		Set<Office> offices = oa.getOffices();
+		OfficeAdministrator oa = getCurrentAdministrator();
+		List<Office> offices = oa.getAdministeredOffices();
 		render(offices);
 	}
 	
-	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN})
 	public static void savePreRegistration(@Valid Office office) {		
 		//get the current user
 		
@@ -75,8 +75,11 @@ public class Offices extends Application {
 			flash.error(Messages.get("office.register.error"));
 			render("@preRegister", office);
 		}
-		getCurrentOfficeOwner().addOffice(office);
+		//Set the owne
+		getCurrentAdministrator().addAdministeredOffice(office);
+		office.addAdministrator(getCurrentAdministrator());
 		office.save();
+		
 		currentUser.get().save();
 		
 		flash.success(Messages.get("office.register.success"));
