@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import models.enums.UserType;
 
 @Entity
-public class Administrator extends OfficeAdministrator {
+public class Administrator extends User {
 	{
 		setUserType(UserType.ADMIN);
 	}

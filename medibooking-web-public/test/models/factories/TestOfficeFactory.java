@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import models.Address;
 import models.Office;
+import models.OfficeAdministrator;
 import models.enums.BusinessType;
 
 import org.junit.Ignore;
@@ -56,6 +57,7 @@ public abstract class TestOfficeFactory {
 		return office;
 		
 	}
+
 	
 	
 }

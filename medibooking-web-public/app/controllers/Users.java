@@ -73,8 +73,7 @@ public class Users extends Application {
 	 */
 	public static void authenticate(String email, String password,
 			boolean keepLogged) {
-		Logger.debug("Keeplogged:" + keepLogged);
-		Logger.debug("URL HERE NOW IS: "+flash.get(Constants.FLASH_LAST_URL));
+				
 		// verify the presence of email
 		validation.required(email, Messages.get("login.invalid.email"));
 		validation.required(password, Messages.get("login.invalid.password"));

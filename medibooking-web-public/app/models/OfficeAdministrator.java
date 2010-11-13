@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,14 +12,14 @@ import javax.persistence.ManyToMany;
 import models.enums.UserType;
 
 @Entity
-public class OfficeAdministrator extends User implements OfficeOwnable{
+public class OfficeAdministrator extends User{
 
 	/**
 	 * Instance initialization block. Run after all super constructors and
 	 * before this constructor
 	 */
 	{
-		administeredOffices = new TreeSet<Office>();
+		administeredOffices = new ArrayList<Office>();
 		this.setUserType(UserType.OFFICE_ADMIN);
 	}
 	
@@ -33,34 +34,22 @@ public class OfficeAdministrator extends User implements OfficeOwnable{
 		this.setPassword(user.getPassword());
 		this.setPhone(user.getPhone());
 	}
-	@ManyToMany
-	private Set<Office> administeredOffices;
+	@ManyToMany(cascade=CascadeType.PERSIST)
+	private List<Office> administeredOffices;
 
-	/**
-	 * Set the Administered offices for this User
-	 * @param administeredOffices A set of administered offices
-	 */
-	public void setAdministeredOffices(Set<Office> administeredOffices) {
-		this.administeredOffices = administeredOffices;
-	}
 
 	/**
 	 * Get the administered offices for this user
 	 * @return A set of administered offices
 	 */
-	public Set<Office> getAdministeredOffices() {
+	public List<Office> getAdministeredOffices() {
 		return administeredOffices;
 	}
 	
-	@Override
-	public void addOffice(Office office) {
+	
+	public void addAdministeredOffice(Office office) {
 		this.administeredOffices.add(office);
 		
 	}
-	@Override
-	public Set<Office> getOffices() {
-		// TODO Auto-generated method stub
-		return this.administeredOffices;
-	}
-
+	
 }

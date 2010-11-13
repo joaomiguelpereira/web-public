@@ -30,22 +30,13 @@ public class OfficesTest extends ApplicationFunctionalTest {
 	}
 
 	@Test
-	public void addOffice() {
+	public void addOfficeForOA() {
 		OfficeAdministrator oAdmin = new OfficeAdministrator();
 		oAdmin.setName("Some Office Admin");
 		oAdmin.setEmail("someemail@gmail.com");
 		oAdmin.setActive(true);
 		oAdmin.setPassword("11111");
 		assertTrue(oAdmin.validateAndSave());
-
-		/*
-		 * Office office = new Office();
-		 * office.setBusinessType(BusinessType.CLINIC);
-		 * office.setName("Office Admin"); Address address = new Address();
-		 * address.setAddressLineOne("Add line 1"); address.setCity("City");
-		 * address.setCountry("Portugal"); address.setPostalCode("333939");
-		 * office.setAddress(address);
-		 */
 
 		authenticateUser("someemail@gmail.com", "11111", false);
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -70,8 +61,14 @@ public class OfficesTest extends ApplicationFunctionalTest {
 		
 		assertRedirectedTo(response.getHeader("Location"),
 				"Offices.listUserOffices",
-				new HashMap<String, Object>(){{put("userId", oa.id);}});
+				new HashMap<String, Object>());
 
+		//get the saved office
+		Office office = Office.find("byEmail", "email@email.com").first();
+		assertNotNull(office);
+		assertEquals(1, office.getAdministrators().size());
+		assertEquals(oa.id, office.getAdministrators().get(0).id);
+		
 		
 
 	}

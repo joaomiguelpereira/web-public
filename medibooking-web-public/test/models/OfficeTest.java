@@ -1,7 +1,8 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
+
 
 import models.enums.BusinessType;
 import models.factories.TestOfficeFactory;
@@ -37,7 +38,7 @@ public class OfficeTest extends ModelUnitTest{
 		//assertTrue(admin.validateAndSave());
 		
 		Office office = TestOfficeFactory.createOffice(null);
-		TreeSet<OfficeAdministrator> admins = new TreeSet<OfficeAdministrator>();
+		ArrayList<OfficeAdministrator> admins = new ArrayList<OfficeAdministrator>();
 		admins.add(admin);
 		office.setAdministrators(admins);
 		

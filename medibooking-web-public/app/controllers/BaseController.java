@@ -1,7 +1,7 @@
 package controllers;
 
 import annotations.authorization.RequiresUserSession;
-import models.OfficeOwnable;
+import models.OfficeAdministrator;
 import models.User;
 import models.enums.UserType;
 import constants.Constants;
@@ -28,19 +28,19 @@ public class BaseController extends Controller {
 	 * @return True if a valid session exists, false otherwise
 	 */
 	protected static boolean hasSession() {
-
+		
 		return session.contains(SessionValuesConstants.LOGIN_TOKEN)
 				&& session.contains(SessionValuesConstants.LOGIN_EMAIL)
 				&& session.contains(SessionValuesConstants.USER_TYPE);
 	}
 
-	protected static OfficeOwnable getCurrentOfficeOwner() {
+	protected static OfficeAdministrator getCurrentAdministrator() {
 
-		if (currentUser.get() instanceof OfficeOwnable) {
-			return (OfficeOwnable) currentUser.get();
+		if (currentUser.get() instanceof OfficeAdministrator )  {
+			return (OfficeAdministrator) currentUser.get();
 		} else {
 			throw new RuntimeException("Expecting current user to be an "
-					+ OfficeOwnable.class.getName() + " but is "
+					+ OfficeAdministrator.class.getName() + " but is "
 					+ currentUser.get().getClass().getName());
 		}
 
