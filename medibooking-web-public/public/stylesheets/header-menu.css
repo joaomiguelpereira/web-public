@@ -20,31 +20,31 @@
 
 #page-header #menu ul li a {
 	padding: 7px;
-	background-color: #DDE8EB;
+	
 	color: #0C516B;
 	font-weight: bold;
-	border: solid 1px #becfd4;
+	
 	text-decoration: none;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
+	padding-bottom: 4px;
 }
 
 #page-header #menu ul li a:hover {
 	background-color: #fff;
-	padding-bottom: 8px;
+	padding-bottom: 4px;
 	border-bottom: none;
+	background-color: #f4f5f6;
 }
 
-#page-header #menu ul li.selected {
+#page-header #menu ul li a.selected {
     padding: 7px;
-    background-color: #fff;
+    background-color: #f4f5f6;
     color: #0C516B;
     font-weight: bold;
-    border: solid 1px #becfd4;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    border: none;
     
-    padding-bottom: 8px;
+    padding-bottom: 4px;
     border-bottom: none;
     
 }
