@@ -2,6 +2,12 @@
 # For example, for French create a messages.fr file
 
 
+
+#custom java extensions
+active = Activo
+inactive = Inactivo
+
+
 # For use in JavaExtensions.since tag
 since.seconds = %s second%s ago
 since.minutes = %s minute%s ago
@@ -61,13 +67,15 @@ validation.url=Este URL não é válido
 validation.phone=O número não é válido
 
 
-#messages for partners
+#messages for offices
 office.register.error = Não é possível continuar. Verifique os errors!
 office.register.success = O registo foi concluído com sucesso.
-
+office.type.OFFICE = Consultório
+office.type.CLINIC = Clinica
 
 #Messages for Users
 views.users.register.title = Registar novo utilizador
 views.users.type.OFFICE_ADMIN = Gestor de Negócio
- views.users.type.USER = Utilizador
+views.users.type.USER = Utilizador
+
 
