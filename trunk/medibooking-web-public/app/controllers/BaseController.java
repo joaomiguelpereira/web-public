@@ -1,5 +1,9 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import annotations.authorization.RequiresUserSession;
 import models.OfficeAdministrator;
 import models.User;
@@ -7,6 +11,10 @@ import models.enums.UserType;
 import constants.Constants;
 import constants.SessionValuesConstants;
 import play.Logger;
+import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
+import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
+import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
+import play.db.jpa.Model;
 import play.i18n.Messages;
 import play.libs.Crypto;
 import play.mvc.Before;
@@ -15,12 +23,33 @@ import play.mvc.Scope;
 import play.mvc.With;
 import play.mvc.Http.Cookie;
 
-public class BaseController extends Controller {
+public class BaseController extends Controller  {
 
+	//private static final int NUMBER_ROWS_PER_PAGE = 5;
 	/**
 	 * Current logged in user. Each Thread has its own copy
 	 */
 	protected static ThreadLocal<User> currentUser = new ThreadLocal<User>();
+
+	
+	/*protected static <T extends Model> List<T> paginate(List<T> collection) {
+		//set the total number of pages
+		int currentPage = 0;
+		
+		if ( request.current().args.containsKey("currentPage")) {
+			
+			currentPage = Integer.valueOf(request.current().args.get("currentPage").toString()).intValue();
+		}
+		
+		Scope.RenderArgs.current().put("totalPages", collection.size()/NUMBER_ROWS_PER_PAGE);
+		Scope.RenderArgs.current().put("currentPage", currentPage+1);
+		Scope.RenderArgs.current().put("callbackUrl", request.current().action);
+		
+		
+				
+		return collection.subList(0, NUMBER_ROWS_PER_PAGE);
+
+	}*/
 
 	/**
 	 * Check if a valid session exists
@@ -28,7 +57,7 @@ public class BaseController extends Controller {
 	 * @return True if a valid session exists, false otherwise
 	 */
 	protected static boolean hasSession() {
-		
+
 		return session.contains(SessionValuesConstants.LOGIN_TOKEN)
 				&& session.contains(SessionValuesConstants.LOGIN_EMAIL)
 				&& session.contains(SessionValuesConstants.USER_TYPE);
@@ -36,7 +65,7 @@ public class BaseController extends Controller {
 
 	protected static OfficeAdministrator getCurrentAdministrator() {
 
-		if (currentUser.get() instanceof OfficeAdministrator )  {
+		if (currentUser.get() instanceof OfficeAdministrator) {
 			return (OfficeAdministrator) currentUser.get();
 		} else {
 			throw new RuntimeException("Expecting current user to be an "
@@ -113,7 +142,7 @@ public class BaseController extends Controller {
 	 */
 	@Before
 	protected static void setCurrentUser() {
-		
+
 		if (hasSession()) {
 
 			User aCurrentUser = User.find("byEmail",
@@ -169,10 +198,10 @@ public class BaseController extends Controller {
 					+ request.remoteAddress);
 
 			if (currentUser.get() != null) {
-				
+
 				flashError("user.not.authorized");
 				Application.index();
-				//forbidden(Messages.get("insufficent.privileges"));
+				// forbidden(Messages.get("insufficent.privileges"));
 			} else {
 				// save current location
 				flash.put(Constants.FLASH_LAST_URL,

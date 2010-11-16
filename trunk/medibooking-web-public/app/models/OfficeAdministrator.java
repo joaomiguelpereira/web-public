@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 
 import models.enums.UserType;
@@ -34,9 +35,9 @@ public class OfficeAdministrator extends User{
 		this.setPassword(user.getPassword());
 		this.setPhone(user.getPhone());
 	}
-	@ManyToMany(cascade=CascadeType.PERSIST)
+	@ManyToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
 	private List<Office> administeredOffices;
-
+	
 
 	/**
 	 * Get the administered offices for this user

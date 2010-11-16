@@ -16,14 +16,17 @@ import models.User;
 import models.enums.BusinessType;
 import models.enums.UserType;
 
+import play.Logger;
 import play.data.validation.Valid;
 import play.i18n.Messages;
+import play.modules.paginate.ValuePaginator;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
 
-public class Offices extends Application {
+
+public class Offices extends BaseController {
 
 	/**
 	 * List all clinics
@@ -32,6 +35,7 @@ public class Offices extends Application {
 	public static void index() {
 		//retrieve all Partners (Just for testing purpose)
 		List<Office> offices = Office.findAll();
+		
 		render(offices);
 	}
 	
@@ -53,14 +57,44 @@ public class Offices extends Application {
 	public static void preRegister() {
 		render();
 	}
+	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN})
+	public static void view(Long id) {
+		boolean allowed = false;
+		//get the office
+		Office office = Office.findById(id);
+		if ( office == null ) {
+			notFound("Office not found");
+		}
+		//check if current user is one of the admins
+		for ( OfficeAdministrator oa : office.getAdministrators() ) {
+			if ( oa.id.equals(currentUser.get().id)) {
+				allowed = true;
+				break;
+			}
+		}
+		if ( !allowed ) {
+			flashError("user.not.authorized");
+			Offices.listUserOffices();
+		} else {
+			renderText("Hi ther "+id);
+		}
+		
+	}
 
 	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN, UserType.ADMIN})
 	public static void listUserOffices() {
 		//get current user
 		//try to find the user
 		OfficeAdministrator oa = getCurrentAdministrator();
+		
+		
 		List<Office> offices = oa.getAdministeredOffices();
+
+		
 		render(offices);
+		
+		
+		
 	}
 	
 	@RequiresUserSession(userTypes={UserType.OFFICE_ADMIN})

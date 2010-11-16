@@ -48,7 +48,7 @@ public class MenuTags extends BaseFastTags {
 		
 		//Current action
 		final String currentAction = Request.current().action;
-		Logger.debug("Current action is:" +currentAction);
+		
 		menuTemplate.compile();
 		String templateStr = menuTemplate.render(new HashMap<String, Object>(){{put("currentAction",currentAction);}});
 		out.println(JavaExtensions.raw(templateStr));
