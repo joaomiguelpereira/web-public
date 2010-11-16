@@ -1,0 +1,51 @@
+<!-- Include JS table instead -->
+#{set 'moreScripts'}
+    <script src="@{'/public/javascripts/DataTables-1.7.4/media/js/jquery.dataTables.min.js'}" type="text/javascript" charset="utf-8"></script> 
+#{/set}
+
+#{set 'moreStyles'}
+
+ <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/javascripts/DataTables-1.7.4/media/css/demo_table.css'}"> 
+#{/set}
+
+<script>
+
+
+	$(document).ready(function() {
+		$('#officesTable').dataTable({"sPaginationType": "full_numbers","bLengthChange":false, "bInfo": false} );
+	} );
+</script>
+
+<div class="data-table">
+
+	
+	<table id="officesTable" class="data-table">
+		<thead>
+  			<tr>
+    			<th>Nome</th>
+    			<th>Tipo</th>
+    			<th>Data criação</th>
+    			<th>Estado</th>
+    			<th>Administradores</th>
+    			
+  				
+  			</tr>
+  		</thead>
+
+		
+		#{dataTables.dataTable collection:offices, as:'office' }
+ 		<tr>
+    		<td><a href="">${office.name}</a></td>
+    		<td>&{'office.type.'+office.businessType}</td>
+  			<td>${office.created_at}</td>
+  			<td>${office.active}</td>
+  			<td>${office.adminCount}</td>
+  		</tr>
+
+
+		#{/dataTables.dataTable}
+	</table>
+	
+	
+	
+</div>

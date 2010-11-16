@@ -1,0 +1,21 @@
+%{ 
+
+	if (_collection != null) { 
+		for (_r in _collection) { 
+			if (play.version.startsWith("1.0")) {
+				play.templates.Template.layoutData.get().put(_as, _r); 
+			} else {  // play 1.1 (and hopefully later?)
+				play.templates.BaseTemplate.layoutData.get().put(_as, _r); 
+			} 
+		%}
+			#{doBody/} 
+
+
+%{ 
+	} 
+	} 
+%}
+
+
+
+
