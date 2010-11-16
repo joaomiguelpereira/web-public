@@ -78,3 +78,48 @@ body {
 	background-color: #f4f5f6;
 }
 /*end forms stuff*/
+
+/* Start data-table stuff*/
+
+
+#offices-list {
+	width: auto;
+	min-width: 288px;
+	float: left;
+	border: solid 1px #ccc;
+	padding: 5px;
+	background-color: #fff;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+.data-table
+{
+	font-size: 12px;
+	text-align: left;
+	border-collapse: collapse;
+}
+.data-table th
+{
+	padding: 8px;
+	font-weight: normal;
+	font-size: 13px;
+	color: #039;
+	
+	/*background: #b9c9fe;*/
+}
+.data-table td
+{
+	padding: 8px;
+	background: #e8edff;
+	border-top: 1px solid #fff;
+	color: #669;
+	min-width: 100px;
+}
+.data-table tbody tr:hover td
+{
+	background: #d0dafd;
+}
+
+.data-table .pagination {
+	text-align: right;
+}
