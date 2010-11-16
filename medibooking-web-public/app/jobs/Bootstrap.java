@@ -15,6 +15,7 @@ import models.User;
 import models.enums.BusinessType;
 import models.enums.UserType;
 import models.factories.TestOfficeFactory;
+import play.Logger;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.mvc.Scope.Session;
@@ -26,7 +27,7 @@ public class Bootstrap extends Job<String> {
 	@Override
 	public void doJob() throws Exception {
 
-		// loadHSQLConsole();
+		//loadHSQLConsole();
 		// load dummy users
 		prepareTestData();
 	}
@@ -66,17 +67,35 @@ public class Bootstrap extends Job<String> {
 
 		
 		List<Office> offices = new ArrayList<Office>();
-		for (int i=0; i<10; i++) {
+		Long totalStartTime = System.nanoTime();
+		for (int i=0; i<200; i++) {
+			Long startTime = System.nanoTime();
+			
 			Office office = createTestOffice("my Office nbr "+i);
 			office.addAdministrator(oAdmin);
 			offices.add(office);	
 			oAdmin.addAdministeredOffice(office);
+			Logger.debug("Created record in: "+ (System.nanoTime()-startTime));
+		}
+		
+		Logger.debug("Created record in: "+ (System.nanoTime()-totalStartTime));
+		//createTestOffice(oAdmin, "Office nbr asd");
+		
+		
+		oAdmin.save();
+		
+		offices = new ArrayList<Office>();
+		for (int i=0; i<1; i++) {
+			Office office = createTestOffice("my Office nbr "+i);
+			office.addAdministrator(oAdmin2);
+			offices.add(office);	
+			oAdmin2.addAdministeredOffice(office);
 		}
 		
 		//createTestOffice(oAdmin, "Office nbr asd");
 		
 		
-		oAdmin.save();
+		oAdmin2.save();
 
 	}
 

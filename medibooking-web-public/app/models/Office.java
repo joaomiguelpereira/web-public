@@ -32,7 +32,7 @@ import validators.Unique;
 import validators.UniqueCheck;
 
 @Entity
-public class Office extends Model {
+public class Office extends BaseModel {
 	
 	{
 		this.administrators = new ArrayList<OfficeAdministrator>();
@@ -83,10 +83,14 @@ public class Office extends Model {
 	@Valid
 	private Address address;
 	
+	
 	@SuppressWarnings("unused")
 	@PrePersist
 	private void beforeSave() {
-		this.setActive(false);
+		if ( !this.isPersistent() ) {
+			this.setActive(false);
+		}
+		
 	}
 	/**
 	 * Default constructor
@@ -191,6 +195,10 @@ public class Office extends Model {
 	public void addAdministrator(OfficeAdministrator oa) {
 		this.administrators.add(oa);
 		
+	}
+	
+	public int getAdminCount() {
+		return this.administrators.size();
 	}
 	
 	
