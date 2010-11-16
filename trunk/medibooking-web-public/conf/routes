@@ -9,6 +9,8 @@ GET     /                                       Application.index
 GET /offices                                    Offices.index
 GET /offices/pre-register                       Offices.preRegister
 GET /myoffices									Offices.listUserOffices
+GET /myoffices/{id}								Offices.view
+
 #Users
 
 GET /user/{userType}/new						Users.blank
