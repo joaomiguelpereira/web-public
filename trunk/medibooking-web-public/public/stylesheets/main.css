@@ -13,6 +13,7 @@ body {
 	margin: 0px;
 	padding: 0px;
 	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.9em;
 }
 
 #page-main-wrapper {
@@ -77,11 +78,9 @@ body {
 	padding: 20px;
 	background-color: #f4f5f6;
 }
+
 /*end forms stuff*/
-
 /* Start data-table stuff*/
-
-
 #offices-list {
 	width: auto;
 	min-width: 288px;
@@ -92,34 +91,89 @@ body {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 }
-.data-table
-{
+
+.data-table {
 	font-size: 12px;
 	text-align: left;
 	border-collapse: collapse;
 }
-.data-table th
-{
+
+.data-table th {
 	padding: 8px;
 	font-weight: normal;
 	font-size: 13px;
 	color: #039;
-	
 	/*background: #b9c9fe;*/
 }
-.data-table td
-{
+
+.data-table td {
 	padding: 8px;
 	background: #e8edff;
 	border-top: 1px solid #fff;
 	color: #669;
 	min-width: 100px;
 }
-.data-table tbody tr:hover td
-{
+
+.data-table tbody tr:hover td {
 	background: #d0dafd;
 }
 
 .data-table .pagination {
 	text-align: right;
+}
+
+/**Starts data-left-menu stuff**/
+#data-left-menu {
+	width: 200px;
+	min-width: 180px;
+	float: left;
+	padding: 5px;
+	border: solid 1px #becfd4;
+	margin-right: 10px;
+	background-color: #fff;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+#data-left-menu ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#data-left-menu ul li {
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#data-left-menu ul li a {
+	width: 200px;
+	display: block;
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+#data-left-menu ul li a:hover {
+	background-color: #f4f5f6;
+}
+
+#data-left-menu ul li.selected {
+	background-color: #dee8eb;
+}
+
+#data-left-menu ul li.separator {
+	border-bottom: solid 1px #ccc;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+
+
+/**Content header**/
+#content-header {
+	padding-left: 24px;
+	font-weight: bold;
+	padding-top: 5px;
+	font-size: 120%;
+	color: #0C516B;
 }

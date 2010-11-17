@@ -76,7 +76,7 @@ public class Offices extends BaseController {
 			flashError("user.not.authorized");
 			Offices.listUserOffices();
 		} else {
-			renderText("Hi ther "+id);
+			render(office);
 		}
 		
 	}

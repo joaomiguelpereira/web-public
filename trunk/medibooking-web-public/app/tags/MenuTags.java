@@ -13,6 +13,7 @@ import models.enums.UserType;
 import play.Logger;
 import play.mvc.Http.Request;
 import play.mvc.Scope.Session;
+import play.templates.BaseTemplate;
 import play.templates.FastTags;
 import play.templates.JavaExtensions;
 import play.templates.Template;
@@ -33,25 +34,24 @@ public class MenuTags extends BaseFastTags {
 		if (hasSession()) {
 			UserType uType = UserType.valueOf(Session.current().get(
 					SessionValuesConstants.USER_TYPE));
-			
+
 			templateName.append(StringUtils.camelize(uType.toString(), false));
 			templateName.append("MainMenu.html");
-			
-			
+
 		} else {
 			templateName.append("defaultMainMenu.html");
-			
+
 		}
-		
-		// Get user type
-		Template menuTemplate = TemplateLoader.load(templateName.toString());
-		
-		//Current action
+
+		// Current action
 		final String currentAction = Request.current().action;
-		
-		menuTemplate.compile();
-		String templateStr = menuTemplate.render(new HashMap<String, Object>(){{put("currentAction",currentAction);}});
-		out.println(JavaExtensions.raw(templateStr));
-		
+
+		BaseTemplate t = (BaseTemplate) TemplateLoader.load(templateName
+				.toString());
+		Map<String, Object> newArgs = new HashMap<String, Object>();
+		newArgs.putAll(template.getBinding().getVariables());
+		newArgs.put("currentAction", currentAction);
+		t.render(newArgs);
+
 	}
 }

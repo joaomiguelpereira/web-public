@@ -35,14 +35,21 @@
 	                
 	               
 	               #{inlineUserSession/}
+	               
 	               #{menus.mainMenu/}
 	               
 	            
 	            
 	            </div> <!-- End Page Header -->
+	            
 	        </div><!-- End Page Header Wrapper -->
+	    	
+	    	<div id="content-header">
+	    			#{get 'contentHeader' /}	
+	    	</div>
+	    	
 	    	<div id="content" class="clearfix">
-	    	   #{doLayout /}
+	    		   #{doLayout /}
 	    	</div><!--End content-->
 	    	<div class="clearfix"></div>
 	    	<div id="page-footer-wrapper">
@@ -50,8 +57,8 @@
 	    	       <div id="containers">
 	    	           
 	    	           <div id="first">
-	    	               <a href="@{Offices.index}">Consultórios e clínicas</a>
-	    	               <a href="@{Offices.preRegister}">Tornar-se parceiro</a>
+	    	               
+	    	               
 	    	               <a href="@{Users.blank(models.enums.UserType.OFFICE_ADMIN)}">Criar conta de dono</a>
 	    	               <a href="@{Users.blank(models.enums.UserType.USER)}">Criar conta normal</a>
 	    	               

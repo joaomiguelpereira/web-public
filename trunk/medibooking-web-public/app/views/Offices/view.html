@@ -1,0 +1,35 @@
+#{extends 'main.html' /}
+#{set title:play.i18n.Messages.get('offices.views.view') /}
+
+#{set 'contentHeader'}
+	Clínica/Consultório: ${office.name}
+	
+#{/set}
+
+#{menus.officeMenuOptions office:office/}
+
+<div id="office-view-data" class="view-data">
+	 <h1>Informação sobre Clínica/Consultório</h1>
+	 
+	 <div class="view-field">
+	 	<span class="field-name">Nome:</span>
+	 	<span class="field-value">${office.name}</span>	 	
+	 </div>
+
+	 <div class="view-field">
+	 	<span class="field-name">Morada:</span>
+	 	<span class="field-value">${office.address.addressLineOne}</span>	 	
+	 </div>
+
+	 <div class="view-field">
+	 	<span class="field-name">Código Postal:</span>
+	 	<span class="field-value">${office.address.postalCode}</span>	 	
+	 </div>
+
+	 <div class="view-field">
+	 	<span class="field-name">Localidade:</span>
+	 	<span class="field-value">${office.address.city}</span>	 	
+	 </div>
+
+</div>
+

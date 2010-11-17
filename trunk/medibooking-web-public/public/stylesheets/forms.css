@@ -1,7 +1,24 @@
 /* form.css */
 /*Start forms stuff*/
-.wizard-form {
-	width: 65%;
+.view-data .view-field span.field-name {
+	display: block;
+	float: left;
+	width: 250px;
+	padding: 0;
+	margin: 0;
+	text-align: left;
+	font-weight: bold;
+	padding-top: 3px;
+}
+
+.view-data .view-field span.field-value {
+	display: block;
+	float: left;
+	padding-top: 3px;
+}
+
+.view-data {
+	max-width: 700px;
 	min-width: 288px;
 	float: left;
 	border: solid 1px #ccc;
@@ -11,34 +28,29 @@
 	border-radius: 5px;
 }
 
-.wizard-form form {
+.view-data form {
 	background-color: #ecf7dc;
 	margin: 4px;
 	padding: 4px;
 	border: solid 1px #becfd4;
 }
 
-
-.wizard-form form fieldset div.buttons input[type='submit'], .wizard-form form fieldset div.buttons input[type='button']{
-	
+.view-data form fieldset div.buttons input[type='submit'],.view-data form fieldset div.buttons input[type='button']
+	{
 	padding: 5px;
-	padding-left:7px;
-	padding-right:7px;
+	padding-left: 7px;
+	padding-right: 7px;
 	cursor: pointer;
 }
 
-.wizard-form form fieldset div.buttons a{
-	
+.view-data form fieldset div.buttons a {
 	padding: 5px;
-	padding-left:7px;
-	padding-right:7px;
+	padding-left: 7px;
+	padding-right: 7px;
 	cursor: pointer;
 }
 
-
-
-	
-.wizard-form form fieldset {
+.view-data form fieldset {
 	clear: both;
 	font-size: 100%;
 	border-color: #000000;
@@ -47,7 +59,7 @@
 	margin: 0 0 0 0;
 }
 
-.wizard-form form fieldset legend {
+.view-data form fieldset legend {
 	font-size: 100%;
 	font-weight: bold;
 	color: #000000;
@@ -55,7 +67,7 @@
 	padding: 0 5px;
 }
 
-.wizard-form form fieldset div.info {
+.view-data form fieldset div.info {
 	font-style: italic;
 	margin-top: -8px;
 	padding: 4px;
@@ -63,34 +75,34 @@
 	font-size: 0.9em;
 }
 
-.wizard-form h1 {
+.view-data h1 {
 	font-size: 1.2em;
 	border-bottom: solid 1px #becfd4;
 }
 
-.wizard-form div.question {
+.view-data div.question {
 	font-weight: bold;
 	margin-bottom: 2px;
 }
 
-.wizard-form ul.answer-multiple-choice {
+.view-data ul.answer-multiple-choice {
 	list-style-type: none;
 	padding-left: 5px;
 	margin-top: 0px;
 }
 
-.wizard-form form div {
+.view-data form div {
 	clear: left;
 	display: block;
 	margin: 10px 0 0 0;
 	padding: 1px 3px;
 }
 
-.wizard-form label {
+.view-data label {
 	font-weight: normal;
 }
 
-.wizard-form form div label {
+.view-data form div label {
 	display: block;
 	float: left;
 	width: 250px;
@@ -99,63 +111,58 @@
 	text-align: left;
 }
 
-.wizard-form form div label span.required-sybmol {
+.view-data form div label span.required-sybmol {
 	font-size: 0.9em;
 	vertical-align: top;
 	padding-left: 3px;
 }
 
-.wizard-form form div span.info,.wizard-form form div span.error {
+.view-data form div span.info,.view-data form div span.error {
 	display: block;
 	margin-left: 250px;
 	vertical-align: top;
 	font-size: 0.8em;
 }
 
-.wizard-form form div span.info {
+.view-data form div span.info {
 	color: #888;
 }
 
-.wizard-form form div span.error {
+.view-data form div span.error {
 	color: #ff0000
 }
 
-.wizard-form form div input[type='text'] {
+.view-data form div input[type='text'] {
 	width: 300px;
 	padding: 3px 4px;
 	border: solid 1px #000;
 	margin: 0 0 0 0;
 }
 
-
-.wizard-form form div textarea {
+.view-data form div textarea {
 	width: 300px;
 	padding: 3px 4px;
 	margin: 0 0 0 0;
 	border: solid 1px #000;
 }
 
-form div.hasError input[type='text'], form div.hasError textarea {
+form div.hasError input[type='text'],form div.hasError textarea {
 	border-color: red;
 }
 
-.wizard-form form div input[type='checkbox'] {
-	
+.view-data form div input[type='checkbox'] {
 	padding: 3px 4px;
 	margin: 0 0 0 0;
 	margin-left: 250px;
 	float: left;
-		
 }
-.wizard-form form div label.checkbox {
-	
+
+.view-data form div label.checkbox {
 	padding: 0;
-	margin-left:10px;
+	margin-left: 10px;
 	text-align: left;
 	width: auto;
-
 }
-
 /* Start not touched*/
 /*
 label u {
