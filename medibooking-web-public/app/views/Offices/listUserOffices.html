@@ -1,6 +1,20 @@
 #{extends 'main.html' /}
 #{set title:'Clinicas e Consultórios' /}
 
+
+
+<div id="data-left-menu">
+	<ul>
+		<li class="selected">Listar</li>
+		<li><a href="@{Offices.preRegister}">Criar nova</a></li>
+		
+		
+		
+		
+	</ul>
+</div>
+
+
 <div id="offices-list">
 	#{include 'Offices/jsOfficesTable.html'/}
 	

@@ -3,7 +3,7 @@
 
 	<ul>
 		<li>
-			<a href="@{Offices.listUserOffices}" class="${currentAction.equals('Offices.listUserOffices')?"selected":""}">As minha Clínicas/Consultórios</a>
+			<a href="@{Offices.listUserOffices}" class="${currentAction.startsWith('Offices.')?"selected":""}">As minha Clínicas/Consultórios</a>
 			<a href="@{Users.userCreatedConfirmation}" class="${currentAction.equals('Users.userCreatedConfirmation')?"selected":""}">Os meus dados</a>
 		
 		</li>

@@ -32,9 +32,10 @@
 
 #page-header #menu ul li a:hover {
 	background-color: #fff;
-	padding-bottom: 4px;
+	padding-bottom: 6px;
 	border-bottom: none;
 	background-color: #f4f5f6;
+	
 }
 
 #page-header #menu ul li a.selected {
@@ -44,7 +45,9 @@
     font-weight: bold;
     border: none;
     
-    padding-bottom: 4px;
+    padding-bottom: 6px;
     border-bottom: none;
-    
+   
 }
+
+
