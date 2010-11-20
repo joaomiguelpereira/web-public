@@ -18,8 +18,8 @@ import play.i18n.Messages;
 import play.libs.Crypto;
 
 import services.UserService;
-import models.Office;
-import models.OfficeAdministrator;
+import models.Business;
+import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
 
@@ -192,9 +192,9 @@ public class Users extends Application {
 	@RequiresUserSession(userTypes=UserType.ADMIN)
 	public static void index() {
 		List<User> users = User.find("userType=?", UserType.USER).fetch();
-		List<OfficeAdministrator> officeAdmins = OfficeAdministrator.findAll();
+		List<BusinessAdministrator> businessesAdmins = BusinessAdministrator.findAll();
 
-		render(users, officeAdmins);
+		render(users, businessesAdmins);
 
 	}
 
@@ -225,8 +225,8 @@ public class Users extends Application {
 		User savedUser = null;
 		switch (userType) {
 
-		case OFFICE_ADMIN:
-			savedUser = new OfficeAdministrator(user).save();
+		case BUSINESS_ADMIN:
+			savedUser = new BusinessAdministrator(user).save();
 			break;
 
 		default:
