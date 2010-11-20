@@ -1,0 +1,118 @@
+
+#{form _postUrl, id:_formId}
+
+       <fieldset>
+       
+           <legend>Informação sobre negócio</legend>
+           <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
+           
+           #{field 'business.name'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Nome :<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_business?.name}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}
+                   <span class="info">O nome pelo qual o seu negócio vai é conhecido.</span>
+               </div>
+           #{/field}
+
+           #{field 'business.address.addressLineOne'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Morada :<span class="required-sybmol">*</span></label>
+                   <textarea  name="${field.name}" id="${field.name}">${_business?.address?.addressLineOne}</textarea>
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}
+                   
+               </div>
+           #{/field}
+
+
+           #{field 'business.address.postalCode'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Código Postal :<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_business?.address?.postalCode}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                   
+               </div>
+           #{/field}
+
+           #{field 'business.address.city'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Localidade :<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_business?.address?.city}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+
+           #{field 'business.phone1'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Telefone <span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${_business?.phone1}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+           #{field 'business.mobile1'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Telemóvel :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${_business?.mobile1}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+
+           #{field 'business.email'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Email :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_business?.email}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+           #{field 'business.url'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Página web :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_business?.url}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+           <p class="space"></p>
+           <legend>Descrição do negócio</legend>
+
+           #{field 'business.shortIntroduction'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Apresentação :</label>
+                   <textarea  rows="10" name="${field.name}" id="${field.name}">${_business?.shortIntroduction}</textarea>
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}
+                   <span class="info">Texto que vai ser apresentado aos utilizadores nas listagens. Máximo de 500 caractéres</span>                    
+               </div>
+           #{/field}
+           
+           <div class="buttons">
+	            <input type="submit" value="&{_i18nSubmit}"> 
+	            <a href="${_cancelAction}">&{'forms.cancel.label'}</a>    
+	        </div>
+	        
+           
+	</fieldset>
+#{/form}
