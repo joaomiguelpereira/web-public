@@ -1,0 +1,15 @@
+%{
+	currentAction = request.action;
+}%
+<div id="data-left-menu">
+	<ul>
+		<li class="${currentAction.startsWith('Offices.view')?"selected":""}"><a href="@{Offices.view(office.id)}">Consultar</a></li>
+		
+		<li class="${currentAction.startsWith('Offices.edit')?"selected":""}"><a href="@{Offices.edit(office.id)}">Editar</a></li>
+		<li><a href="">Médicos</a></li>
+		<li class="separator"></li>
+		
+		
+	</ul>
+</div>
+

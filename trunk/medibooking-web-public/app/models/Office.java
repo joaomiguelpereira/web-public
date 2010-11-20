@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 
-import models.enums.BusinessType;
 
 import play.Logger;
 import play.data.validation.CheckWith;
@@ -44,9 +43,8 @@ public class Office extends BaseModel {
     @MinSize(4)
 	private String name;
 	
-	@Required
-	@Enumerated(EnumType.STRING)
-	private BusinessType businessType;
+	@MaxSize(500)
+	private String shortIntroduction;
 	
 	@Required
 	@PhoneNumber
@@ -107,13 +105,6 @@ public class Office extends BaseModel {
 		return name;
 	}
 
-	public void setBusinessType(BusinessType businessType) {
-		this.businessType = businessType;
-	}
-
-	public BusinessType getBusinessType() {
-		return businessType;
-	}
 
 	public void setAddress(Address address) {
 		this.address = address;
@@ -199,6 +190,12 @@ public class Office extends BaseModel {
 	
 	public int getAdminCount() {
 		return this.administrators.size();
+	}
+	public void setShortIntroduction(String shortIntroduction) {
+		this.shortIntroduction = shortIntroduction;
+	}
+	public String getShortIntroduction() {
+		return shortIntroduction;
 	}
 	
 	

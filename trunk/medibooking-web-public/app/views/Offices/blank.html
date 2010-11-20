@@ -1,0 +1,26 @@
+#{extends 'main.html' /}
+
+#{set title:'Home' /}
+
+
+
+
+#{helperBox title:'Precisa de Ajuda?'}
+    <ul>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+        <li><a href="#">O que é o mediBooking.com</a></li>
+    </ul>
+#{/helperBox}
+
+
+<div class="view-data">
+    <h1>Torne-se nosso parceiro</h1>
+    <p>Por favor preencha os dados para o registo do seu negócio</p>
+ 
+    <p class="spacer"></p>
+
+	#{Offices.officeForm office:office, postUrl:@create(), formId:'newOffice', cancelAction:@list(), i18nSubmit:'forms.create.button'/}
+    
+    
+</div>

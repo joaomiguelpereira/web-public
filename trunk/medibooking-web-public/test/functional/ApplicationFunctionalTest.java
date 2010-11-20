@@ -1,24 +1,26 @@
 package functional;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import models.User;
 
 import org.junit.Ignore;
 
+import play.Logger;
+import play.data.validation.Error;
+import play.data.validation.Validation;
+import play.i18n.Messages;
+import play.mvc.Http;
+import play.mvc.Http.Response;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
+import play.mvc.Scope;
+import play.mvc.Scope.Flash;
+import play.test.FunctionalTest;
 import constants.SessionValuesConstants;
 import controllers.Users;
-import play.i18n.Messages;
-import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Scope;
-import play.mvc.Http.Response;
-import play.mvc.Router.ActionDefinition;
-import play.mvc.Scope.Flash;
-import play.mvc.Router;
-import play.test.FunctionalTest;
 
 @Ignore
 public class ApplicationFunctionalTest extends FunctionalTest {
@@ -27,6 +29,19 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 	private String methodName;
 	private Map<String, Object> args = new HashMap<String, Object>();
 	private Class[] argTypes;
+
+	protected void showValidationErrors() {
+		
+		Map<String, List<play.data.validation.Error>> errors = Validation.current().errorsMap();
+
+		for (List<play.data.validation.Error> theErrors : errors.values()) {
+			for (Error error : theErrors) {
+				Logger.debug("Error on " + error.getKey() + ":"
+						+ error.message());
+			}
+		}
+
+	}
 
 	/**
 	 * Call FunctionalTest.GET
@@ -39,21 +54,26 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 
 	/**
 	 * 
-	 * @param url
-	 *            Url to test
+	 * @param response
+	 *            response
 	 * @param expectedUrl
 	 *            The expected URL
 	 * @param expectedUrlparams
 	 *            The params to construct the expected URL. Must have even
 	 * 
 	 */
-	protected void assertRedirectedTo(String url, String expectedUrl,
+	protected void assertRedirectedTo(Response response, String expectedUrl,
 			Map<String, Object> expectedUrlparams) {
 		ActionDefinition ad = Router.reverse(expectedUrl, expectedUrlparams);
 		ad.absolute();
-		assertEquals(ad.url, url);
+		String currentUrl = response.current().getHeader("Location");
+		assertEquals(ad.url, currentUrl);
 	}
 
+	protected void logoutCurrentUser() {
+		Scope.Session.current().clear();
+		Flash.current().clear();
+	}
 	protected void authenticateUser(String email, String password,
 			boolean keepLogged) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -88,7 +108,19 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		assertEquals(Messages.get(i18nKey), Flash.current().get("warning"));
 	}
 
+	protected void assertNoWarningFlashed() {
+		if (Flash.current().contains("warning")) {
+			Logger.debug("Warning Flashed:" + Flash.current().get("warning"));
+		}
+		assertNull(Flash.current().get("warning"));
+
+	}
+	
+	
 	protected void assertNoErrorFlashed() {
+		if (Flash.current().contains("error")) {
+			Logger.debug("Error Flashed:" + Flash.current().get("error"));
+		}
 		assertNull(Flash.current().get("error"));
 
 	}

@@ -161,6 +161,10 @@ body {
 	background-color: #dee8eb;
 }
 
+#data-left-menu ul li.selected a:hover {
+	background-color: #dee8eb;
+}
+
 #data-left-menu ul li.separator {
 	border-bottom: solid 1px #ccc;
 	padding-top: 5px;

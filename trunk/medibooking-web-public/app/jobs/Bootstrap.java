@@ -12,7 +12,6 @@ import models.Administrator;
 import models.Office;
 import models.OfficeAdministrator;
 import models.User;
-import models.enums.BusinessType;
 import models.enums.UserType;
 import models.factories.TestOfficeFactory;
 import play.Logger;
@@ -88,19 +87,21 @@ public class Bootstrap extends Job<String> {
 		for (int i=0; i<1; i++) {
 			Office office = createTestOffice("my Office nbr "+i);
 			office.addAdministrator(oAdmin2);
-			offices.add(office);	
+			office.addAdministrator(oAdmin);
+			//offices.add(office);	
 			oAdmin2.addAdministeredOffice(office);
+			oAdmin.addAdministeredOffice(office);
 		}
 		
 		//createTestOffice(oAdmin, "Office nbr asd");
 		
-		
+		oAdmin.save();
 		oAdmin2.save();
 
 	}
 
 	private Office createTestOffice(String officeName) {
-		final BusinessType businessType = BusinessType.OFFICE;
+		
 		final String addressLineOne = "Address Line ";
 		final String addressLineTwo = "Address Line 2";
 		final String addressPostalCode = "Postal Code";
@@ -112,7 +113,7 @@ public class Bootstrap extends Job<String> {
 		Office office = new Office();
 
 		office.setName(officeName);
-		office.setBusinessType(businessType);
+		
 		office.setPhone1(phoneNumber1);
 		office.setPhone2(phoneNumber2);
 

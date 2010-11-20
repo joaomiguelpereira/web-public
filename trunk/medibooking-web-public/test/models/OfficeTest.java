@@ -3,7 +3,6 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.enums.BusinessType;
 import models.factories.TestOfficeFactory;
 
 import org.junit.Before;
@@ -38,8 +37,8 @@ public class OfficeTest extends ModelUnitTest {
 		assertTrue(admin2.validateAndSave());
 		
 
-		Office office = TestOfficeFactory.createOffice(null);
-		Office office2 = TestOfficeFactory.createOffice(null);
+		Office office = TestOfficeFactory.createOffice(null,null);
+		Office office2 = TestOfficeFactory.createOffice(null,null);
 
 		office2.addAdministrator(admin2);
 		office2.addAdministrator(admin);
@@ -83,7 +82,7 @@ public class OfficeTest extends ModelUnitTest {
 		assertEntitySaved();
 		// assertTrue(admin.validateAndSave());
 
-		Office office = TestOfficeFactory.createOffice(null);
+		Office office = TestOfficeFactory.createOffice(null,null);
 		ArrayList<OfficeAdministrator> admins = new ArrayList<OfficeAdministrator>();
 		admins.add(admin);
 		office.setAdministrators(admins);
@@ -111,7 +110,7 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void invalidPhones() {
 
-		Office partner = TestOfficeFactory.createOffice(null);
+		Office partner = TestOfficeFactory.createOffice(null,null);
 
 		partner.setPhone1("invalid1");
 		// Save it
@@ -127,7 +126,7 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void validateDuplicatedName() {
 
-		Office partner = TestOfficeFactory.createOffice(null);
+		Office partner = TestOfficeFactory.createOffice(null,null);
 
 		// Save it
 		partner.validateAndSave();
@@ -136,7 +135,7 @@ public class OfficeTest extends ModelUnitTest {
 		Office savedPartner = Office.find("name=?", partner.getName()).first();
 		assertNotNull(savedPartner);
 
-		Office partner2 = TestOfficeFactory.createOffice(partner.getName());
+		Office partner2 = TestOfficeFactory.createOffice(partner.getName(),null);
 
 		// Don't save it because the name is not unique
 		assertFalse(partner2.validateAndSave());
@@ -146,7 +145,7 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void createAndRetrievePartner() {
 
-		Office office = TestOfficeFactory.createOffice(null);
+		Office office = TestOfficeFactory.createOffice(null,null);
 		// Save it
 
 		assertTrue(office.validateAndSave());

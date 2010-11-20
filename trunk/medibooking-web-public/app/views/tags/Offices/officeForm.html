@@ -1,0 +1,103 @@
+
+#{form _postUrl, id:_formId}
+
+       <fieldset>
+       
+           <legend>Informação sobre <span class="businessTypeWithPronoum"></span></legend>
+           <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
+           
+           #{field 'office.name'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Nome <span class="businessTypeWithPreposition"></span>:<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_office?.name}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}
+                   <span class="info">O nome pelo qual o seu negócio vai é conhecido.</span>
+               </div>
+           #{/field}
+
+           #{field 'office.address.addressLineOne'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Morada :<span class="required-sybmol">*</span></label>
+                   <textarea  name="${field.name}" id="${field.name}">${_office?.address?.addressLineOne}</textarea>
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}
+                   
+               </div>
+           #{/field}
+
+
+           #{field 'office.address.postalCode'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Código Postal :<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_office?.address?.postalCode}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                   
+               </div>
+           #{/field}
+
+           #{field 'office.address.city'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Localidade :<span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_office?.address?.city}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+
+           #{field 'office.phone1'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Telefone <span class="required-sybmol">*</span></label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${_office?.phone1}" />
+                   
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+           #{field 'office.mobile1'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Telemóvel :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="10" maxlength="9" value="${_office?.mobile1}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+
+           #{field 'office.email'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Email :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_office?.email}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+
+           #{field 'office.url'}
+               <div class="${field.errorClass}">
+                   <label for="${field.name}">Página web :</label>
+                   <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${_office?.url}" />
+                   #{ifErrors}
+                       <span class="error">${field.error}</span>
+                   #{/ifErrors}                    
+               </div>
+           #{/field}
+           <div class="buttons">
+	            <input type="submit" value="&{_i18nSubmit}"> 
+	            <a href="${_cancelAction}">&{'forms.cancel.label'}</a>    
+	        </div>
+           
+	</fieldset>
+#{/form}
