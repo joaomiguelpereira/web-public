@@ -14,9 +14,9 @@ public class Application extends BaseController {
     		UserType uType = UserType.valueOf(session.get(SessionValuesConstants.USER_TYPE));
     		
     		switch (uType) {
-			case OFFICE_ADMIN:
+			case BUSINESS_ADMIN:
 				flash.keep();
-				Offices.list();
+				Businesses.list();
 				break;
 			default:
 				render();

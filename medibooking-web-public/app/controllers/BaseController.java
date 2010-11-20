@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import annotations.authorization.RequiresUserSession;
-import models.OfficeAdministrator;
+import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
 import constants.Constants;
@@ -59,13 +59,13 @@ public class BaseController extends Controller {
 				&& session.contains(SessionValuesConstants.USER_TYPE);
 	}
 
-	protected static OfficeAdministrator getCurrentAdministrator() {
+	protected static BusinessAdministrator getCurrentAdministrator() {
 
-		if (currentUser.get() instanceof OfficeAdministrator) {
-			return (OfficeAdministrator) currentUser.get();
+		if (currentUser.get() instanceof BusinessAdministrator) {
+			return (BusinessAdministrator) currentUser.get();
 		} else {
 			throw new RuntimeException("Expecting current user to be an "
-					+ OfficeAdministrator.class.getName() + " but is "
+					+ BusinessAdministrator.class.getName() + " but is "
 					+ currentUser.get().getClass().getName());
 		}
 
