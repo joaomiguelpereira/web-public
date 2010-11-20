@@ -13,4 +13,17 @@ public class BaseFastTags extends FastTags {
 						SessionValuesConstants.LOGIN_TOKEN) && Session
 				.current().contains(SessionValuesConstants.USER_TYPE));
 	}
+	
+	/**
+	 * Throw an illegal argument exception if conditions is false
+	 * @param condition
+	 * @param message
+	 */
+	protected static void throwIllegalArgumentExceptionIfNotTrue(boolean condition,
+			String message) {
+		if ( !condition ) {
+			throw new IllegalArgumentException(message);
+		}
+	}
+
 }
