@@ -7,7 +7,6 @@ import java.util.UUID;
 import models.Address;
 import models.Office;
 import models.OfficeAdministrator;
-import models.enums.BusinessType;
 
 import org.junit.Ignore;
 
@@ -15,7 +14,13 @@ import org.junit.Ignore;
 public abstract class TestOfficeFactory {
 	
 	
-	public static Office createOffice(String name) {
+	/**
+	 * Create a new test Office
+	 * @param name The name. If null some random String will be used
+	 * @param oAdmin The administrator of the office
+	 * @return the newly created office. Not persisted
+	 */
+	public static Office createOffice(String name, OfficeAdministrator oAdmin) {
 		
 		final String sufix = System.nanoTime()+"";
 		String officeName = "Office "+sufix;
@@ -26,7 +31,6 @@ public abstract class TestOfficeFactory {
 			officeName = name;
 		}
 		
-		final BusinessType businessType = BusinessType.OFFICE;
 		final String addressLineOne = "Address Line "+sufix;
 		final String addressLineTwo = "Address Line 2"+sufix;
 		final String addressPostalCode = "Postal Code";
@@ -41,7 +45,7 @@ public abstract class TestOfficeFactory {
 		Office office = new Office();
 		
 		office.setName(officeName);
-		office.setBusinessType(businessType);
+	
 		office.setPhone1(phoneNumber1);
 		office.setPhone2(phoneNumber2);
 		
@@ -54,6 +58,10 @@ public abstract class TestOfficeFactory {
 		officeAddress.setCity(addressCity);
 		officeAddress.setCountry(addressCountry);
 		office.setAddress(officeAddress);
+		if ( oAdmin != null ) {
+			office.addAdministrator(oAdmin);
+		}
+		
 		return office;
 		
 	}

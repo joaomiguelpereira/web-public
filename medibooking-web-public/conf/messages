@@ -69,7 +69,7 @@ validation.phone=O número não é válido
 
 #messages for offices
 office.register.error = Não é possível continuar. Verifique os errors!
-office.register.success = O registo foi concluído com sucesso.
+office.save.success = O registo foi concluído com sucesso.
 office.type.OFFICE = Consultório
 office.type.CLINIC = Clinica
 
@@ -77,5 +77,9 @@ office.type.CLINIC = Clinica
 views.users.register.title = Registar novo utilizador
 views.users.type.OFFICE_ADMIN = Gestor de Negócio
 views.users.type.USER = Utilizador
+
+
+#Office views
+offices.views.view = Ver Consultório/Clínica
 
 

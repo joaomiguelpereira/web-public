@@ -6,10 +6,11 @@
 GET     /                                       Application.index
 
 #Routes for Offices
-GET /offices                                    Offices.index
-GET /offices/pre-register                       Offices.preRegister
-GET /myoffices									Offices.listUserOffices
-GET /myoffices/{id}								Offices.view
+GET /offices                                    Offices.list
+GET /offices/new		                        Offices.blank
+GET /office/{id}								Offices.view
+GET /office/{id}/edit							Offices.edit
+
 
 #Users
 

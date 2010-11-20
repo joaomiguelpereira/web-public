@@ -1,38 +1,39 @@
  #{if flash.error}
-            <div id="floating-message-wrapper" class="error">
-                <div id="page-message">
-                    <strong>${flash.error}</strong>
-                </div>
-                
-                <div id="page-message-close">
-                    <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
-                    
-                </div>
-            </div>
-        #{/if}
+	 <div id="floating-message-wrapper" class="error">
+	     <div id="page-message">
+	         <strong>${flash.error}</strong>
+	     </div>
+	     
+	     <div id="page-message-close">
+	         <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
+	         
+	     </div>
+	 </div>
+
+#{/if}
         
-        #{if flash.success}
-            <div id="floating-message-wrapper" class="success">
-                <div id="page-message">
-                    <strong>${flash.success}</strong>
-                </div>
-                
-                <div id="page-message-close">
-                    <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
-                    
-                </div>
-            </div>    
-        #{/if}
+#{if flash.success}
+     <div id="floating-message-wrapper" class="success">
+         <div id="page-message">
+             <strong>${flash.success}</strong>
+         </div>
+         
+         <div id="page-message-close">
+             <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
+             
+         </div>
+     </div>    
+#{/if}
         
-        #{if flash.contains("warning")}
-            <div id="floating-message-wrapper" class="warning">
-                <div id="page-message">
-                    <strong>${flash.get("warning")}</strong>
-                </div>
-                
-                <div id="page-message-close">
-                    <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
-                    
-                </div>
-            </div>    
-        #{/if}
+#{if flash.contains("warning")}
+      <div id="floating-message-wrapper" class="warning">
+          <div id="page-message">
+              <strong>${flash.get("warning")}</strong>
+          </div>
+          
+          <div id="page-message-close">
+              <a href="#" onClick="FloatingMessagesUtils.close()">X</a>
+              
+          </div>
+      </div>    
+#{/if}

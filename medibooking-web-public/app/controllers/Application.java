@@ -16,7 +16,7 @@ public class Application extends BaseController {
     		switch (uType) {
 			case OFFICE_ADMIN:
 				flash.keep();
-				Offices.listUserOffices();
+				Offices.list();
 				break;
 			default:
 				render();

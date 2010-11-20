@@ -1,0 +1,13 @@
+#{extends 'main.html' /}
+#{set title:play.i18n.Messages.get('offices.views.view') /}
+
+#{set 'contentHeader'}
+	Clínica/Consultório: ${office.name}
+	
+#{/set}
+
+#{include 'Offices/officeMenuOptions.html'/}
+
+<div class="view-data">
+	#{Offices.officeForm office:office, postUrl:@save(office.id), formId:'editOffice', cancelAction:@view(office.id), i18nSubmit:'forms.save.button'/}
+</div>

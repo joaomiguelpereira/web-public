@@ -14,6 +14,8 @@ import play.Logger;
 import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
+import play.data.validation.Error;
+import play.data.validation.Validation;
 import play.db.jpa.Model;
 import play.i18n.Messages;
 import play.libs.Crypto;
@@ -23,33 +25,27 @@ import play.mvc.Scope;
 import play.mvc.With;
 import play.mvc.Http.Cookie;
 
-public class BaseController extends Controller  {
+public class BaseController extends Controller {
 
-	//private static final int NUMBER_ROWS_PER_PAGE = 5;
+	// private static final int NUMBER_ROWS_PER_PAGE = 5;
 	/**
 	 * Current logged in user. Each Thread has its own copy
 	 */
 	protected static ThreadLocal<User> currentUser = new ThreadLocal<User>();
 
-	
-	/*protected static <T extends Model> List<T> paginate(List<T> collection) {
-		//set the total number of pages
-		int currentPage = 0;
-		
-		if ( request.current().args.containsKey("currentPage")) {
-			
-			currentPage = Integer.valueOf(request.current().args.get("currentPage").toString()).intValue();
-		}
-		
-		Scope.RenderArgs.current().put("totalPages", collection.size()/NUMBER_ROWS_PER_PAGE);
-		Scope.RenderArgs.current().put("currentPage", currentPage+1);
-		Scope.RenderArgs.current().put("callbackUrl", request.current().action);
-		
-		
-				
-		return collection.subList(0, NUMBER_ROWS_PER_PAGE);
+	protected static void logValidationErrors() {
 
-	}*/
+		Map<String, List<play.data.validation.Error>> errors = Validation
+				.current().errorsMap();
+
+		for (List<play.data.validation.Error> theErrors : errors.values()) {
+			for (Error error : theErrors) {
+				Logger.debug("Error on " + error.getKey() + ":"
+						+ error.message());
+			}
+		}
+
+	}
 
 	/**
 	 * Check if a valid session exists

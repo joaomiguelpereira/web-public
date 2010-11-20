@@ -24,15 +24,35 @@ public class UniqueCheck extends AbstractAnnotationCheck<Unique> {
 		// Check if the value of the field is null or empty and assume that the
 		// validation is satisfied in this case
 		
+		Long id = null;
+		if (validatedObject instanceof Model ) {
+			Model model = (Model)validatedObject;
+			if ( model.isPersistent() ) {
+				id = model.id;
+			}
+		}
+		
 		if (value != null && value.toString().length() > 0) {
-			StringBuffer queryStr = new StringBuffer();
+			StringBuilder queryStr = new StringBuilder();
 			queryStr.append("select p from ");
 			queryStr.append(validatedObject.getClass().getSimpleName());
 			queryStr.append(" p where ");
 			queryStr.append(((FieldContext) context).getField().getName());
 			queryStr.append("=:value");
+			if ( id != null ) {
+				queryStr.append(" and id!=:id");
+			}
+			
+			
+			
+			//queryStr.append(" and id");
+			
 			Query query = JPA.em().createQuery(queryStr.toString());
 			query.setParameter("value", value);
+			
+			if ( id!=null) {
+				query.setParameter("id", id);
+			}
 			
 			if (query.getResultList().size() != 0) {
 				satisfied = false;
