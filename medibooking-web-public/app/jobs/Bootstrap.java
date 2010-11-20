@@ -9,11 +9,11 @@ import jj.play.ns.com.jhlabs.image.CraterFilter;
 
 import models.Address;
 import models.Administrator;
-import models.Office;
-import models.OfficeAdministrator;
+import models.Business;
+import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
-import models.factories.TestOfficeFactory;
+import models.factories.TestBusinessFactory;
 import play.Logger;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -41,14 +41,14 @@ public class Bootstrap extends Job<String> {
 		user.setPassword("12345");
 		user.save();
 
-		OfficeAdministrator oAdmin = new OfficeAdministrator();
+		BusinessAdministrator oAdmin = new BusinessAdministrator();
 		oAdmin.setName("Office admin");
 		oAdmin.setActive(true);
 		oAdmin.setEmail("oadmin@gmail.com");
 		oAdmin.setPassword("12345");
 		oAdmin.save();
 
-		OfficeAdministrator oAdmin2 = new OfficeAdministrator();
+		BusinessAdministrator oAdmin2 = new BusinessAdministrator();
 		oAdmin2.setName("Office admin2");
 		oAdmin2.setActive(true);
 		oAdmin2.setEmail("oadmin2@gmail.com");
@@ -65,15 +65,15 @@ public class Bootstrap extends Job<String> {
 		// create at least two clinics for user oadmin
 
 		
-		List<Office> offices = new ArrayList<Office>();
+		List<Business> businesses = new ArrayList<Business>();
 		Long totalStartTime = System.nanoTime();
-		for (int i=0; i<200; i++) {
+		for (int i=0; i<5; i++) {
 			Long startTime = System.nanoTime();
 			
-			Office office = createTestOffice("my Office nbr "+i);
+			Business office = createTestBusiness("my Office nbr "+i);
 			office.addAdministrator(oAdmin);
-			offices.add(office);	
-			oAdmin.addAdministeredOffice(office);
+			businesses.add(office);	
+			oAdmin.addAdministeredBusinesses(office);
 			Logger.debug("Created record in: "+ (System.nanoTime()-startTime));
 		}
 		
@@ -83,14 +83,14 @@ public class Bootstrap extends Job<String> {
 		
 		oAdmin.save();
 		
-		offices = new ArrayList<Office>();
+		businesses = new ArrayList<Business>();
 		for (int i=0; i<1; i++) {
-			Office office = createTestOffice("my Office nbr "+i);
-			office.addAdministrator(oAdmin2);
-			office.addAdministrator(oAdmin);
+			Business business = createTestBusiness("my Office nbr "+i);
+			business.addAdministrator(oAdmin2);
+			business.addAdministrator(oAdmin);
 			//offices.add(office);	
-			oAdmin2.addAdministeredOffice(office);
-			oAdmin.addAdministeredOffice(office);
+			oAdmin2.addAdministeredBusinesses(business);
+			oAdmin.addAdministeredBusinesses(business);
 		}
 		
 		//createTestOffice(oAdmin, "Office nbr asd");
@@ -100,7 +100,7 @@ public class Bootstrap extends Job<String> {
 
 	}
 
-	private Office createTestOffice(String officeName) {
+	private Business createTestBusiness(String businessName) {
 		
 		final String addressLineOne = "Address Line ";
 		final String addressLineTwo = "Address Line 2";
@@ -110,21 +110,21 @@ public class Bootstrap extends Job<String> {
 		final String phoneNumber1 = "123456789";
 		final String phoneNumber2 = "987654321";
 
-		Office office = new Office();
+		Business business = new Business();
 
-		office.setName(officeName);
+		business.setName(businessName);
 		
-		office.setPhone1(phoneNumber1);
-		office.setPhone2(phoneNumber2);
+		business.setPhone1(phoneNumber1);
+		business.setPhone2(phoneNumber2);
 
 		Address officeAddress = new Address();
-		officeAddress.setAddressLineOne(addressLineOne+officeName);
+		officeAddress.setAddressLineOne(addressLineOne+businessName);
 		officeAddress.setAddressLineTwo(addressLineTwo);
 		officeAddress.setPostalCode(addressPostalCode);
 		officeAddress.setCity(addressCity);
 		officeAddress.setCountry(addressCountry);
-		office.setAddress(officeAddress);
-		return office;
+		business.setAddress(officeAddress);
+		return business;
 
 	}
 	
