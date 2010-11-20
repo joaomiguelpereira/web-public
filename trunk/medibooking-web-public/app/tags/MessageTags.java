@@ -12,7 +12,7 @@ import play.templates.FastTags;
 import play.templates.GroovyTemplate.ExecutableTemplate;
 
 @FastTags.Namespace("messages")
-public class _setI18nPageTitle extends BaseFastTags {
+public class MessageTags extends BaseFastTags {
 
 	private static final String KEY = "key";
 
