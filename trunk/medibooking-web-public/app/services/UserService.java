@@ -1,6 +1,6 @@
 package services;
 
-import models.OfficeAdministrator;
+import models.BusinessAdministrator;
 import models.User;
 
 public interface UserService {

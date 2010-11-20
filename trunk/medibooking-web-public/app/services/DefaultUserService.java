@@ -1,7 +1,7 @@
 package services;
 
 import exceptions.NotImplementedException;
-import models.OfficeAdministrator;
+import models.BusinessAdministrator;
 import models.User;
 import play.Logger;
 
