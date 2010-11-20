@@ -1,10 +1,7 @@
 #{extends 'main.html' /}
-#{set title:play.i18n.Messages.get('offices.views.view') /}
 
-#{set 'contentHeader'}
-	Clínica/Consultório: ${office.name}
-	
-#{/set}
+#{messages.setI18nTitle key:'offices.views.view' /}
+
 
 #{include 'Offices/officeMenuOptions.html'/}
 

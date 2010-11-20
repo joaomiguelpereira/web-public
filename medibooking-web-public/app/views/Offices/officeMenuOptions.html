@@ -3,12 +3,12 @@
 }%
 <div id="data-left-menu">
 	<ul>
-		<li class="${currentAction.startsWith('Offices.view')?"selected":""}"><a href="@{Offices.view(office.id)}">Consultar</a></li>
+		<li class="${currentAction.equals('Offices.view')?"selected":""}"><a href="@{Offices.view(office.id)}">Consultar</a></li>
 		
-		<li class="${currentAction.startsWith('Offices.edit')?"selected":""}"><a href="@{Offices.edit(office.id)}">Editar</a></li>
+		<li class="${(currentAction.equals('Offices.edit') || currentAction.startsWith('Offices.save'))?"selected":""}"><a href="@{Offices.edit(office.id)}">Editar</a></li>
 		<li><a href="">Médicos</a></li>
 		<li class="separator"></li>
-		
+		<li><a href="@{Offices.list}">Voltar à lista</a></li>
 		
 	</ul>
 </div>

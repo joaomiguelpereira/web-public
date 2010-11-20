@@ -1,17 +1,8 @@
 #{extends 'main.html' /}
 
-#{set title:'Home' /}
+#{messages.setI18nTitle key:'offices.views.blank' /}
 
-
-
-
-#{helperBox title:'Precisa de Ajuda?'}
-    <ul>
-        <li><a href="#">O que é o mediBooking.com</a></li>
-        <li><a href="#">O que é o mediBooking.com</a></li>
-        <li><a href="#">O que é o mediBooking.com</a></li>
-    </ul>
-#{/helperBox}
+#{include 'Offices/officesMenuOptions.html'/}
 
 
 <div class="view-data">
