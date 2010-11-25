@@ -11,17 +11,17 @@ User(bob):
   password: 11111
   active: false
 
-OfficeAdministrator(oadmin):
+BusinessAdministrator(oadmin):
   name: Office Admin Pereira
   email: oadmin_teste@gmail.com
   password: 12345
   active: true
-  userType: models.enums.UserType.OFFICE_ADMIN
+  userType: models.enums.UserType.BUSINESS_ADMIN
   
-OfficeAdministrator(oadmin2):
+BusinessAdministrator(oadmin2):
   name: Office Admin Pereira
   email: oadmin_teste_two@gmail.com
   password: 12345
   active: true
-  userType: models.enums.UserType.OFFICE_ADMIN
+  userType: models.enums.UserType.BUSINESS_ADMIN
   

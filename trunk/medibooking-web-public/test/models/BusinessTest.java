@@ -23,29 +23,7 @@ public class BusinessTest extends ModelUnitTest {
 		Fixtures.load("users.yml");
 	}
 
-	@Test
-	public void deleteBusiness() {
-		//Get a business admin
-		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
-		//Load it with a business
-		Business bu = TestBusinessFactory.createBusiness("Some Name", ba);
-		ba.addAdministeredBusinesses(bu);
-		assertTrue(bu.validateAndSave());
-		ba.save();
-		final long buId = bu.id;
-		//now remove it
-		bu.delete();
-		//try to get it from the db
-		Business buRemoved = Business.findById(buId);
-		assertNull(buRemoved);	
-		
-		
-		
-		
-		
-		
-		
-	}
+	
 	@Test
 	public void officeCanHaveMultipleAdmins() {
 		BusinessAdministrator admin = new BusinessAdministrator();

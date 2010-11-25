@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import models.OfficeAdministrator;
+import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
 
@@ -16,6 +16,7 @@ import constants.SessionValuesConstants;
 import controllers.Users;
 
 import play.Logger;
+import play.db.jpa.Model;
 import play.i18n.Messages;
 import play.libs.Crypto;
 import play.libs.Mail.Mock;
@@ -40,13 +41,122 @@ public class UsersTest extends ApplicationFunctionalTest {
 		if (Flash.current() != null) {
 			Flash.current().clear();
 		}
+		logoutCurrentUser();
 
 	}
 
 	@Test
+	public void showEditMyData() {
+
+		//Log a user
+		authenticateUser("active@gmail.com", "11111", false);
+		User loggedUser = User.find("byEmail", "active@gmail.com").first();
+		Http.Response response = GET(Router.reverse("Users.edit"));
+		assertNoErrorFlashed();
+		assertNoWarningFlashed();
+		assertIsOk(response);
+		assertI18nHtmlTitlePresent(response,"views.users.edit.title");
+		//Assert binding
+		assertBindingExists("user");
+		assertBindedModel("user",loggedUser);	
+
+	}
+	
+	@Test
+	public void forbidShowEditDataForNotLoggedUser() {
+		Http.Response response = GET(Router.reverse("Users.edit"));
+		assertErrorFlashed("user.not.authorized");
+		assertRedirectedTo(response, "Users.login", new HashMap<String, Object>());		
+		assertNoBindingExists("user");
+	}
+	
+	
+
+	
+
+	@Test
+	public void editMyData() {
+		fail();
+	}
+	
+	@Test
+	public void forbidEditDataForNotLoggedUser() {
+		fail();
+	}
+	
+
+	@Test
+	public void forbidEditDataForNotCurrentUser() {
+		fail();
+	}
+	
+	@Test
+	public void showChangePassword() {
+		fail();
+	}
+	
+	@Test
+	public void forbidShowChangePasswordForNotLoggedUser() {
+		fail();
+	}
+	
+
+	@Test
+	public void forbidshowChangePasswordForNotCurrentUser() {
+		fail();
+	}
+
+
+	@Test
+	public void changePassword() {
+		fail();
+	}
+	
+	@Test
+	public void forbidChangePasswordForNotLoggedUser() {
+		fail();
+	}
+	
+
+	@Test
+	public void forbidChangePasswordForNotCurrentUser() {
+		fail();
+	}
+
+	
+	@Test
+	public void showMyData() {
+		
+		//Log a user
+		authenticateUser("active@gmail.com", "11111", false);
+		User loggedUser = User.find("byEmail", "active@gmail.com").first();
+		Http.Response response = GET(Router.reverse("Users.account"));
+		assertNoErrorFlashed();
+		assertNoWarningFlashed();
+		assertIsOk(response);
+		assertI18nHtmlTitlePresent(response,"views.users.account.title");
+		//Assert binding
+		assertBindingExists("user");
+		assertBindedModel("user",loggedUser);	
+	}
+	
+
+
+
+	@Test
+	public void forbidShowDataForNotLoggedUser() {
+		Http.Response response = GET(Router.reverse("Users.account"));
+		assertErrorFlashed("user.not.authorized");
+		assertRedirectedTo(response, "Users.login", new HashMap<String, Object>());		
+		assertNoBindingExists("user");
+	}
+	
+
+
+	@Test
 	public void testShowRegisterForOfficeAdmin() {
 		Response res = withController(Users.class)
-				.withArgs("userType", UserType.OFFICE_ADMIN)
+				.withArgs("userType", UserType.BUSINESS_ADMIN)
 				.withAction("blank").get();
 		assertIsOk(res);
 	}
@@ -191,7 +301,7 @@ assertEquals(Crypto.sign(user.getLoginInformation().getLoginToken()) + SessionVa
 		params.put("user.name", "user name");
 		params.put("user.email", "myemail@gmail.com");
 		params.put("user.password", "MyPassword");
-		params.put("userType", UserType.OFFICE_ADMIN);
+		params.put("userType", UserType.BUSINESS_ADMIN);
 		params.put("emailConfirmation", "myemail@gmail.com");
 		params.put("passwordConfirmation", "MyPassword");
 		params.put("termsAgreement", true);
@@ -200,7 +310,7 @@ assertEquals(Crypto.sign(user.getLoginInformation().getLoginToken()) + SessionVa
 		assertSuccessFlashed("user.register.success");
 		assertStatus(200, response);
 		// Find the user in DB
-		OfficeAdministrator oa = OfficeAdministrator.find("email=?",
+		BusinessAdministrator oa = BusinessAdministrator.find("email=?",
 				"myemail@gmail.com").first();
 		assertNotNull(oa);
 		assertFalse(oa.isActive());

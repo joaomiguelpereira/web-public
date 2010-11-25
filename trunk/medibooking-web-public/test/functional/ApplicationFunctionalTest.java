@@ -11,6 +11,7 @@ import org.junit.Ignore;
 import play.Logger;
 import play.data.validation.Error;
 import play.data.validation.Validation;
+import play.db.jpa.Model;
 import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Http.Response;
@@ -30,9 +31,32 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 	private Map<String, Object> args = new HashMap<String, Object>();
 	private Class[] argTypes;
 
-	protected void showValidationErrors() {
+	protected void assertI18nHtmlTitlePresent(Response response, String key,
+			Object... args) {
+		assertTrue(response.out.toString().contains(Messages.get(key, args)));
+
+	}
+
+	protected <T extends Model> void assertBindedModel(String key, T model) {
 		
-		Map<String, List<play.data.validation.Error>> errors = Validation.current().errorsMap();
+		T bindedModel = (T)Scope.RenderArgs.current().data.get(key);
+		assertEquals(model.id, bindedModel.id);
+	}
+
+	protected void assertBindingExists(String key) {
+		assertTrue(Scope.RenderArgs.current().data.containsKey(key));
+		assertNotNull(Scope.RenderArgs.current().data.get(key));
+
+	}
+
+	protected void assertNoBindingExists(String key) {
+		assertFalse(Scope.RenderArgs.current().data.containsKey(key));
+	}
+
+	protected void showValidationErrors() {
+
+		Map<String, List<play.data.validation.Error>> errors = Validation
+				.current().errorsMap();
 
 		for (List<play.data.validation.Error> theErrors : errors.values()) {
 			for (Error error : theErrors) {
@@ -71,9 +95,16 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 	}
 
 	protected void logoutCurrentUser() {
-		Scope.Session.current().clear();
-		Flash.current().clear();
+		if ( Scope.Session.current() != null ) {
+			Scope.Session.current().clear();
+		}
+		
+		if (Flash.current()!=null ) {
+			Flash.current().clear();
+		}
+		
 	}
+
 	protected void authenticateUser(String email, String password,
 			boolean keepLogged) {
 		Map<String, Object> params = new HashMap<String, Object>();
@@ -115,8 +146,7 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		assertNull(Flash.current().get("warning"));
 
 	}
-	
-	
+
 	protected void assertNoErrorFlashed() {
 		if (Flash.current().contains("error")) {
 			Logger.debug("Error Flashed:" + Flash.current().get("error"));

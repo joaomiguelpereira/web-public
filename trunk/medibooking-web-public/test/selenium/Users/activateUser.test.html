@@ -6,8 +6,8 @@
 
  
 #{selenium}
-    //Open the Register User for an OFFICE_ADMIN
-    open('@{Users.userCreatedConfirmation('OFFICE_ADMIN')}')
+    //Open the Register User for an BUSINESS_ADMIN
+    open('@{Users.userCreatedConfirmation('BUSINESS_ADMIN')}')
     waitForPageToLoad(1000)
     assertNotTitle('Application error')
 	assertTitle(${play.i18n.Messages.get('user.activate')})

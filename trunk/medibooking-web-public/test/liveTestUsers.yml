@@ -15,5 +15,5 @@ User(oadmin):
   email: oadmin@gmail.com
   password: 12345
   active: true
-  userType: models.enums.UserType.OFFICE_ADMIN
+  userType: models.enums.UserType.BUSINESS_ADMIN
   
