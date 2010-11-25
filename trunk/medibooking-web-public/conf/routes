@@ -5,11 +5,11 @@
 # Home page
 GET     /                                       Application.index
 
-#Routes for Offices
-GET /offices                                    Offices.list
-GET /offices/new		                        Offices.blank
-GET /office/{id}								Offices.view
-GET /office/{id}/edit							Offices.edit
+#Routes for Businesses
+GET /businesses                                 Businesses.list
+GET /businesses/new		                        Businesses.blank
+GET /business/{id}								Businesses.view
+GET /businesses/{id}/edit						Businesses.edit
 
 
 #Users
