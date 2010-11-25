@@ -31,10 +31,10 @@ import validators.Unique;
 import validators.UniqueCheck;
 
 @Entity
-public class Office extends BaseModel {
+public class Business extends BaseModel {
 	
 	{
-		this.administrators = new ArrayList<OfficeAdministrator>();
+		this.administrators = new ArrayList<BusinessAdministrator>();
 	}
 	
 	@Required
@@ -74,7 +74,7 @@ public class Office extends BaseModel {
 	private Boolean active;
 	
 	@ManyToMany
-	private List<OfficeAdministrator> administrators;
+	private List<BusinessAdministrator> administrators;
 	
 	@Required
 	@Embedded
@@ -93,7 +93,7 @@ public class Office extends BaseModel {
 	/**
 	 * Default constructor
 	 */
-	public Office() {
+	public Business() {
 		
 	}
 
@@ -177,13 +177,13 @@ public class Office extends BaseModel {
 	public Boolean isActive() {
 		return active;
 	}
-	public void setAdministrators(List<OfficeAdministrator> administrators) {
+	public void setAdministrators(List<BusinessAdministrator> administrators) {
 		this.administrators = administrators;
 	}
-	public List<OfficeAdministrator> getAdministrators() {
+	public List<BusinessAdministrator> getAdministrators() {
 		return administrators;
 	}
-	public void addAdministrator(OfficeAdministrator oa) {
+	public void addAdministrator(BusinessAdministrator oa) {
 		this.administrators.add(oa);
 		
 	}
