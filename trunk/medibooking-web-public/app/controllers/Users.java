@@ -23,7 +23,7 @@ import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
 
-public class Users extends Application {
+public class Users extends BaseController {
 
 	/**
 	 * Blank form to create a new user
@@ -41,6 +41,24 @@ public class Users extends Application {
 
 	}
 
+	/**
+	 * Show the account screen
+	 */
+	@RequiresUserSession
+	public static void account() {
+		User user = currentUser.get();
+		render(user);
+	}
+
+	@RequiresUserSession
+	public static void edit() {
+		User user = currentUser.get();
+		render(user);
+	}
+
+	/**
+	 * Logout a user
+	 */
 	public static void logout() {
 		// if the user is not currently logged in
 		if (session.get(SessionValuesConstants.LOGIN_EMAIL) == null) {
@@ -52,7 +70,7 @@ public class Users extends Application {
 			if (user != null) {
 				user.invalidateLoginToken();
 			}
-			
+
 			clearAuthenticatedUserSessionData();
 
 			flashSuccess("logout.successfull");
@@ -73,7 +91,7 @@ public class Users extends Application {
 	 */
 	public static void authenticate(String email, String password,
 			boolean keepLogged) {
-				
+
 		// verify the presence of email
 		validation.required(email, Messages.get("login.invalid.email"));
 		validation.required(password, Messages.get("login.invalid.password"));
@@ -121,11 +139,10 @@ public class Users extends Application {
 
 				}
 
-				
 				flashSuccess("login.successful");
-				//Redirect to last requested location
+				// Redirect to last requested location
 				redirectToLastRequestedResource();
-				
+
 			}
 		} else {
 			flashError("login.innactive.user");
@@ -133,11 +150,10 @@ public class Users extends Application {
 		}
 	}
 
-
 	public static void login() {
-		
+
 		if (!hasSession()) {
-			
+
 			flash.keep(Constants.FLASH_LAST_URL);
 			render();
 		} else {
@@ -182,6 +198,11 @@ public class Users extends Application {
 
 	}
 
+	/**
+	 * Acrion called after successfull account activation
+	 * 
+	 * @param userType
+	 */
 	public static void nextStepsAfterActivation(UserType userType) {
 		render(userType);
 	}
@@ -189,10 +210,11 @@ public class Users extends Application {
 	/**
 	 * List all users
 	 */
-	@RequiresUserSession(userTypes=UserType.ADMIN)
+	@RequiresUserSession(userTypes = UserType.ADMIN)
 	public static void index() {
 		List<User> users = User.find("userType=?", UserType.USER).fetch();
-		List<BusinessAdministrator> businessesAdmins = BusinessAdministrator.findAll();
+		List<BusinessAdministrator> businessesAdmins = BusinessAdministrator
+				.findAll();
 
 		render(users, businessesAdmins);
 
