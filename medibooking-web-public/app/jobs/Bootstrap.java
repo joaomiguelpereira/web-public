@@ -66,18 +66,16 @@ public class Bootstrap extends Job<String> {
 
 		
 		List<Business> businesses = new ArrayList<Business>();
-		Long totalStartTime = System.nanoTime();
+		
 		for (int i=0; i<5; i++) {
-			Long startTime = System.nanoTime();
 			
-			Business office = createTestBusiness("my Office nbr "+i);
+			
+			Business office = createTestBusiness("my Office "+System.nanoTime());
 			office.addAdministrator(oAdmin);
 			businesses.add(office);	
 			oAdmin.addAdministeredBusinesses(office);
-			Logger.debug("Created record in: "+ (System.nanoTime()-startTime));
+			
 		}
-		
-		Logger.debug("Created record in: "+ (System.nanoTime()-totalStartTime));
 		//createTestOffice(oAdmin, "Office nbr asd");
 		
 		
@@ -85,7 +83,7 @@ public class Bootstrap extends Job<String> {
 		
 		businesses = new ArrayList<Business>();
 		for (int i=0; i<1; i++) {
-			Business business = createTestBusiness("my Office nbr "+i);
+			Business business = createTestBusiness("my Office nbr "+System.nanoTime());
 			business.addAdministrator(oAdmin2);
 			business.addAdministrator(oAdmin);
 			//offices.add(office);	
