@@ -20,7 +20,8 @@ GET /users							     		Users.index
 GET /user/registrationConfirmation				Users.userCreatedConfirmation
 GET /user/activate/{activationKey}				Users.activateUser
 GET /login										Users.login
-
+GET /user/account								Users.account
+GET /user/account/edit							Users.edit
 
 
 
