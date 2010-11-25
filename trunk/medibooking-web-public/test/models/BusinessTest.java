@@ -3,7 +3,7 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.factories.TestOfficeFactory;
+import models.factories.TestBusinessFactory;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,22 +14,46 @@ import play.data.validation.Validation;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
-public class OfficeTest extends ModelUnitTest {
+public class BusinessTest extends ModelUnitTest {
 
 	@Before
 	public void setup() {
 		Fixtures.deleteAll();
-		// Fixtures.load("partners.yml");
+		//Load users
+		Fixtures.load("users.yml");
 	}
 
 	@Test
+	public void deleteBusiness() {
+		//Get a business admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		//Load it with a business
+		Business bu = TestBusinessFactory.createBusiness("Some Name", ba);
+		ba.addAdministeredBusinesses(bu);
+		assertTrue(bu.validateAndSave());
+		ba.save();
+		final long buId = bu.id;
+		//now remove it
+		bu.delete();
+		//try to get it from the db
+		Business buRemoved = Business.findById(buId);
+		assertNull(buRemoved);	
+		
+		
+		
+		
+		
+		
+		
+	}
+	@Test
 	public void officeCanHaveMultipleAdmins() {
-		OfficeAdministrator admin = new OfficeAdministrator();
+		BusinessAdministrator admin = new BusinessAdministrator();
 		admin.setEmail("joao@email.com");
 		admin.setName("Some fancy name");
 		admin.setPassword("123456");
 		assertTrue(admin.validateAndSave());
-		OfficeAdministrator admin2 = new OfficeAdministrator();
+		BusinessAdministrator admin2 = new BusinessAdministrator();
 		admin2.setEmail("joao2@email.com");
 		admin2.setName("Some fancy name");
 		admin2.setPassword("123456");
@@ -37,8 +61,8 @@ public class OfficeTest extends ModelUnitTest {
 		assertTrue(admin2.validateAndSave());
 		
 
-		Office office = TestOfficeFactory.createOffice(null,null);
-		Office office2 = TestOfficeFactory.createOffice(null,null);
+		Business office = TestBusinessFactory.createBusiness(null,null);
+		Business office2 = TestBusinessFactory.createBusiness(null,null);
 
 		office2.addAdministrator(admin2);
 		office2.addAdministrator(admin);
@@ -52,16 +76,16 @@ public class OfficeTest extends ModelUnitTest {
 		
 		assertTrue(office2.validateAndSave());
 
-		admin2.addAdministeredOffice(office);
-		admin.addAdministeredOffice(office);
+		admin2.addAdministeredBusinesses(office);
+		admin.addAdministeredBusinesses(office);
 
 		admin.save();
 		admin2.save();
 
 		// get office
-		Office o1 = Office.findById(office.id);
+		Business o1 = Business.findById(office.id);
 		assertEquals(2, o1.getAdministrators().size());
-		Office o2 = Office.findById(office2.id);
+		Business o2 = Business.findById(office2.id);
 		assertEquals(2, o2.getAdministrators().size());
 		assertEquals(2, o2.getAdminCount());
 		assertEquals(2, o1.getAdminCount());
@@ -73,7 +97,7 @@ public class OfficeTest extends ModelUnitTest {
 
 	@Test
 	public void addAdministrator() {
-		OfficeAdministrator admin = new OfficeAdministrator();
+		BusinessAdministrator admin = new BusinessAdministrator();
 		admin.setEmail("joao@email.com");
 		admin.setName("Some fancy name");
 		admin.setPassword("123456");
@@ -82,26 +106,26 @@ public class OfficeTest extends ModelUnitTest {
 		assertEntitySaved();
 		// assertTrue(admin.validateAndSave());
 
-		Office office = TestOfficeFactory.createOffice(null,null);
-		ArrayList<OfficeAdministrator> admins = new ArrayList<OfficeAdministrator>();
+		Business office = TestBusinessFactory.createBusiness(null,null);
+		ArrayList<BusinessAdministrator> admins = new ArrayList<BusinessAdministrator>();
 		admins.add(admin);
 		office.setAdministrators(admins);
 
 		// Save it
 		assertTrue(office.validateAndSave());
-		admin.getAdministeredOffices().add(office);
-		Office savedOffice = Office.findById(office.id);
+		admin.getAdministeredBusinesses().add(office);
+		Business savedOffice = Business.findById(office.id);
 		assertNotNull(savedOffice);
 		assertNotNull(savedOffice.getAdministrators());
 		assertTrue(savedOffice.getAdministrators().size() == 1);
-		for (OfficeAdministrator oa : savedOffice.getAdministrators()) {
+		for (BusinessAdministrator oa : savedOffice.getAdministrators()) {
 			assertEquals("joao@email.com", oa.getEmail());
 		}
 
-		OfficeAdministrator oa = OfficeAdministrator.findById(admin.id);
-		assertEquals(1, oa.getAdministeredOffices().size());
+		BusinessAdministrator oa = BusinessAdministrator.findById(admin.id);
+		assertEquals(1, oa.getAdministeredBusinesses().size());
 
-		for (Office o : oa.getAdministeredOffices()) {
+		for (Business o : oa.getAdministeredBusinesses()) {
 			assertTrue(o.getName().equals(office.getName()));
 		}
 
@@ -110,7 +134,7 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void invalidPhones() {
 
-		Office partner = TestOfficeFactory.createOffice(null,null);
+		Business partner = TestBusinessFactory.createBusiness(null,null);
 
 		partner.setPhone1("invalid1");
 		// Save it
@@ -126,16 +150,16 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void validateDuplicatedName() {
 
-		Office partner = TestOfficeFactory.createOffice(null,null);
+		Business partner = TestBusinessFactory.createBusiness(null,null);
 
 		// Save it
 		partner.validateAndSave();
 
 		// retrieve it
-		Office savedPartner = Office.find("name=?", partner.getName()).first();
+		Business savedPartner = Business.find("name=?", partner.getName()).first();
 		assertNotNull(savedPartner);
 
-		Office partner2 = TestOfficeFactory.createOffice(partner.getName(),null);
+		Business partner2 = TestBusinessFactory.createBusiness(partner.getName(),null);
 
 		// Don't save it because the name is not unique
 		assertFalse(partner2.validateAndSave());
@@ -145,7 +169,7 @@ public class OfficeTest extends ModelUnitTest {
 	@Test
 	public void createAndRetrievePartner() {
 
-		Office office = TestOfficeFactory.createOffice(null,null);
+		Business office = TestBusinessFactory.createBusiness(null,null);
 		// Save it
 
 		assertTrue(office.validateAndSave());
@@ -155,7 +179,7 @@ public class OfficeTest extends ModelUnitTest {
 		// }
 
 		// retrieve it
-		Office savedPartner = Office.find("name=?", office.getName()).first();
+		Business savedPartner = Business.find("name=?", office.getName()).first();
 		assertNotNull(savedPartner);
 		assertFalse(savedPartner.isActive());
 
