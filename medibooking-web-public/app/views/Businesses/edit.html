@@ -1,0 +1,10 @@
+#{extends 'main.html' /}
+
+#{messages.setI18nTitle key:'views.businesses.view.title' /}
+
+
+#{include 'Businesses/businessOptions.html'/}
+
+<div class="view-data">
+	#{Businesses.businessForm business:business, postUrl:@save(business.id), formId:'editBusiness', cancelAction:@view(business.id), i18nSubmit:'forms.save.button'/}
+</div>

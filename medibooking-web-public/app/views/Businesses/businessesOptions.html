@@ -1,0 +1,11 @@
+%{
+	currentAction = request.action;
+}%
+<div id="data-left-menu">
+	<ul>
+		
+		<li class="${currentAction.equals('Businesses.list')?"selected":""}"><a href="@{Businesses.list}">Listar</a></li>
+		<li class="${currentAction.equals('Businesses.blank')?"selected":""}"><a href="@{Businesses.blank}">Novo</a></li>
+		
+	</ul>
+</div>
