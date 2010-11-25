@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 import models.Address;
-import models.Office;
-import models.OfficeAdministrator;
+import models.Business;
+import models.BusinessAdministrator;
 
 import org.junit.Ignore;
 
 @Ignore
-public abstract class TestOfficeFactory {
+public abstract class TestBusinessFactory {
 	
 	
 	/**
@@ -20,7 +20,7 @@ public abstract class TestOfficeFactory {
 	 * @param oAdmin The administrator of the office
 	 * @return the newly created office. Not persisted
 	 */
-	public static Office createOffice(String name, OfficeAdministrator oAdmin) {
+	public static Business createBusiness(String name, BusinessAdministrator oAdmin) {
 		
 		final String sufix = System.nanoTime()+"";
 		String officeName = "Office "+sufix;
@@ -42,7 +42,7 @@ public abstract class TestOfficeFactory {
 		
 		
 		
-		Office office = new Office();
+		Business office = new Business();
 		
 		office.setName(officeName);
 	
