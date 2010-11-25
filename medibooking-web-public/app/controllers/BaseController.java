@@ -176,14 +176,19 @@ public class BaseController extends Controller {
 		boolean authorized = false;
 		if (rus != null && currentUser.get() != null) {
 
-			// check if user has what it needs
-			for (UserType ut : rus.userTypes()) {
-				if (ut.equals(currentUser.get().getUserType())) {
-					authorized = true;
-					break;
+			//if no userType is given, then allow
+			if ( rus.userTypes().length != 0 ) {
+				// check if user has what it needs
+				for (UserType ut : rus.userTypes()) {
+					if (ut.equals(currentUser.get().getUserType())) {
+						authorized = true;
+						break;
+					}
 				}
+			} else {
+				authorized = true;
 			}
-
+		
 		} else if (rus == null) {
 			authorized = true;
 		}
