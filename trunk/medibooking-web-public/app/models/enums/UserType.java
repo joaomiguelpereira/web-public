@@ -1,5 +1,5 @@
 package models.enums;
 
 public enum UserType {
-	ADMIN, USER, OFFICE_ADMIN;
+	ADMIN, USER, BUSINESS_ADMIN;
 }

@@ -13,22 +13,22 @@ import javax.persistence.ManyToMany;
 import models.enums.UserType;
 
 @Entity
-public class OfficeAdministrator extends User{
+public class BusinessAdministrator extends User{
 
 	/**
 	 * Instance initialization block. Run after all super constructors and
 	 * before this constructor
 	 */
 	{
-		administeredOffices = new ArrayList<Office>();
-		this.setUserType(UserType.OFFICE_ADMIN);
+		administeredBusinesses = new ArrayList<Business>();
+		this.setUserType(UserType.BUSINESS_ADMIN);
 	}
 	
 
-	public OfficeAdministrator() {
+	public BusinessAdministrator() {
 		
 	}
-	public OfficeAdministrator(User user) {
+	public BusinessAdministrator(User user) {
 		this.setEmail(user.getEmail());
 		this.setMobile(user.getEmail());
 		this.setName(user.getName());
@@ -36,20 +36,20 @@ public class OfficeAdministrator extends User{
 		this.setPhone(user.getPhone());
 	}
 	@ManyToMany(cascade=CascadeType.PERSIST, fetch=FetchType.LAZY)
-	private List<Office> administeredOffices;
+	private List<Business> administeredBusinesses;
 	
 
 	/**
 	 * Get the administered offices for this user
 	 * @return A set of administered offices
 	 */
-	public List<Office> getAdministeredOffices() {
-		return administeredOffices;
+	public List<Business> getAdministeredBusinesses() {
+		return administeredBusinesses;
 	}
 	
 	
-	public void addAdministeredOffice(Office office) {
-		this.administeredOffices.add(office);
+	public void addAdministeredBusinesses(Business business) {
+		this.administeredBusinesses.add(business);
 		
 	}
 	
