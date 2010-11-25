@@ -1,0 +1,51 @@
+<!-- Include JS table instead -->
+#{set 'moreScripts'}
+    <script src="@{'/public/javascripts/DataTables-1.7.4/media/js/jquery.dataTables.min.js'}" type="text/javascript" charset="utf-8"></script> 
+#{/set}
+
+#{set 'moreStyles'}
+
+ <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/javascripts/DataTables-1.7.4/media/css/demo_table.css'}"> 
+#{/set}
+
+<script>
+
+
+	$(document).ready(function() {
+		$('#businessesTable').dataTable({"sPaginationType": "full_numbers","bLengthChange":false, "bInfo": false} );
+	} );
+</script>
+
+
+
+
+<div class="data-table">	
+	<table id="businessesTable" class="data-table">
+		<thead>
+  			<tr>
+    			<th style="width:200px">Nome</th>
+    			<th style="width:100px">Data criação</th>
+    			<th style="width:140px">Última alteração em</th>
+    			<th style="width:100px">Estado</th>
+    			
+    			
+  				
+  			</tr>
+  		</thead>
+
+		
+		#{dataTables.dataTable collection:businesses, as:'business' }
+ 		<tr>
+    		<td><a href="@{Businesses.view(business.id)}">${business.name}</a></td>
+  			<td>${business.createdAt.format('dd-MM-yyyy')}</td>
+  			<td>${business.modifiedAt.format('dd-MM-yyyy')}</td>
+  			<td>${business.active.booleanAs(play.i18n.Messages.get('active'),play.i18n.Messages.get('inactive'))}</td>
+  		</tr>
+
+
+		#{/dataTables.dataTable}
+	</table>
+	
+	
+	
+</div>

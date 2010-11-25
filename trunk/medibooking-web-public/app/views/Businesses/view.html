@@ -1,0 +1,78 @@
+#{extends 'main.html' /}
+
+#{set title:play.i18n.Messages.get('views.businesses.view.title') /}
+
+#{include 'Businesses/businessOptions.html'/}
+
+<div class="view-data">
+	<dir class="not-editable">
+		
+		 <h1>Informação Básica sobre Clínica/Consultório</h1>
+		 <table>
+		 	<tr class="view-field">
+		 		<td class="field-name">Nome:</td>
+		 		<td class="field-value">${business.name}</td>	
+		 	</tr>
+		 	
+		 	
+		 
+		 
+			 <tr class="view-field">
+			 	<td class="field-name">Morada:</td>
+			 	<td class="field-value">${business.address.addressLineOne}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Código Postal:</td>
+			 	<td class="field-value">${business.address.postalCode}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Localidade:</td>
+			 	<td class="field-value">${business.address.city}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Telefone:</td>
+			 	<td class="field-value">${business.phone1}</td>	 	
+			 </tr>
+		
+		
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Telemóvel:</td>
+			 	<td class="field-value">${business.mobile1}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Email:</td>
+			 	<td class="field-value">${business.email}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Página Web:</td>
+			 	<td class="field-value">${business.url}</td>	 	
+			 </tr>
+		
+			 <tr class="view-field">
+			 	<td class="field-name">Estado: </td>
+			 	<td class="field-value">${business.active.booleanAs(play.i18n.Messages.get('active'),play.i18n.Messages.get('inactive'))}</td>	 	
+			 </tr>
+			 
+		</table>
+		<h1>Informação Adicional</h1>
+	
+		<table>
+		
+		 	<tr class="view-field">
+		 		<td class="field-name" colspan="2">Apresentação:</td>	
+		 	</tr>
+		 	<tr class="view-field">
+		 		<td class="field-value" colspan="2">${business.shortIntroduction}</td>	
+		 	</tr>
+			 
+		</table>
+	</div>
+
+</div>
+
