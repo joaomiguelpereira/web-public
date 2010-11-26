@@ -1,3 +1,39 @@
 #{extends 'main.html' /}
 
 #{messages.setI18nTitle key:'views.users.view.title' /}
+
+#{include 'Users/userOptions.html'/}
+
+<div class="view-data">
+	<dir class="not-editable">
+		
+		 <h1>Informação sobre utilizador</h1>
+		 <table>
+
+		 	<tr class="view-field">
+		 		<td class="field-name">Email:</td>
+		 		<td class="field-value">${user.email}</td>	
+		 	</tr>
+		 
+		 	<tr class="view-field">
+		 		<td class="field-name">Nome:</td>
+		 		<td class="field-value">${user.name}</td>	
+		 	</tr>
+		
+
+		 	<tr class="view-field">
+		 		<td class="field-name">Telefone:</td>
+		 		<td class="field-value">${user.phone}</td>	
+		 	</tr>
+
+		 	<tr class="view-field">
+		 		<td class="field-name">Telemóvel:</td>
+		 		<td class="field-value">${user.mobile}</td>	
+		 	</tr>
+		
+		</table> 	
+	</div>
+
+</div>
+
+
