@@ -12,6 +12,7 @@ import constants.SessionValuesConstants;
 import notifiers.UserMailer;
 
 import play.Logger;
+import play.data.binding.Binder;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
@@ -41,11 +42,90 @@ public class Users extends BaseController {
 
 	}
 
+	@RequiresUserSession
+	public static void saveNewPassword(String originalPassword,
+			String newPassword, String newPasswordConfirmation) {
+		if (newPassword == null || newPasswordConfirmation == null
+				|| originalPassword == null) {
+
+			validation.addError("newPassword",
+					"models.user.newPassword.invalid");
+			flashError("controllers.users.saveNewPassword.fail");
+			flash.keep();
+			changePassword();
+
+		}
+		if (newPassword.length() < 5) {
+			validation.addError("newPassword",
+					"models.user.newPassword.invalid");
+			flashError("controllers.users.saveNewPassword.fail");
+			flash.keep();
+			changePassword();
+		}
+
+		if (!newPassword.equals(newPasswordConfirmation)) {
+			validation.addError("newPassword",
+					"models.user.newPassword.confirmation");
+			flashError("controllers.users.saveNewPassword.fail");
+			flash.keep();
+			changePassword();
+
+		}
+
+		User user = currentUser.get();
+		// Check if the originalPassword is the same as the hash stored in DB
+		String passwordHash = User.generatePasswordHash(originalPassword,
+				user.getEmail());
+		if (passwordHash.equals(user.getPasswordHash())) {
+			user.setPasswordHash(User.generatePasswordHash(newPassword,
+					user.getEmail()));
+			user.save();
+			flashSuccess("controllers.users.saveNewPassword.sucess");
+			Users.view();
+		} else {
+			flashError("controllers.users.saveNewPassword.fail");
+			validation.addError("originalPassword",
+					Messages.get("models.user.wrongPassword"));
+			flash.keep();
+			changePassword();
+		}
+
+	}
+
+	@RequiresUserSession
+	public static void changePassword() {
+		User user = currentUser.get();
+		render(user);
+	}
+
+	@RequiresUserSession
+	public static void save() {
+		User user = currentUser.get();
+		// Don't allow to change email nor useType
+		if (params.all().containsKey("user.email")
+				|| params.all().containsKey("user.userType")) {
+			flashError("controllers.users.save.fail");
+			render("@edit", user);
+
+		}
+		Binder.bind(user, "user", params.all());
+		if (user.validateAndSave()) {
+			flashSuccess("controllers.users.save.sucess");
+			flash.keep();
+			Users.view();
+		} else {
+			flashError("controllers.users.save.fail");
+			logValidationErrors();
+			render("@edit", user);
+		}
+
+	}
+
 	/**
 	 * Show the account screen
 	 */
 	@RequiresUserSession
-	public static void account() {
+	public static void view() {
 		User user = currentUser.get();
 		render(user);
 	}
@@ -176,7 +256,7 @@ public class Users extends BaseController {
 
 		boolean success = false;
 		// find the user
-		User user = User.find("activationUUID=?", activationKey.trim()).first();
+		User user = User.find("byActivationUUID", activationKey.trim()).first();
 		if (null != user) {
 			if (user.isActive()) {
 				flashWarning("user.already.activated");
@@ -212,7 +292,7 @@ public class Users extends BaseController {
 	 */
 	@RequiresUserSession(userTypes = UserType.ADMIN)
 	public static void index() {
-		List<User> users = User.find("userType=?", UserType.USER).fetch();
+		List<User> users = User.find("byUserType", UserType.USER).fetch();
 		List<BusinessAdministrator> businessesAdmins = BusinessAdministrator
 				.findAll();
 
@@ -221,7 +301,7 @@ public class Users extends BaseController {
 	}
 
 	/**
-	 * Save the user
+	 * Create new User
 	 * 
 	 * @param user
 	 * @param userType
@@ -229,19 +309,20 @@ public class Users extends BaseController {
 	 * @param passwordConfirmation
 	 * @param termsAgreement
 	 */
-	public static void save(@Valid User user, UserType userType,
+	public static void create(@Valid User user, UserType userType,
 			String emailConfirmation, String passwordConfirmation,
 			boolean termsAgreement) {
 		// WA
 		validation.equals(emailConfirmation, user.getEmail()).message(
 				Messages.get("validation.emails.notMatch"));
+		validation.required(user.getPassword());
 		validation.equals(passwordConfirmation, user.getPassword()).message(
 				Messages.get("validation.passwords.notMatch"));
 		validation.isTrue(termsAgreement).message(
 				"validation.accept.termsAndConditions");
 
 		if (validation.hasErrors()) {
-			flashError("partner.register.error");
+			flashError("controllers.users.create.error");
 			render("@blank", user, userType, termsAgreement, emailConfirmation);
 		}
 		User savedUser = null;

@@ -14,7 +14,7 @@
     #{include 'Users/new'+utils.StringUtils.camelize(userType, true)+'HelpText.html'/}
     
     <p class="spacer"></p>
-	#{form @save(), id:'registerUserForm'}
+	#{form @create(), id:'registerUserForm'}
 		<fieldset>
 			<legend>Informação sobre o novo &{'views.users.type.'+userType}</legend>
             <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>

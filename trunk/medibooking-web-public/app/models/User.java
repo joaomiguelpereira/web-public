@@ -46,7 +46,6 @@ public class User extends Model {
 	private String email;
 
 	@Transient
-	@Required
 	@MinSize(5)
 	private String password;
 
@@ -67,7 +66,9 @@ public class User extends Model {
 	private void prepareNewUser() {
 		// do it if it's a new entity
 		if (!this.isPersistent()) {
-			this.passwordHash = Codec.hexMD5(this.password + this.email);
+			
+			
+			this.passwordHash = generatePasswordHash(this.password, this.email);
 			this.setActivationUUID(UUID.randomUUID().toString());
 			this.setLoginInformation(new LoginInformation());
 		}
@@ -160,17 +161,17 @@ public class User extends Model {
 		Logger.debug("Trying to authenticate user: " + this.email
 				+ " from IP: " + clientIP);
 		String passwordHash = Codec.hexMD5(password + this.email);
-		
+
 		if (this.passwordHash.equals(passwordHash) && this.isActive()) {
 			// create new authentication token
 			loginToken = UUID.randomUUID().toString();
 			this.loginInformation.setLoginToken(loginToken);
 			this.loginInformation.setLastSuccessfulLogin(System
 					.currentTimeMillis());
-			
+
 			this.loginInformation.setSuccessfulLoginCount(this.loginInformation
 					.getSuccessfulLoginCount() + 1);
-			
+
 			this.loginInformation
 					.setUnsuccessfullLoginCountBeforeSuccessfulLogin(0);
 			Logger.debug("Authentication successful");
@@ -202,7 +203,13 @@ public class User extends Model {
 	public void invalidateLoginToken() {
 		this.loginInformation.setLoginToken(null);
 		this.save();
-		
+
+	}
+
+	public static String generatePasswordHash(String password,
+			String email) {
+		return Codec.hexMD5(password + email);
+
 	}
 
 }
