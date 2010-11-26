@@ -15,14 +15,14 @@ GET /businesses/{id}/edit						Businesses.edit
 #Users
 
 GET /user/{userType}/new						Users.blank
-POST /user/{userType}				     		Users.save
-GET /users							     		Users.index
+POST /user/{userType}				     		Users.create
 GET /user/registrationConfirmation				Users.userCreatedConfirmation
 GET /user/activate/{activationKey}				Users.activateUser
 GET /login										Users.login
-GET /user/account								Users.account
+GET /user/account								Users.view
+POST /user/account/save							Users.save
 GET /user/account/edit							Users.edit
-
+GET /users							     		Users.index
 
 
 # Map static resources from the /app/public folder to the /public path
