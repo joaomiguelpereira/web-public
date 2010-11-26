@@ -1,3 +1,71 @@
 #{extends 'main.html' /}
 
 #{messages.setI18nTitle key:'views.users.edit.title' /}
+
+#{include 'Users/userOptions.html'/}
+
+<div class="view-data">
+    
+    
+    
+    
+    
+	#{form @save(), id:'editUserForm'}
+		<fieldset>
+			<legend>Editar dados do utilizador</legend>
+	        #{field 'user.email'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Email : </label>
+                    <input disabled="true" type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.email}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>            
+            #{/field}
+
+
+	        #{field 'user.name'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Nome: <span class="required-sybmol">*</span></label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.name}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>            
+            #{/field}
+
+
+
+	        #{field 'user.phone'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Telefone: </label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.phone}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>            
+            #{/field}
+
+	        #{field 'user.mobile'}
+                <div class="${field.errorClass}">
+                    <label for="${field.name}">Telemóvel: </label>
+                    <input type="text" name="${field.name}" id="${field.name}" size="20" maxlength="60" value="${user?.mobile}" />
+                    #{ifErrors}
+                        <span class="error">${field.error}</span>
+                    #{/ifErrors}
+                </div>            
+            #{/field}
+
+            <div class="clearfix"></div>
+            <div class="buttons">
+        		<input type="submit" value="&{'forms.save.button.label'}">
+        		<a href="@{Users.view()}">&{'forms.cancel.label'}</a>
+            	 
+            </div>
+            
+		                
+		</fieldset>
+	 
+	#{/form}
+    
+ </div>

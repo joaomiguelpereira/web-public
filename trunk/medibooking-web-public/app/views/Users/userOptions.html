@@ -1,0 +1,13 @@
+%{
+	currentAction = request.action;
+}%
+<div id="data-left-menu">
+	<ul>
+		<li class="${currentAction.equals('Users.view')?"selected":""}"><a href="@{Users.view}">Consultar</a></li>
+		
+		<li class="${(currentAction.equals('Users.edit') || currentAction.startsWith('Users.save'))?"selected":""}"><a href="@{Users.edit}">Editar</a></li>
+		
+		
+	</ul>
+</div>
+
