@@ -159,6 +159,20 @@ form div.hasError input[type='text'],form div.hasError textarea {
 	float: left;
 }
 
+.view-data form div input[disabled='true'] {
+	width: 300px;
+	padding: 3px 4px;
+	border: solid 1px #000;
+	margin: 0 0 0 0;
+	border: none;
+	color: black;
+	background-color: transparent;
+}
+
+
+
+
+
 .view-data form div label.checkbox {
 	padding: 0;
 	margin-left: 10px;
