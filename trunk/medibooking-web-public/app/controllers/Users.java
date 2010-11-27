@@ -51,24 +51,22 @@ public class Users extends BaseController {
 			validation.addError("newPassword",
 					"models.user.newPassword.invalid");
 			flashError("controllers.users.saveNewPassword.fail");
-			flash.keep();
-			changePassword();
+			
+			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
 
 		}
 		if (newPassword.length() < 5) {
 			validation.addError("newPassword",
 					"models.user.newPassword.invalid");
 			flashError("controllers.users.saveNewPassword.fail");
-			flash.keep();
-			changePassword();
+			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
 		}
 
 		if (!newPassword.equals(newPasswordConfirmation)) {
 			validation.addError("newPassword",
 					"models.user.newPassword.confirmation");
 			flashError("controllers.users.saveNewPassword.fail");
-			flash.keep();
-			changePassword();
+			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
 
 		}
 
@@ -86,8 +84,8 @@ public class Users extends BaseController {
 			flashError("controllers.users.saveNewPassword.fail");
 			validation.addError("originalPassword",
 					Messages.get("models.user.wrongPassword"));
-			flash.keep();
-			changePassword();
+			
+			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
 		}
 
 	}
