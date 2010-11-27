@@ -6,7 +6,8 @@
 		<li class="${currentAction.equals('Users.view')?"selected":""}"><a href="@{Users.view}">Consultar</a></li>
 		
 		<li class="${(currentAction.equals('Users.edit') || currentAction.startsWith('Users.save'))?"selected":""}"><a href="@{Users.edit}">Editar</a></li>
-		
+
+		<li class="${(currentAction.equals('Users.changePassword') || currentAction.startsWith('Users.saveNewPassword'))?"selected":""}"><a href="@{Users.changePassword}">Alterar Password</a></li>		
 		
 	</ul>
 </div>
