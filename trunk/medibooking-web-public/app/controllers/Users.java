@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import annotations.authorization.RequiresEmptyUserSession;
 import annotations.authorization.RequiresUserSession;
 
 import constants.Constants;
@@ -16,6 +17,7 @@ import play.data.binding.Binder;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
+import play.libs.Codec;
 import play.libs.Crypto;
 
 import services.UserService;
@@ -31,42 +33,125 @@ public class Users extends BaseController {
 	 * 
 	 * @param userType
 	 */
+	@RequiresEmptyUserSession
 	public static void blank(UserType userType) {
-
-		if (!hasSession()) {
-			render(userType);
-		} else {
-			flashWarning("login.session.exists");
-			Application.index();
-		}
-
+		render(userType);
 	}
 
+	@RequiresEmptyUserSession
+	public static void recoverPassword() {
+		render();
+	}
+
+	@RequiresEmptyUserSession
+	public static void changeResetedPassword(String resetPasswordSecret) {
+		//Just before shoing the screen, check if the secret is valid
+		User user = User.find("byResetPasswordSecret", resetPasswordSecret).first();
+		if ( user == null ) {
+			flashError("controllers.users.changeResetedPassword.fail");
+			Application.index();
+		}
+		render(resetPasswordSecret);
+	}
+	@RequiresEmptyUserSession
+	public static void saveNewPasswordAfterReset(String newPassword, String newPasswordConfirmation,String resetPasswordSecret) {
+		//check if any of the params is invalid
+		if (newPassword == null || newPasswordConfirmation == null ) {
+
+			validation.addError("newPassword",
+					"models.user.newPassword.invalid");
+			flashError("controllers.users.saveNewPasswordAfterReset.fail");
+			render("@changeResetedPassword", newPassword, newPasswordConfirmation,
+					resetPasswordSecret);
+
+		}
+		if (newPassword.length() < 5) {
+
+			validation.addError("newPassword",
+					"models.user.newPassword.invalid");
+			flashError("controllers.users.saveNewPasswordAfterReset.fail");
+			render("@changeResetedPassword", newPassword, newPasswordConfirmation,
+					resetPasswordSecret);
+		}
+
+		if (!newPassword.equals(newPasswordConfirmation)) {
+
+			validation.addError("newPasswordConfirmation",
+					"models.user.newPassword.confirmation");
+			flashError("controllers.users.saveNewPasswordAfterReset.fail");
+			render("@changeResetedPassword", newPassword, newPasswordConfirmation,
+					resetPasswordSecret);
+
+		}
+		if ( resetPasswordSecret==null) {
+			flashError("controllers.users.saveNewPasswordAfterReset.fail");
+			flash.keep();
+			Application.index();
+		}
+		//Try to find the user 
+		User user = User.find("byResetPasswordSecret",resetPasswordSecret).first();
+		if ( user==null) {
+			flashError("controllers.users.saveNewPasswordAfterReset.fail");
+			flash.keep();
+			Application.index();			
+		}
+		
+		user.setPasswordHash(User.generatePasswordHash(newPassword, user.getEmail()));
+		user.setResetPasswordSecret(null);
+		user.save();
+		flashSuccess("controllers.users.saveNewPasswordAfterReset.success");
+		flash.keep();
+		Users.login();
+		
+	}
+	@RequiresEmptyUserSession
+	public static void resetPassword(String email) {
+		//Find the user 
+		User user = User.find("byEmail", email).first();
+		if (user != null) {
+			//create a resetPasswordSecret
+			user.setResetPasswordSecret(Codec.hexMD5(user.getEmail()+user.getName()+System.currentTimeMillis()+Codec.UUID()));
+			user.save();
+			UserMailer.resetPassword(user);
+			flashSuccess("controllers.users.resetPassword.success");
+			flash.keep();
+			Application.index();
+		} else {
+			flashError("controllers.users.resetPassword.fail");
+			validation.addError("email", "not.found");
+			render("@recoverPassword", email);
+		}
+	}
+	
 	@RequiresUserSession
 	public static void saveNewPassword(String originalPassword,
 			String newPassword, String newPasswordConfirmation) {
+
 		if (newPassword == null || newPasswordConfirmation == null
 				|| originalPassword == null) {
 
 			validation.addError("newPassword",
 					"models.user.newPassword.invalid");
 			flashError("controllers.users.saveNewPassword.fail");
-			
-			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
+
+			render("@changePassword", originalPassword, newPassword,
+					newPasswordConfirmation);
 
 		}
 		if (newPassword.length() < 5) {
 			validation.addError("newPassword",
 					"models.user.newPassword.invalid");
 			flashError("controllers.users.saveNewPassword.fail");
-			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
+			render("@changePassword", originalPassword, newPassword,
+					newPasswordConfirmation);
 		}
 
 		if (!newPassword.equals(newPasswordConfirmation)) {
 			validation.addError("newPassword",
 					"models.user.newPassword.confirmation");
 			flashError("controllers.users.saveNewPassword.fail");
-			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
+			render("@changePassword", originalPassword, newPassword,
+					newPasswordConfirmation);
 
 		}
 
@@ -84,8 +169,9 @@ public class Users extends BaseController {
 			flashError("controllers.users.saveNewPassword.fail");
 			validation.addError("originalPassword",
 					Messages.get("models.user.wrongPassword"));
-			
-			render("@changePassword", originalPassword, newPassword, newPasswordConfirmation);
+
+			render("@changePassword", originalPassword, newPassword,
+					newPasswordConfirmation);
 		}
 
 	}
@@ -235,7 +321,7 @@ public class Users extends BaseController {
 			flash.keep(Constants.FLASH_LAST_URL);
 			render();
 		} else {
-			flashWarning("login.session.exists");
+			flashWarning("empty.userSession.required.fail");
 			Application.index();
 		}
 	}

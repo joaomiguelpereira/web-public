@@ -52,7 +52,15 @@
                         
 		    <div class="buttons">
 		    	<input type="submit" value="&{'forms.login.authenticate'}"> 
-            </div>        
+            </div> 
+            <div>
+            	<a href="@{Users.recoverPassword}">Esqueceu-se da password? </a>
+            </div>       
+
+            <div>
+            	<a href="@{Users.blank(models.enums.UserType.USER)}">Ainda não tem conta? </a>
+            </div>       
+			
 		</fieldset>
 	 
 	#{/form}

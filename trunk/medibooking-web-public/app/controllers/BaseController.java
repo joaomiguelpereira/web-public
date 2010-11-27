@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import annotations.authorization.RequiresEmptyUserSession;
 import annotations.authorization.RequiresUserSession;
 import models.BusinessAdministrator;
 import models.User;
@@ -164,6 +165,15 @@ public class BaseController extends Controller {
 		}
 	}
 
+	@Before
+	protected static void checkEmptySessionRequirement() {
+		RequiresEmptyUserSession rus = getActionAnnotation(RequiresEmptyUserSession.class);
+		
+		if (rus != null && currentUser.get() != null ) {
+			flashWarning("empty.user_session.required.fail");
+			Application.index();
+		}
+	}
 	/**
 	 * Check authorization to the action
 	 */

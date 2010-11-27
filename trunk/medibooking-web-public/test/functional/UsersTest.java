@@ -1,5 +1,7 @@
 package functional;
 
+import groovy.swing.factory.ActionFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -104,7 +106,7 @@ public class UsersTest extends ApplicationFunctionalTest {
 		User savedUser = User.findById(loggedUser.id);
 		assertEquals("active@gmail.com", savedUser.getEmail());
 		assertEquals(UserType.USER, savedUser.getUserType());
-		
+
 	}
 
 	@Test
@@ -147,10 +149,8 @@ public class UsersTest extends ApplicationFunctionalTest {
 				new HashMap<String, Object>());
 		assertNoBindingExists("user");
 
-
 	}
 
-	
 	@Test
 	public void testShowChangePassword() {
 		authenticateUser("active@gmail.com", "11111", false);
@@ -174,7 +174,6 @@ public class UsersTest extends ApplicationFunctionalTest {
 		assertNoBindingExists("user");
 	}
 
-	
 	@Test
 	public void testDontChangePasswordForInvalidOriginalPassword() {
 		// Log a user
@@ -185,14 +184,14 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11211");
 		params.put("newPassword", "12345");
 		params.put("newPasswordConfirmation", "12345");
-		
 
 		POST(Router.reverse("Users.saveNewPassword", params));
 		assertErrorFlashed("controllers.users.saveNewPassword.fail");
-		
+
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("11111" , loggedUser.getEmail()) , savedUser.getPasswordHash());
+		assertEquals(User.generatePasswordHash("11111", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 	}
 
 	@Test
@@ -205,17 +204,17 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11111");
 		params.put("newPassword", "1234");
 		params.put("newPasswordConfirmation", "1234");
-		
 
 		POST(Router.reverse("Users.saveNewPassword", params));
 		assertErrorFlashed("controllers.users.saveNewPassword.fail");
-		
+
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("11111" , loggedUser.getEmail()) , savedUser.getPasswordHash());
+		assertEquals(User.generatePasswordHash("11111", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 
 	}
-	
+
 	@Test
 	public void testDontChangePasswordForNullNewPassword() {
 		authenticateUser("active@gmail.com", "11111", false);
@@ -225,14 +224,14 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11111");
 		params.put("newPassword", null);
 		params.put("newPasswordConfirmation", "54321");
-		
 
 		POST(Router.reverse("Users.saveNewPassword", params));
 		assertErrorFlashed("controllers.users.saveNewPassword.fail");
-		
+
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("11111" , loggedUser.getEmail()) , savedUser.getPasswordHash());
+		assertEquals(User.generatePasswordHash("11111", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 
 	}
 
@@ -245,17 +244,16 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11111");
 		params.put("newPassword", "");
 		params.put("newPasswordConfirmation", "");
-		
 
 		POST(Router.reverse("Users.saveNewPassword", params));
 		assertErrorFlashed("controllers.users.saveNewPassword.fail");
-		
+
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("11111" , loggedUser.getEmail()) , savedUser.getPasswordHash());
+		assertEquals(User.generatePasswordHash("11111", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 
 	}
-
 
 	@Test
 	public void testDontChangePasswordForInvalidNewPasswordConfirmation() {
@@ -267,14 +265,14 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11111");
 		params.put("newPassword", "12345");
 		params.put("newPasswordConfirmation", "54321");
-		
 
 		POST(Router.reverse("Users.saveNewPassword", params));
 		assertErrorFlashed("controllers.users.saveNewPassword.fail");
-		
+
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("11111" , loggedUser.getEmail()) , savedUser.getPasswordHash());
+		assertEquals(User.generatePasswordHash("11111", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 
 	}
 
@@ -288,9 +286,9 @@ public class UsersTest extends ApplicationFunctionalTest {
 		params.put("originalPassword", "11111");
 		params.put("newPassword", "12345");
 		params.put("newPasswordConfirmation", "12345");
-		
 
-		Http.Response response = POST(Router.reverse("Users.saveNewPassword", params));
+		Http.Response response = POST(Router.reverse("Users.saveNewPassword",
+				params));
 		assertNoErrorFlashed();
 		assertNoWarningFlashed();
 		assertSuccessFlashed("controllers.users.saveNewPassword.sucess");
@@ -299,25 +297,28 @@ public class UsersTest extends ApplicationFunctionalTest {
 
 		// get the user from the DB
 		User savedUser = User.findById(loggedUser.id);
-		assertEquals( User.generatePasswordHash("12345" , loggedUser.getEmail()) , savedUser.getPasswordHash());
-		
-		
-		
-		
+		assertEquals(User.generatePasswordHash("12345", loggedUser.getEmail()),
+				savedUser.getPasswordHash());
 
 	}
 
 	@Test
 	public void testForbidChangePasswordForNotLoggedUser() {
-		Http.Response response = GET(Router.reverse("Users.saveNewPassword"));
+
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("originalPassword", "11111");
+		params.put("newPassword", "12345");
+		params.put("newPasswordConfirmation", "12345");
+
+		Http.Response response = POST(Router.reverse("Users.saveNewPassword",
+				params));
+
 		assertErrorFlashed("user.not.authorized");
 		assertRedirectedTo(response, "Users.login",
 				new HashMap<String, Object>());
 		assertNoBindingExists("user");
 	}
 
-
-	
 	@Test
 	public void testShowMyData() {
 
@@ -335,7 +336,7 @@ public class UsersTest extends ApplicationFunctionalTest {
 	}
 
 	@Test
-	public void forbidShowDataForNotLoggedUser() {
+	public void testForbidShowDataForNotLoggedUser() {
 		Http.Response response = GET(Router.reverse("Users.view"));
 		assertErrorFlashed("user.not.authorized");
 		assertRedirectedTo(response, "Users.login",
@@ -578,5 +579,209 @@ public class UsersTest extends ApplicationFunctionalTest {
 		assertErrorFlashed("user.invalid.activation.key");
 
 	}
+
+	@Test
+	public void testShowRecoverPasswordForNotLoggedUser() {
+		// Show the recover password to the user if it's not logged in
+		Response response = GET(Router.reverse("Users.recoverPassword"));
+		assertI18nHtmlTitlePresent(response,
+				"views.users.recoverPassword.title");
+		assertNoErrorFlashed();
+	}
+
+	@Test
+	public void testDontShowRecoverPasswordLoggedUser() {
+		authenticateUser("active@gmail.com", "11111", true);
+		Response response = GET(Router.reverse("Users.recoverPassword"));
+		assertWarningFlashed("empty.user_session.required.fail");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+	}
+
+	@Test
+	public void testRecoverPassword() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "active@gmail.com");
+
+		ActionDefinition adef = Router.reverse("Users.resetPassword", params);
+		// Response response = POST(adef, params, null);
+
+		Response response = POST(adef);
+
+		// Expect a mail was sent with a secret token that gives access to the
+		// change password page for the user
+		assertSuccessFlashed("controllers.users.resetPassword.success");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+		// Get the user
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertNotNull(user.getResetPasswordSecret());
+		// Assert mail sent with correct link to reset password screen
+
+		assertTrue(Mock.getLastMessageReceivedBy("active@gmail.com").contains(
+				Messages.get("controllers.users.resetPassword.mail.subject")));
+
+		params.clear();
+		params.put("resetPasswordSecret", user.getResetPasswordSecret());
+
+		ActionDefinition ad = Router.reverse("Users.changeResetedPassword",
+				params);
+		ad.absolute();
+		String resetPasswordLink = ad.url;
+		assertTrue(Mock.getLastMessageReceivedBy("active@gmail.com").contains(
+				resetPasswordLink));
+
+	}
+
+	@Test
+	public void testFailRecoverPasswordForInexistentMail() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "acsadasdasdtivse@gmail.com");
+
+		POST(Router.reverse("Users.resetPassword", params));
+
+		assertErrorFlashed("controllers.users.resetPassword.fail");
+
+	}
+
+	@Test
+	public void testSaveResetedPassword() {
+
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "active@gmail.com");
+
+		Response response = POST(Router.reverse("Users.resetPassword", params));
+
+		// Expect a mail was sent with a secret token that gives access to the
+		// change password page for the user
+		assertSuccessFlashed("controllers.users.resetPassword.success");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+		// Get the user
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertNotNull(user.getResetPasswordSecret());
+
+		params.clear();
+
+		// need new password
+		// need new password confirmation
+		// need resetPasswordSecret
+		params = new HashMap<String, Object>();
+		params.put("newPassword", "12345");
+		params.put("newPasswordConfirmation", "12345");
+		params.put("resetPasswordSecret", user.getResetPasswordSecret());
+		
+		response = POST(Router.reverse("Users.saveNewPasswordAfterReset", params));
+		// Redirect to login
+		assertRedirectedTo(response, "Users.login",
+				new HashMap<String, Object>());
+		assertSuccessFlashed("controllers.users.saveNewPasswordAfterReset.success");
+		// assert new password was saved
+		user = User.find("byEmail", "active@gmail.com").first();
+		assertNull(user.getResetPasswordSecret());
+		assertEquals(User.generatePasswordHash("12345", user.getEmail()),
+				user.getPasswordHash());
+	}
+
+	@Test
+	public void testInvalidSecretInResetPassword() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "active@gmail.com");
+
+		Response response = POST(Router.reverse("Users.resetPassword", params));
+
+		// Expect a mail was sent with a secret token that gives access to the
+		// change password page for the user
+		assertSuccessFlashed("controllers.users.resetPassword.success");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+		// Get the user
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertNotNull(user.getResetPasswordSecret());
+
+		params.clear();
+
+		// need new password
+		// need new password confirmation
+		// need resetPasswordSecret
+		params = new HashMap<String, Object>();
+		params.put("newPassword", "12345");
+		params.put("newPasswordConfirmation", "12345");
+		params.put("resetPasswordSecret", user.getResetPasswordSecret()+"1");
+		
+		response = POST(Router.reverse("Users.saveNewPasswordAfterReset", params));
+		assertRedirectedTo(response, "Application.index",new HashMap<String, Object>());
+		assertErrorFlashed("controllers.users.saveNewPasswordAfterReset.fail");
+		
+	}
+	
+	@Test
+	public void testInvalidNewPasswordInResetPassword() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "active@gmail.com");
+
+		Response response = POST(Router.reverse("Users.resetPassword", params));
+
+		// Expect a mail was sent with a secret token that gives access to the
+		// change password page for the user
+		assertSuccessFlashed("controllers.users.resetPassword.success");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+		// Get the user
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertNotNull(user.getResetPasswordSecret());
+
+		params.clear();
+
+		// need new password
+		// need new password confirmation
+		// need resetPasswordSecret
+		params = new HashMap<String, Object>();
+		params.put("newPassword", "1234");
+		params.put("newPasswordConfirmation", "1234");
+		params.put("resetPasswordSecret", user.getResetPasswordSecret());
+		
+		response = POST(Router.reverse("Users.saveNewPasswordAfterReset", params));
+		assertErrorFlashed("controllers.users.saveNewPasswordAfterReset.fail");
+		
+	}
+
+	@Test
+	public void testInvalidNewPasswordConfirmationInResetPassword() {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("email", "active@gmail.com");
+
+		Response response = POST(Router.reverse("Users.resetPassword", params));
+
+		// Expect a mail was sent with a secret token that gives access to the
+		// change password page for the user
+		assertSuccessFlashed("controllers.users.resetPassword.success");
+		assertRedirectedTo(response, "Application.index",
+				new HashMap<String, Object>());
+		// Get the user
+		User user = User.find("byEmail", "active@gmail.com").first();
+		assertNotNull(user.getResetPasswordSecret());
+
+		params.clear();
+
+		// need new password
+		// need new password confirmation
+		// need resetPasswordSecret
+		params = new HashMap<String, Object>();
+		params.put("newPassword", "12345");
+		params.put("newPasswordConfirmation", "12346");
+		params.put("resetPasswordSecret", user.getResetPasswordSecret());
+		
+		response = POST(Router.reverse("Users.saveNewPasswordAfterReset", params));
+		assertErrorFlashed("controllers.users.saveNewPasswordAfterReset.fail");
+		
+	}
+
 
 }

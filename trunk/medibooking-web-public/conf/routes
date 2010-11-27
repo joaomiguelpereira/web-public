@@ -14,17 +14,23 @@ GET /businesses/{id}/edit						Businesses.edit
 
 #Users
 
-GET /user/{userType}/new						Users.blank
-POST /user/{userType}				     		Users.create
-GET /user/registrationConfirmation				Users.userCreatedConfirmation
-GET /user/activate/{activationKey}				Users.activateUser
-GET /login										Users.login
-GET /user/account								Users.view
-POST /user/account/save							Users.save
-GET /user/account/edit							Users.edit
-GET /user/account/changePassword				Users.changePassword
-POST /user/account/saveNewPassword				Users.saveNewPassword
-GET /users							     		Users.index
+GET /user/account/new/{userType}								Users.blank
+POST /user/account/create/{userType}				     		Users.create
+GET /user/account/registrationConfirmation						Users.userCreatedConfirmation
+GET /user/account/activate/{activationKey}						Users.activateUser
+GET /login														Users.login
+GET /users							     						Users.index
+GET /user/account												Users.view
+POST /user/account/save											Users.save
+GET /user/account/edit											Users.edit
+GET /user/account/changePassword								Users.changePassword
+GET /user/account/changeResetedPassword/{resetPasswordSecret} 	Users.changeResetedPassword
+
+GET /user/account/recoverPassword								Users.recoverPassword
+POST /user/account/resetPassword                        		Users.resetPassword
+POST /user/account/saveNewPasswordAfterReset					Users.saveNewPasswordAfterReset
+POST /user/account/saveNewPassword								Users.saveNewPassword
+
 
 
 
