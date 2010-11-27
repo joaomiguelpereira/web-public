@@ -29,6 +29,9 @@ public class User extends Model {
 
 	}
 
+	
+	private String resetPasswordSecret;
+	
 	@Required
 	@MaxSize(60)
 	@MinSize(6)
@@ -188,6 +191,10 @@ public class User extends Model {
 			Logger.debug("Authentication unsuccessful");
 		}
 		this.loginInformation.setLastLoginClientIP(clientIP);
+		//Empty recoverPasswordSecret if any
+		if ( this.resetPasswordSecret != null ) {
+			this.resetPasswordSecret = null;
+		}
 		this.save();
 		return loginToken;
 	}
@@ -210,6 +217,14 @@ public class User extends Model {
 			String email) {
 		return Codec.hexMD5(password + email);
 
+	}
+
+	public void setResetPasswordSecret(String resetPasswordSecret) {
+		this.resetPasswordSecret = resetPasswordSecret;
+	}
+
+	public String getResetPasswordSecret() {
+		return resetPasswordSecret;
 	}
 
 }
