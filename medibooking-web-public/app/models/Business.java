@@ -66,6 +66,9 @@ public class Business extends BaseModel {
 	@Valid
 	private Address address;
 	
+
+	@OneToOne
+	private BusinessAdministrator superAdmin = null;
 	
 	@SuppressWarnings("unused")
 	@PrePersist
@@ -75,6 +78,7 @@ public class Business extends BaseModel {
 		}
 		
 	}
+	
 	/**
 	 * Default constructor
 	 */
@@ -145,6 +149,14 @@ public class Business extends BaseModel {
 	}
 	public List<WebSite> getWebSites() {
 		return webSites;
+	}
+
+	public void setSuperAdmin(BusinessAdministrator superAdmin) {
+		this.superAdmin = superAdmin;
+	}
+
+	public BusinessAdministrator getSuperAdmin() {
+		return superAdmin;
 	}
 	
 	

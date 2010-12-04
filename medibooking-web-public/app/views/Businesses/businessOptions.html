@@ -6,10 +6,34 @@
 		<li class="${currentAction.equals('Businesses.view')?"selected":""}"><a href="@{Businesses.view(business.id)}">Consultar</a></li>
 		
 		<li class="${(currentAction.equals('Businesses.edit') || currentAction.startsWith('Businesses.save'))?"selected":""}"><a href="@{Businesses.edit(business.id)}">Editar</a></li>
+		
+		<li><a id="removeBusinessLink" href="#">Remover</a></li>
 		<li><a href="">Médicos</a></li>
 		<li class="separator"></li>
 		<li><a href="@{Businesses.list}">Voltar à lista</a></li>
-		
 	</ul>
 </div>
 
+#{form @Businesses.delete(business.id), method:'DELETE', id:'deleteBusinessForm'}
+#{/form}
+
+
+
+<script>
+
+	$('deleteBusinessForm').submit(function() {
+		window.alert("Submiting");
+	});
+	
+	$('#removeBusinessLink').click(function() {
+		if ( window.confirm("Tem a certeza que quer remover ${business.name}") ) {
+			$('#deleteBusinessForm').submit();
+			return false;
+			
+		}
+		
+		
+	});
+
+
+</script>

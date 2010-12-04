@@ -52,5 +52,9 @@ public class BusinessAdministrator extends User{
 		this.administeredBusinesses.add(business);
 		
 	}
+	public boolean removeAdministeredBusiness(Business business) {
+		return this.administeredBusinesses.remove(business);
+		
+	}
 	
 }

@@ -39,7 +39,7 @@ public class Businesses extends BaseController {
 	@RequiresUserSession(userTypes = UserType.ADMIN)
 	public static void index() {
 		// retrieve all Partners (Just for testing purpose)
-		List<Business> businesses= Business.findAll();
+		List<Business> businesses = Business.findAll();
 
 		render(businesses);
 	}
@@ -63,15 +63,49 @@ public class Businesses extends BaseController {
 			notFound("Business not found");
 		}
 
-		checkBusinessOwnership(business);
+		checkBusinessAdministrativeRights(business, false);
 		render(business);
+	}
+
+	/**
+	 * Delete a business
+	 * 
+	 * @param id
+	 */
+	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
+	public static void delete(Long id) {
+		Business business = Business.findById(id);
+		if (business == null) {
+			notFound("Business not found");
+		}
+		checkBusinessAdministrativeRights(business,true);
+		//remove the business from the admin list
+		boolean removed = getCurrentAdministrator().removeAdministeredBusiness(business);
+		if (removed ) {
+			//save ba new state
+			getCurrentAdministrator().save();
+			//now, just delete the business
+			business.delete();
+			flashSuccess("controllers.businesses.delete.success");
+			flash.keep();
+			Businesses.list();
+		} else {
+			flashError("controllers.businesses.delete.fail");
+			flash.keep();
+			Businesses.view(business.id);
+			
+		}
+		
+		
+		Logger.debug("Removing Business " + business.getName());
+		renderText("Removing Business " + business.getName());
 	}
 
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	public static void save(Long id) {
 		Business business = Business.findById(id);
 		notFoundIfNull(business);
-		checkBusinessOwnership(business);
+		checkBusinessAdministrativeRights(business, false);
 		Binder.bind(business, "business", params.all());
 
 		if (business.validateAndSave()) {
@@ -93,7 +127,7 @@ public class Businesses extends BaseController {
 			notFound("Business not found");
 		}
 
-		checkBusinessOwnership(business);
+		checkBusinessAdministrativeRights(business, false);
 		render(business);
 
 	}
@@ -110,7 +144,6 @@ public class Businesses extends BaseController {
 
 	}
 
-	
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	public static void create(@Valid Business business, List<Email> emails) {
 		// get the current user
@@ -125,7 +158,11 @@ public class Businesses extends BaseController {
 		}
 		// Set the owner
 		getCurrentAdministrator().addAdministeredBusinesses(business);
+		// May have any number of admins
 		business.addAdministrator(getCurrentAdministrator());
+		// Has only one superAdmin
+		business.setSuperAdmin(getCurrentAdministrator());
+
 		business.save();
 
 		currentUser.get().save();
@@ -137,22 +174,30 @@ public class Businesses extends BaseController {
 
 	// ///////End actions
 
-
 	/**
 	 * Check if the business requested is administered by the current user
 	 * 
 	 * @param business
 	 */
-	private static void checkBusinessOwnership(Business business) {
+	private static void checkBusinessAdministrativeRights(Business business,
+			boolean shouldBeSuperAdmin) {
+		
 		boolean allowed = false;
-		if (currentUser.get() != null) {
 
-			// check if current user is one of the admins
-			for (BusinessAdministrator oa : business.getAdministrators()) {
-				if (oa.id.equals(currentUser.get().id)) {
+		if (currentUser.get() != null) {
+			if (shouldBeSuperAdmin) {
+				if (business.getSuperAdmin().id.equals(currentUser.get().id)) {
 					allowed = true;
-					break;
 				}
+			} else {
+				// check if current user is one of the admins
+				for (BusinessAdministrator oa : business.getAdministrators()) {
+					if (oa.id.equals(currentUser.get().id)) {
+						allowed = true;
+						break;
+					}
+				}
+
 			}
 		}
 		if (!allowed) {
