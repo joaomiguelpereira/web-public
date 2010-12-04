@@ -1,12 +1,15 @@
 package controllers;
 
+import java.util.List;
+
 import constants.SessionValuesConstants;
+import models.Business;
+import models.User;
 import models.enums.UserType;
 
 
 public class Application extends BaseController {
 
-	
 	
     public static void index() {
         //decide what is the front page for the current user

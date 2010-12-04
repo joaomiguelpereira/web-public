@@ -112,9 +112,7 @@ public class Bootstrap extends Job<String> {
 
 		business.setName(businessName);
 		
-		business.setPhone1(phoneNumber1);
-		business.setPhone2(phoneNumber2);
-
+		
 		Address officeAddress = new Address();
 		officeAddress.setAddressLineOne(addressLineOne+businessName);
 		officeAddress.setAddressLineTwo(addressLineTwo);
