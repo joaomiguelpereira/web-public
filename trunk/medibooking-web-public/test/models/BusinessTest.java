@@ -104,21 +104,6 @@ public class BusinessTest extends ModelUnitTest {
 
 	}
 
-	@Test
-	public void invalidPhones() {
-
-		Business partner = TestBusinessFactory.createBusiness(null, null);
-
-		partner.setPhone1("invalid1");
-		// Save it
-		assertFalse(partner.validateAndSave());
-
-		partner.setPhone1("2345228228");
-
-		// Save it
-		assertFalse(partner.validateAndSave());
-
-	}
 
 	@Test
 	public void validateDuplicatedName() {

@@ -28,6 +28,23 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		Fixtures.load("users.yml");
 	}
 
+	@Test
+	public void createBusiness() {
+		//Authenicate a user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);
+		//Create params Map
+		Map<String, Object> params = new HashMap<String, Object>();
+		//Set business name
+		params.put("business.name", "Business Name");
+		params.put("business.shortIntroduction", "Short description of the business");
+		params.put("business.address.addressLineOne", "Address line 1");
+		params.put("business.address.postalCode", "Postal Code");
+		params.put("business.address.city", "City");
+		//Add phones
+		params.put("phones[0]", "123456789");
+		
+		
+	}
 	
 	@Test
 	public void deleteBusiness() {
@@ -132,9 +149,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		params.put("business.address.addressLineOne", "Address line 1");
 		params.put("business.address.postalCode", "Postal Code");
 		params.put("business.address.city", "City");
-		params.put("business.email", "email@email.com");
-		params.put("business.phone1", "123456789");
-
+		
 		Http.Response response = POST(Router.reverse("Businesses.create",
 				params));
 
@@ -150,7 +165,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 				new HashMap<String, Object>());
 
 		// get the saved office
-		Business business = Business.find("byEmail", "email@email.com").first();
+		Business business = Business.find("byName", "Clinic Name").first();
 		assertNotNull(business);
 		assertEquals(1, business.getAdministrators().size());
 		assertEquals(oa.id, business.getAdministrators().get(0).id);
