@@ -3,6 +3,7 @@ package controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import annotations.authorization.RequiresEmptyUserSession;
 import annotations.authorization.RequiresUserSession;
@@ -23,6 +24,7 @@ import play.libs.Crypto;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Scope;
+import play.mvc.Scope.Params;
 import play.mvc.With;
 import play.mvc.Http.Cookie;
 
@@ -46,6 +48,19 @@ public class BaseController extends Controller {
 			}
 		}
 
+	}
+
+	protected static void inspectParams(Params params) {
+		Map<String, String[]> mapParams =  params.all();
+		Set<String> keys =  mapParams.keySet();
+		
+		for ( String key : keys) {
+			String[] vals = mapParams.get(key);
+			for ( String value: vals ) {
+				System.err.println("Key: "+key+" -> "+value);
+			}
+		}
+		
 	}
 
 	/**

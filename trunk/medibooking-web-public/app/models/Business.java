@@ -13,13 +13,13 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 
 
 import play.Logger;
 import play.data.validation.CheckWith;
-import play.data.validation.Email;
 import play.data.validation.MaxSize;
 import play.data.validation.MinSize;
 import play.data.validation.Required;
@@ -37,6 +37,7 @@ public class Business extends BaseModel {
 		this.administrators = new ArrayList<BusinessAdministrator>();
 	}
 	
+	
 	@Required
 	@Unique
     @MaxSize(60)
@@ -46,32 +47,16 @@ public class Business extends BaseModel {
 	@MaxSize(500)
 	private String shortIntroduction;
 	
-	@Required
-	@PhoneNumber
-	private String phone1;
-
-	
-	@PhoneNumber
-	private String phone2;
-	
-	@PhoneNumber
-	private String fax;
-	
-	@PhoneNumber
-	private String mobile1;
-	
-	@PhoneNumber
-	private String mobile2;
-	
-	@Email
-	@Unique
-	private String email;
-	
-	@URL
-	@Unique
-	private String url;
-	
 	private Boolean active;
+	
+	@OneToMany
+	private List<Email> emails;
+	
+	@OneToMany
+	private List<Phone> phones;
+	
+	@OneToMany
+	private List<WebSite> webSites;
 	
 	@ManyToMany
 	private List<BusinessAdministrator> administrators;
@@ -114,61 +99,7 @@ public class Business extends BaseModel {
 		return address;
 	}
 
-	public void setPhone1(String phone1) {
-		this.phone1 = phone1;
-	}
-
-	public String getPhone1() {
-		return phone1;
-	}
-
-	public void setPhone2(String phone2) {
-		this.phone2 = phone2;
-	}
-
-	public String getPhone2() {
-		return phone2;
-	}
-
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-
-	public String getFax() {
-		return fax;
-	}
-
-	public void setMobile1(String mobile1) {
-		this.mobile1 = mobile1;
-	}
-
-	public String getMobile1() {
-		return mobile1;
-	}
-
-	public void setMobile2(String mobile2) {
-		this.mobile2 = mobile2;
-	}
-
-	public String getMobile2() {
-		return mobile2;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getUrl() {
-		return url;
-	}
+	
 
 	public void setActive(Boolean active) {
 		this.active = active;
@@ -196,6 +127,24 @@ public class Business extends BaseModel {
 	}
 	public String getShortIntroduction() {
 		return shortIntroduction;
+	}
+	public void setEmails(List<Email> emails) {
+		this.emails = emails;
+	}
+	public List<Email> getEmails() {
+		return emails;
+	}
+	public void setPhones(List<Phone> phones) {
+		this.phones = phones;
+	}
+	public List<Phone> getPhones() {
+		return phones;
+	}
+	public void setWebSites(List<WebSite> webSites) {
+		this.webSites = webSites;
+	}
+	public List<WebSite> getWebSites() {
+		return webSites;
 	}
 	
 	

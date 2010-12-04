@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import annotations.authorization.RequiresUserSession;
 
 import models.Business;
 import models.BusinessAdministrator;
+import models.Email;
 
 import models.User;
 import models.enums.UserType;
@@ -21,6 +26,7 @@ import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Scope.Params;
 
 import play.mvc.With;
 
@@ -104,16 +110,16 @@ public class Businesses extends BaseController {
 
 	}
 
+	
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
-	public static void create(@Valid Business business) {
+	public static void create(@Valid Business business, List<Email> emails) {
 		// get the current user
-
 		if (currentUser.get() == null) {
 			notFound(Messages.get("user.not.found"));
 		}
 
 		if (validation.hasErrors()) {
-			flash.error(Messages.get("business.save.success"));
+			flash.error(Messages.get("business.save.fail"));
 			logValidationErrors();
 			render("@blank", business);
 		}
@@ -125,11 +131,12 @@ public class Businesses extends BaseController {
 		currentUser.get().save();
 
 		flash.success(Messages.get("business.save.success"));
-		Businesses.list();
+		Businesses.view(business.id);
 
 	}
 
 	// ///////End actions
+
 
 	/**
 	 * Check if the business requested is administered by the current user
