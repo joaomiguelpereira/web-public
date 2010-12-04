@@ -23,12 +23,12 @@ public abstract class TestBusinessFactory {
 	public static Business createBusiness(String name, BusinessAdministrator oAdmin) {
 		
 		final String sufix = System.nanoTime()+"";
-		String officeName = "Office "+sufix;
+		String businessName = "Office "+sufix;
 		
 		if ( name == null ) {
-			officeName = "Office "+sufix;
+			businessName = "Office "+sufix;
 		} else {
-			officeName = name;
+			businessName = name;
 		}
 		
 		final String addressLineOne = "Address Line "+sufix;
@@ -42,12 +42,10 @@ public abstract class TestBusinessFactory {
 		
 		
 		
-		Business office = new Business();
+		Business business = new Business();
 		
-		office.setName(officeName);
+		business.setName(businessName);
 	
-		office.setPhone1(phoneNumber1);
-		office.setPhone2(phoneNumber2);
 		
 	
 		
@@ -57,12 +55,12 @@ public abstract class TestBusinessFactory {
 		officeAddress.setPostalCode(addressPostalCode);
 		officeAddress.setCity(addressCity);
 		officeAddress.setCountry(addressCountry);
-		office.setAddress(officeAddress);
+		business.setAddress(officeAddress);
 		if ( oAdmin != null ) {
-			office.addAdministrator(oAdmin);
+			business.addAdministrator(oAdmin);
 		}
 		
-		return office;
+		return business;
 		
 	}
 
