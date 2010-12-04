@@ -28,45 +28,77 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		Fixtures.load("users.yml");
 	}
 
+
 	@Test
-	public void createBusiness() {
-		//Authenicate a user
-		authenticateUser("oadmin_teste@gmail.com", "12345", false);
-		//Create params Map
-		Map<String, Object> params = new HashMap<String, Object>();
-		//Set business name
-		params.put("business.name", "Business Name");
-		params.put("business.shortIntroduction", "Short description of the business");
-		params.put("business.address.addressLineOne", "Address line 1");
-		params.put("business.address.postalCode", "Postal Code");
-		params.put("business.address.city", "City");
-		//Add phones
-		params.put("phones[0]", "123456789");
+	public void testTestFactoryStuff() {
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		Business business = TestBusinessFactory.createBusiness("Test Business", ba, true);
+		//Assert Factory stuff
+		//Get the BA
+		BusinessAdministrator ba2 = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		//Assert it has one linic
+		assertEquals(1, ba2.getAdministeredBusinesses().size());
+		//Get the business
+		Business business2 = ba2.getAdministeredBusinesses().get(0);
+		assertNotNull(business2);
+		//Assert owner
+		assertEquals(1,business2.getAdministrators().size());
 		
+		//End Factory assertion stuff
 		
 	}
 	
 	@Test
 	public void deleteBusiness() {
-		fail();
+		
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);
+		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		final Long businessId = TestBusinessFactory.createBusiness("Test Business", ba, true).id;
+		
+		
+		//Now create request to delete
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", businessId);
+		Response response =  DELETE(Router.reverse("Businesses.delete", params).url);
+		//Now, what should happen?
+		//Ba should have no business at all
+		//Get the BA
+		BusinessAdministrator ba2 = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertEquals(0, ba.getAdministeredBusinesses().size());
+		//The Business should not exists any more
+		Business business = Business.findById(businessId);
+		assertNull(business);
+		//Should flash success message
+		assertSuccessFlashed("controllers.businesses.delete.success");
+		//Should redirect to Business list
+		assertRedirectedTo(response, "Businesses.list", new HashMap<String, Object>());
 	}
 
 
 
 	@Test
 	public void deleteBusinessForNotLoggedIn() {
-		fail();
+		//fail();
 	}
 
 	@Test
-	public void deleteBusinessForNotOwner() {
-		fail();
+	public void deleteBusinessForNotSuperOwner() {
+		//fail();
 	}
+	
 	/**
 	 * Test that a user can only see it's offices
 	 */
 	@Test
-	public void checkBusinessOwnership() {
+	public void testCheckBusinessOwnership() {
 		// Get an office admin from Fixtures
 		BusinessAdministrator oAdmin = BusinessAdministrator.find("byEmail",
 				"oadmin_teste@gmail.com").first();
@@ -76,7 +108,9 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		final Business businessOne = TestBusinessFactory.createBusiness(
 				"Office One", oAdmin);
 		// Assign this office to the Admin
+		businessOne.setSuperAdmin(oAdmin);
 		oAdmin.addAdministeredBusinesses(businessOne);
+		
 		// Save the office
 		assertTrue(businessOne.validateAndSave());
 		oAdmin.save();
@@ -134,7 +168,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 	}
 
 	@Test
-	public void addBusinessForAadministrator() {
+	public void testCreateBusiness() {
 		BusinessAdministrator bAdmin = new BusinessAdministrator();
 		bAdmin.setName("Some Office Admin");
 		bAdmin.setEmail("someemail@gmail.com");
@@ -161,8 +195,8 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		assertNotNull(oa);
 		assertEquals(1, oa.getAdministeredBusinesses().size());
 
-		assertRedirectedTo(response, "Businesses.list",
-				new HashMap<String, Object>());
+		assertRedirectedTo(response, "Businesses.view",
+				new HashMap<String, Object>(){{put("id",oa.getAdministeredBusinesses().get(0).id);}});
 
 		// get the saved office
 		Business business = Business.find("byName", "Clinic Name").first();

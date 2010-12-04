@@ -70,10 +70,14 @@ public class Bootstrap extends Job<String> {
 		for (int i=0; i<5; i++) {
 			
 			
-			Business office = createTestBusiness("my Office "+System.nanoTime());
-			office.addAdministrator(oAdmin);
-			businesses.add(office);	
-			oAdmin.addAdministeredBusinesses(office);
+			Business business = createTestBusiness("my Office "+System.nanoTime());
+			
+			business.addAdministrator(oAdmin);
+			business.setSuperAdmin(oAdmin);
+			businesses.add(business);
+			
+			
+			oAdmin.addAdministeredBusinesses(business);
 			
 		}
 		//createTestOffice(oAdmin, "Office nbr asd");
@@ -85,6 +89,8 @@ public class Bootstrap extends Job<String> {
 		for (int i=0; i<1; i++) {
 			Business business = createTestBusiness("my Office nbr "+System.nanoTime());
 			business.addAdministrator(oAdmin2);
+			business.setSuperAdmin(oAdmin2);
+			
 			business.addAdministrator(oAdmin);
 			//offices.add(office);	
 			oAdmin2.addAdministeredBusinesses(business);
