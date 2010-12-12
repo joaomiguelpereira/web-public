@@ -8,6 +8,8 @@ import models.User;
 
 import org.junit.Ignore;
 
+import com.google.gson.Gson;
+
 import play.Logger;
 import play.data.validation.Error;
 import play.data.validation.Validation;
@@ -125,6 +127,23 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 				user.getLoginInformation().getLoginToken());
 		Flash.current().clear();
 
+	}
+
+	protected void assertJSONResponse(Response response, String json) {
+		//Assert is JSON Response
+		assertTrue(response.contentType.contains("application/json"));
+		assertTrue(response.out.toString().contains(json));
+		
+		
+	}
+
+	protected void assertJSONError(Response response, String il18nKey) {
+		//Assert is JSON Response
+		assertTrue(response.contentType.contains("application/json"));
+		Map<String,String> jsonMap = new HashMap<String, String>();
+		jsonMap.put("error", Messages.get(il18nKey));
+		String jsonString = new Gson().toJson(jsonMap);
+		assertTrue(response.out.toString().contains(jsonString));
 	}
 
 	protected void assertSuccessFlashed(String i18nKey) {

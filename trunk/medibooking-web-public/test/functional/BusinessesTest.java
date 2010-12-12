@@ -1,11 +1,14 @@
 package functional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import models.Business;
 import models.BusinessAdministrator;
+import models.Email;
+import models.Phone;
 import models.User;
 
 import models.factories.TestBusinessFactory;
@@ -13,8 +16,11 @@ import models.factories.TestBusinessFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
 import play.Logger;
 
+import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Http.Response;
 import play.mvc.Router;
@@ -28,7 +34,73 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		Fixtures.load("users.yml");
 	}
 
+	@Test
+	public void testActivateBusiness() {
 
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		Business business = TestBusinessFactory.createBusiness("Test Business2", ba, true);
+		
+		List<Phone> phones = new ArrayList<Phone>();
+		Phone phone = new Phone();
+		phone.setDescription("Desc");
+		phone.setName("Principal");
+		phone.setPhone("12345678");
+		phones.add(phone);
+		business.setPhones(phones);
+		
+		List<Email> emails = new ArrayList<Email>();
+		Email email = new Email();
+		email.setEmail("jonas@gmail.com");
+		email.setDescription("Description");
+		email.setName("principal");
+		emails.add(email);
+		business.setEmails(emails);
+		
+		business.setShortIntroduction("Some short introductions here");
+		business.save();
+		
+		//Now create request to activate
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", business.id);
+		Response response =  POST(Router.reverse("Businesses.activate", params));
+		
+		Map<String, String> expectedMap = new HashMap<String, String>();
+		expectedMap.put("active", Boolean.TRUE.toString());
+		assertJSONResponse(response, new Gson().toJson(expectedMap));
+		
+		Business bu = Business.find("byName", "Test Business2").first();
+		assertTrue(bu.isActive());
+
+	}
+	
+	
+	
+
+	@Test
+	public void testDontActivateBusinessWithNoCompleteInformation() {
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);
+		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		final Long businessId = TestBusinessFactory.createBusiness("Test Business", ba, true).id;
+		//Now create request to activate
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", businessId);
+		Response response =  POST(Router.reverse("Businesses.activate", params));
+		
+		assertJSONError(response, "controllers.businesses.activate.fail.incomplete.info");
+		
+	}
+
+	
 	@Test
 	public void testTestFactoryStuff() {
 		//Get the Admin
@@ -50,6 +122,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		//End Factory assertion stuff
 		
 	}
+	
 	
 	@Test
 	public void deleteBusiness() {
@@ -86,12 +159,44 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 
 	@Test
 	public void deleteBusinessForNotLoggedIn() {
-		//fail();
+		//Authenticate user
+		//authenticateUser("oadmin_teste@gmail.com", "12345", false);
+		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		final Long businessId = TestBusinessFactory.createBusiness("Test Business", ba, true).id;
+		
+		
+		//Now create request to delete
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", businessId);
+		
+		Response response =  DELETE(Router.reverse("Businesses.delete", params).url);
+		assertErrorFlashed("user.not.authorized");
+		assertRedirectedTo(response, "Users.login", new HashMap<String, Object>());
 	}
 
 	@Test
 	public void deleteBusinessForNotSuperOwner() {
-		//fail();
+		//Authenticate user
+		authenticateUser("oadmin_teste_two@gmail.com", "12345", false);
+		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		final Long businessId = TestBusinessFactory.createBusiness("Test Business", ba, true).id;
+		
+		
+		//Now create request to delete
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", businessId);
+		
+		Response response =  DELETE(Router.reverse("Businesses.delete", params).url);
+		assertErrorFlashed("user.not.business.owner");
+		assertRedirectedTo(response, "Businesses.list", new HashMap<String, Object>());
 	}
 	
 	/**

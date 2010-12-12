@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,7 @@ import play.mvc.Controller;
 import play.mvc.Scope.Params;
 
 import play.mvc.With;
+import sun.awt.X11.MWMConstants;
 
 public class Businesses extends BaseController {
 
@@ -67,6 +69,39 @@ public class Businesses extends BaseController {
 		render(business);
 	}
 
+	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
+	public static void activate(Long id) {
+		Business business = Business.findById(id);
+		Map<String, Object> jsonOutMap = new HashMap<String, Object>();
+		String jsonOut;
+		if (business == null) {
+			jsonOutMap.put("error",
+					Messages.get("controllers.businesses.not.found"));
+			jsonOut = new Gson().toJson(jsonOutMap);
+			render(jsonOut);
+		} else {
+			// has complete info
+			if ((business.getShortIntroduction() == null)
+					|| (business.getShortIntroduction().isEmpty())
+					|| business.getPhones() == null
+					|| business.getPhones().isEmpty()
+					|| business.getEmails() == null
+					|| business.getEmails().isEmpty()) {
+				jsonOutMap.put("error",
+						Messages.get("controllers.businesses.activate.fail.incomplete.info"));
+				jsonOut = new Gson().toJson(jsonOutMap);
+				renderJSON(jsonOut);
+
+			} else {
+				business.setActive(true);
+				business.save();
+				jsonOutMap.put("active", Boolean.TRUE.toString());
+				jsonOutMap.put("flash", new HashMap<String, String>(){{put("sucess",Messages.get("controllers.businesses.activate.fail.incomplete.info"));}});
+				renderJSON(new Gson().toJson(jsonOutMap));
+			}
+		}
+	}
+
 	/**
 	 * Delete a business
 	 * 
@@ -78,13 +113,14 @@ public class Businesses extends BaseController {
 		if (business == null) {
 			notFound("Business not found");
 		}
-		checkBusinessAdministrativeRights(business,true);
-		//remove the business from the admin list
-		boolean removed = getCurrentAdministrator().removeAdministeredBusiness(business);
-		if (removed ) {
-			//save ba new state
+		checkBusinessAdministrativeRights(business, true);
+		// remove the business from the admin list
+		boolean removed = getCurrentAdministrator().removeAdministeredBusiness(
+				business);
+		if (removed) {
+			// save ba new state
 			getCurrentAdministrator().save();
-			//now, just delete the business
+			// now, just delete the business
 			business.delete();
 			flashSuccess("controllers.businesses.delete.success");
 			flash.keep();
@@ -93,10 +129,9 @@ public class Businesses extends BaseController {
 			flashError("controllers.businesses.delete.fail");
 			flash.keep();
 			Businesses.view(business.id);
-			
+
 		}
-		
-		
+
 		Logger.debug("Removing Business " + business.getName());
 		renderText("Removing Business " + business.getName());
 	}
@@ -181,11 +216,13 @@ public class Businesses extends BaseController {
 	 */
 	private static void checkBusinessAdministrativeRights(Business business,
 			boolean shouldBeSuperAdmin) {
-		
+
 		boolean allowed = false;
+		String errorKey = "user.not.authorized";
 
 		if (currentUser.get() != null) {
 			if (shouldBeSuperAdmin) {
+				errorKey = "user.not.business.owner";
 				if (business.getSuperAdmin().id.equals(currentUser.get().id)) {
 					allowed = true;
 				}
@@ -201,7 +238,7 @@ public class Businesses extends BaseController {
 			}
 		}
 		if (!allowed) {
-			flashError("user.not.authorized");
+			flashError(errorKey);
 			Businesses.list();
 		}
 	}

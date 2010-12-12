@@ -26,7 +26,7 @@
 	});
 	
 	$('#removeBusinessLink').click(function() {
-		if ( window.confirm("Tem a certeza que quer remover ${business.name}") ) {
+		if ( window.confirm("${play.i18n.Messages.get('views.businesses.options.delete.confirmation', business.name)}") ) {
 			$('#deleteBusinessForm').submit();
 			return false;
 			
