@@ -5,11 +5,19 @@
 # Home page
 GET     /                                       Application.index
 
+
 #Routes for Businesses
+GET /businesses.json                            Businesses.list(format:'json')
 GET /businesses                                 Businesses.list
 GET /businesses/new		                        Businesses.blank
+POST /business/activate/{id}					Businesses.activate(format:'json')
+POST /business/create							Businesses.create
+GET /business/{id}.json							Businesses.view(format:'json')
+DELETE /business/{id}							Businesses.delete
 GET /business/{id}								Businesses.view
 GET /businesses/{id}/edit						Businesses.edit
+
+
 
 
 #Users
