@@ -81,5 +81,6 @@ views.users.type.USER = Utilizador
  views
 views.businesses.view.title = Ver Consultório/Clínica
 views.business.blank = Registar novo negócio
+views.businesses.options.delete.confirmation = Tem a certeza que quer remover o negócio %s
 
 
