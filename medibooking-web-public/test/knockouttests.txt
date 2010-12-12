@@ -1,0 +1,129 @@
+    *{
+	<form action="" id="businessForm">
+       <fieldset>
+           <legend>Informação sobre negócio</legend>
+           <div class="info">Todos os campos marcados com <span class="required-sybmol">*</span> são de preenchimento obrigatório</div>
+           <div>
+           		<label for="business[name]">Nome :<span class="required-sybmol">*</span></label>
+                <input data-bind="value: name()" type="text" name="business[name]" id="business[name]" size="20" maxlength="60" value="" />
+                <span class="error" style="display:none"></span>
+                
+                <span class="info">O nome pelo qual o seu negócio vai é conhecido.</span>
+           </div>
+           <div>
+                <label for="business[address[addressLine1]]">Morada :<span class="required-sybmol">*</span></label>
+                <textarea data-bind="text: address().addressLineOne()" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
+                <span class="error" style="display:none"></span>                   
+           </div>
+
+			<div>
+            	<label for="business[address[postalCode]]">Código Postal :<span class="required-sybmol">*</span></label>
+                <input data-bind="value: address().postalCode()" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
+             	<span class="error" style="display:none"></span>                   
+            </div>
+
+  			<div>
+            	<label for="business[address[city]]">Localidade :<span class="required-sybmol">*</span></label>
+                <input data-bind="value: address().city()" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
+                <span class="error" style="display:none"></span>
+                                    
+            </div>
+           
+
+
+           <p class="space"></p>
+           <legend>Apresentação do negócio</legend>
+           
+			<div>
+            	<label for="business[shortIntroduction]">Breve descrição :</label>
+                <textarea data-bind="text: shortIntroduction()" rows="10" name="business[shortIntroduction]" id="business[shortIntroduction]"></textarea>
+				<span class="error" style="display:none"></span>
+                <span class="info">Texto que vai ser apresentado aos utilizadores nas listagens. Máximo de 500 caractéres</span>                    
+			</div>
+           <div class="buttons">
+	       		<a id="teste">cc</a>
+	            <input type="submit" value="&{'forms.create.button'}"> 
+	            <a href="${_cancelAction}">&{'forms.cancel.label'}</a>    
+	        </div>
+	        <p class="space"></p>
+	        <legend>Contactos</legend>
+			<div>
+            	<label for="business[emails[0]]">Email 1 :</label>
+                <textarea rows="10" name="business[shortIntroduction]" id="business[shortIntroduction]"></textarea>
+				<span class="error" style="display:none"></span>
+                <span class="info">Texto que vai ser apresentado aos utilizadores nas listagens. Máximo de 500 caractéres</span>                    
+			</div>
+	        
+	        
+	</fieldset>
+</form>
+*{
+
+
+*{
+<script>
+
+	//Create data model here for PoC only
+	/*var businessModel = {
+			
+			
+			                            
+			business: ko.observable(
+			{
+				name: ko.observable('businessNames'),
+				shortIntroduction: ko.observable("desdfgc"),
+				emails: ko.observableArray( [ {email: ko.observable("jonas@gmail.com"), name: ko.observable("email default")}] ),
+				address : ko.observable(
+					{ 
+						addressLineOne: ko.observable('line1 Address'),
+						postalCode: ko.observable('postal code'),
+						city: ko.observable('city')
+					})})
+	}*/
+	
+
+	//Create data model here for PoC only
+	var businessModel = {
+			
+			
+			                            
+				name: ko.observable('businessNames'),
+				shortIntroduction: ko.observable("desdfgc"),
+				emails: ko.observableArray( [ {email: ko.observable("jonas@gmail.com"), name: ko.observable("email default")}] ),
+				address : ko.observable(
+					{ 
+						addressLineOne: ko.observable('line1 Address'),
+						postalCode: ko.observable('postal code'),
+						city: ko.observable('city')
+					})}
+	
+
+	
+	//var business = ko.observable(businessModel);
+	
+	var element = document.getElementById('businessForm');
+	
+	ko.applyBindings(businessModel,element);
+	
+	$('#teste').click(function() {
+		
+		//businessModel.business().name("teste");
+		//Create JSON data from the model
+				/*$.ajax({ 
+    		type:        "post", 
+    		contentType: "application/json", 
+    		url:         "@{Businesses.createAsJson()}", 
+    		data:        ko.toJSON(businessModel), 
+    		//success:     responseHandler, 
+    		processData: false, 
+    		dataType:    "json" 
+  		}));*/ 
+  		var data = ko.toJSON(businessModel);
+  		//window.alert(data.toString());
+		$.post('@{Businesses.createAsJson()}',data)
+		
+		
+		
+	})
+</script>
+*}

@@ -49,13 +49,13 @@ public class Business extends BaseModel {
 	
 	private Boolean active;
 	
-	@OneToMany
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<Email> emails;
 	
-	@OneToMany
+	@OneToMany(cascade=CascadeType.PERSIST)
 	private List<Phone> phones;
 	
-	@OneToMany
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<WebSite> webSites;
 	
 	@ManyToMany
