@@ -5,39 +5,52 @@
 #{include 'Businesses/businessOptions.html'/}
 
 <div class="view-data">
-	<dir class="not-editable">
+	<div class="not-editable"">
 		
 		 <h1>Informação Básica sobre Clínica/Consultório</h1>
-		 <table>
+		 <table id='businessBasicInfo'>
+		 	
 		 	<tr class="view-field">
 		 		<td class="field-name">Nome:</td>
-		 		<td class="field-value">${business.name}</td>	
+		 		<td class="field-value" >
+		 			<span data-bind="text: name"></span>
+		 			<input style="display:none" data-bind="value: name" type="text" name="business[name]" id="business[name]" size="20" maxlength="60" value="" />
+		 		</td>	
 		 	</tr>
-		 	
-		 	
-		 
 		 
 			 <tr class="view-field">
 			 	<td class="field-name">Morada:</td>
-			 	<td class="field-value">${business.address.addressLineOne}</td>	 	
+			 	<td class="field-value">
+			 		<span data-bind="text: addressLineOne"></span>
+			 		<textarea style="display:none" data-bind="text: addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
+			 			 	
+			 	</td>
 			 </tr>
 		
 			 <tr class="view-field">
 			 	<td class="field-name">Código Postal:</td>
-			 	<td class="field-value">${business.address.postalCode}</td>	 	
+			 	<td class="field-value">
+			 		<span data-bind="text: addressPostalCode"></span>
+			 		<input style="display:none" data-bind="value: addressPostalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
+			 	</td>	 	
 			 </tr>
 		
 			 <tr class="view-field">
 			 	<td class="field-name">Localidade:</td>
-			 	<td class="field-value">${business.address.city}</td>	 	
+			 	<td class="field-value">
+			 		<span data-bind="text: addressCity"></span>
+			 		<input style="display:none" data-bind="value: addressCity" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
+			 	</td>	 	
 			 </tr>
 		
-			 <tr class="view-field">
-			 	<td class="field-name">Estado: </td>
-			 	<td class="field-value">${business.active.booleanAs(play.i18n.Messages.get('active'),play.i18n.Messages.get('inactive'))}</td>	 	
-			 </tr>
 			 
 		</table>
+		<div class="inlineOption" id="businessBasicInfoOptions">
+		 	<a href="#" class="editOption">Editar</a>
+		 	<a href="#" class="saveOption" style="display:none">Guardar</a>
+		 	<a href="#" class="cancelOption" style="display:none">Cancelar</a>
+		 </div>
+		
 		<h1>Informação Adicional</h1>
 	
 		<table>
@@ -51,6 +64,61 @@
 			 
 		</table>
 	</div>
-
 </div>
+
+
+<script type="text/javascript">
+
+	//Create model
+	var businessBasicInfoModel = {
+			name : ko.observable('${business.name}'),
+			addressLineOne: ko.observable('${business.address.addressLineOne}'),
+			addressPostalCode: ko.observable('${business.address.postalCode}'),
+			addressCity: ko.observable('${business.address.city}')
+	}
+	//Bind element
+	var elBasicInfo = document.getElementById('businessBasicInfo');	
+	ko.applyBindings(businessBasicInfoModel,elBasicInfo);
+	
+	
+	var businessBasicInfoOptionsUtils = {
+		
+		toggle : function() {
+			//get all span elements within the table
+			//set them invisible
+			$('#businessBasicInfo span').toggle();
+			//get all input, textarea elemens and set the, visible
+			$('#businessBasicInfo input').toggle();
+			$('#businessBasicInfo textarea').toggle();
+
+			$('#businessBasicInfo input:first:visible').focus();	
+			//Toggle options
+			$('#businessBasicInfoOptions a.editOption').toggle();
+			$('#businessBasicInfoOptions a.cancelOption').toggle();
+			$('#businessBasicInfoOptions a.saveOption').toggle();
+		}	
+	};
+
+	$('#businessBasicInfoOptions a.saveOption').click(function() {
+		//jsUtils.startWorkingStatus();
+		jsUtils.showResultStatus('hey there', jsUtils.messageType.success);
+		//window.alert(jsUtils.messageType.error);
+		return false;
+		
+	});
+	
+	
+	//Associate events
+	//BusinessBasicInfoOptions edit
+	$('#businessBasicInfoOptions a.editOption').click(function() {
+		businessBasicInfoOptionsUtils.toggle();
+		return false;
+	});
+	
+	//BusinessBasicInfoOptions cancel
+	$('#businessBasicInfoOptions a.cancelOption').click(function() {
+		businessBasicInfoOptionsUtils.toggle();
+		return false;
+	});
+</script>
 
