@@ -16,6 +16,7 @@ GET /business/{id}.json							Businesses.view(format:'json')
 DELETE /business/{id}							Businesses.delete
 GET /business/{id}								Businesses.view
 GET /businesses/{id}/edit						Businesses.edit
+POST /business/{id}/save						Businesses.saveAsync(format:'json')
 
 
 

@@ -131,9 +131,27 @@ public class Businesses extends BaseController {
 			Businesses.view(business.id);
 
 		}
+	}
 
-		Logger.debug("Removing Business " + business.getName());
-		renderText("Removing Business " + business.getName());
+	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
+	public static void saveAsync(Long id) {
+		
+		//Check if the business exists
+		Business business = Business.findById(id);
+		if ( business == null ) {
+			jsonError("model.business.not.found");
+			//generate JSON error -> Not Found
+			//render error
+		}
+		//Business business = new Gson().fromJson(params.get("body"), Business.class);
+		Logger.debug(business.toString());
+	}
+	
+	private static void jsonError(String i18nKey) {
+		Map<String, String> jsonOut = new HashMap<String, String>();
+		jsonOut.put("error", Messages.get(i18nKey));
+		renderJSON(new Gson().toJson(jsonOut));
+		
 	}
 
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
@@ -153,6 +171,7 @@ public class Businesses extends BaseController {
 		}
 
 	}
+	
 
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	public static void view(Long id) {

@@ -1,9 +1,25 @@
+var responseBus =  {
+	
+	handle: function(data) {
+		//check if data is JSON
+		if ( data.error ) {
+			jsUtils.showResultStatus(data.error,jsUtils.messageType.error );
+		} else if ( data.success ) {
+			jsUtils.showResultStatus(data.success,jsUtils.messageType.success );
+		} else if (data.warning ) {
+			jsUtils.showResultStatus(data.warning ,jsUtils.messageType.warning );
+		}
+		
+		//Check for registered listeners
+	}	
+};
+
 var jsUtils = {
 	
 	startWorkingStatus: function() {
 		$('#page-main-wrapper').css({ 'opacity' : 0.5 });
 		//see http://jquery.malsup.com/block/
-		$.blockUI();	
+		$.blockUI({ message: '<p><img src="/public/images/busy.gif" /></p><p>Por favor aguarde...</p>' });	
 	},
 	
 	endWorkingStatus: function() {
