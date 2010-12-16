@@ -21,8 +21,8 @@
 			 <tr class="view-field">
 			 	<td class="field-name">Morada:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: addressLineOne"></span>
-			 		<textarea style="display:none" data-bind="text: addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
+			 		<span data-bind="text: address().addressLineOne"></span>
+			 		<textarea style="display:none" data-bind="value: address().addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
 			 			 	
 			 	</td>
 			 </tr>
@@ -30,16 +30,16 @@
 			 <tr class="view-field">
 			 	<td class="field-name">Código Postal:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: addressPostalCode"></span>
-			 		<input style="display:none" data-bind="value: addressPostalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
+			 		<span data-bind="text: address().postalCode"></span>
+			 		<input style="display:none" data-bind="value: address().postalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
 			 	</td>	 	
 			 </tr>
 		
 			 <tr class="view-field">
 			 	<td class="field-name">Localidade:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: addressCity"></span>
-			 		<input style="display:none" data-bind="value: addressCity" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
+			 		<span data-bind="text: address().city"></span>
+			 		<input style="display:none" data-bind="value: address().city" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
 			 	</td>	 	
 			 </tr>
 		
@@ -72,9 +72,11 @@
 	//Create model
 	var businessBasicInfoModel = {
 			name : ko.observable('${business.name}'),
-			addressLineOne: ko.observable('${business.address.addressLineOne}'),
-			addressPostalCode: ko.observable('${business.address.postalCode}'),
-			addressCity: ko.observable('${business.address.city}')
+			address : ko.observable({
+				addressLineOne: ko.observable('${business.address.addressLineOne}'), 
+				postalCode: ko.observable('${business.address.postalCode}'),
+				city: ko.observable('${business.address.city}')
+			})
 	}
 	//Bind element
 	var elBasicInfo = document.getElementById('businessBasicInfo');	
@@ -90,7 +92,6 @@
 			//get all input, textarea elemens and set the, visible
 			$('#businessBasicInfo input').toggle();
 			$('#businessBasicInfo textarea').toggle();
-
 			$('#businessBasicInfo input:first:visible').focus();	
 			//Toggle options
 			$('#businessBasicInfoOptions a.editOption').toggle();
@@ -100,9 +101,14 @@
 	};
 
 	$('#businessBasicInfoOptions a.saveOption').click(function() {
-		//jsUtils.startWorkingStatus();
-		jsUtils.showResultStatus('hey there', jsUtils.messageType.success);
-		//window.alert(jsUtils.messageType.error);
+		jsUtils.startWorkingStatus();
+		//jsUtils.showResultStatus('hey there', jsUtils.messageType.success);
+		//Make ajax call to edit
+		$.post('@{Businesses.saveAsync(300)}', ko.toJSON(businessBasicInfoModel), function(data) {
+			jsUtils.endWorkingStatus();
+			//Handle response
+			responseBus.handle(data);
+		} );
 		return false;
 		
 	});
@@ -113,6 +119,7 @@
 	$('#businessBasicInfoOptions a.editOption').click(function() {
 		businessBasicInfoOptionsUtils.toggle();
 		return false;
+		
 	});
 	
 	//BusinessBasicInfoOptions cancel
