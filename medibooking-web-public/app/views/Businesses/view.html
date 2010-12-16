@@ -13,16 +13,16 @@
 		 	<tr class="view-field">
 		 		<td class="field-name">Nome:</td>
 		 		<td class="field-value" >
-		 			<span data-bind="text: name"></span>
-		 			<input style="display:none" data-bind="value: name" type="text" name="business[name]" id="business[name]" size="20" maxlength="60" value="" />
+		 			<span data-bind="text: business().name()"></span>
+		 			<input style="display:none" data-bind="value: business().name()" type="text" name="business[name]" id="business[name]" size="20" maxlength="60" value="" />
 		 		</td>	
 		 	</tr>
 		 
 			 <tr class="view-field">
 			 	<td class="field-name">Morada:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: address().addressLineOne"></span>
-			 		<textarea style="display:none" data-bind="value: address().addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
+			 		<span data-bind="text: business().address().addressLineOne"></span>
+			 		<textarea style="display:none" data-bind="value: business().address().addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
 			 			 	
 			 	</td>
 			 </tr>
@@ -30,16 +30,16 @@
 			 <tr class="view-field">
 			 	<td class="field-name">Código Postal:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: address().postalCode"></span>
-			 		<input style="display:none" data-bind="value: address().postalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
+			 		<span data-bind="text: business().address().postalCode"></span>
+			 		<input style="display:none" data-bind="value: business().address().postalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
 			 	</td>	 	
 			 </tr>
 		
 			 <tr class="view-field">
 			 	<td class="field-name">Localidade:</td>
 			 	<td class="field-value">
-			 		<span data-bind="text: address().city"></span>
-			 		<input style="display:none" data-bind="value: address().city" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
+			 		<span data-bind="text: business().address().city"></span>
+			 		<input style="display:none" data-bind="value: business().address().city" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
 			 	</td>	 	
 			 </tr>
 		
@@ -70,17 +70,29 @@
 <script type="text/javascript">
 
 	//Create model
-	var businessBasicInfoModel = {
-			name : ko.observable('${business.name}'),
-			address : ko.observable({
-				addressLineOne: ko.observable('${business.address.addressLineOne}'), 
-				postalCode: ko.observable('${business.address.postalCode}'),
-				city: ko.observable('${business.address.city}')
+	var businessViewModel = {
+			
+			business : ko.observable({
+				name : ko.observable('${business.name}'),
+				address : ko.observable({
+					addressLineOne: ko.observable('${business.address.addressLineOne}'), 
+					postalCode: ko.observable('${business.address.postalCode}'),
+					city: ko.observable('${business.address.city}')
+				})				
+			}),
+			errors : ko.observable({
+				name: ko.observable(''),
+				address : ko.observable({
+					addressLineOne: ko.observable(''), 
+					postalCode: ko.observable(''),
+					city: ko.observable('')
+				})
+				
 			})
 	}
 	//Bind element
 	var elBasicInfo = document.getElementById('businessBasicInfo');	
-	ko.applyBindings(businessBasicInfoModel,elBasicInfo);
+	ko.applyBindings(businessViewModel,elBasicInfo);
 	
 	
 	var businessBasicInfoOptionsUtils = {
@@ -104,7 +116,7 @@
 		jsUtils.startWorkingStatus();
 		//jsUtils.showResultStatus('hey there', jsUtils.messageType.success);
 		//Make ajax call to edit
-		$.post('@{Businesses.saveAsync(300)}', ko.toJSON(businessBasicInfoModel), function(data) {
+		$.post('@{Businesses.saveAsync(300)}', ko.toJSON(businessViewModel.business), function(data) {
 			jsUtils.endWorkingStatus();
 			//Handle response
 			responseBus.handle(data);
