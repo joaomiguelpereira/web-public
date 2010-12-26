@@ -30,8 +30,7 @@ public class Address{
 	@MaxSize(50)
 	@MinSize(4)
 	private String city;
-	
-	
+		
 	@MaxSize(50)
 	@MinSize(2)
 	private String country;
