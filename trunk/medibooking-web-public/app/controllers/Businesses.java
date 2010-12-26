@@ -5,8 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -21,16 +24,19 @@ import models.enums.UserType;
 
 import play.Logger;
 import play.data.binding.Binder;
+import play.data.binding.Unbinder;
 import play.data.validation.Error;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
+import play.db.jpa.Model;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Scope;
 import play.mvc.Scope.Params;
 
 import play.mvc.With;
-import sun.awt.X11.MWMConstants;
+import utils.JSONUtils;
 
 public class Businesses extends BaseController {
 
@@ -87,8 +93,9 @@ public class Businesses extends BaseController {
 					|| business.getPhones().isEmpty()
 					|| business.getEmails() == null
 					|| business.getEmails().isEmpty()) {
-				jsonOutMap.put("error",
-						Messages.get("controllers.businesses.activate.fail.incomplete.info"));
+				jsonOutMap
+						.put("error",
+								Messages.get("controllers.businesses.activate.fail.incomplete.info"));
 				jsonOut = new Gson().toJson(jsonOutMap);
 				renderJSON(jsonOut);
 
@@ -96,7 +103,12 @@ public class Businesses extends BaseController {
 				business.setActive(true);
 				business.save();
 				jsonOutMap.put("active", Boolean.TRUE.toString());
-				jsonOutMap.put("flash", new HashMap<String, String>(){{put("sucess",Messages.get("controllers.businesses.activate.fail.incomplete.info"));}});
+				jsonOutMap.put("flash", new HashMap<String, String>() {
+					{
+						put("sucess",
+								Messages.get("controllers.businesses.activate.fail.incomplete.info"));
+					}
+				});
 				renderJSON(new Gson().toJson(jsonOutMap));
 			}
 		}
@@ -134,44 +146,118 @@ public class Businesses extends BaseController {
 	}
 
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
-	public static void saveAsync(Long id) {
-		
-		//Check if the business exists
-		Business business = Business.findById(id);
-		if ( business == null ) {
-			jsonError("model.business.not.found");
-			//generate JSON error -> Not Found
-			//render error
-		}
-		//Business business = new Gson().fromJson(params.get("body"), Business.class);
-		Logger.debug(business.toString());
-	}
-	
-	private static void jsonError(String i18nKey) {
-		Map<String, String> jsonOut = new HashMap<String, String>();
-		jsonOut.put("error", Messages.get(i18nKey));
-		renderJSON(new Gson().toJson(jsonOut));
-		
-	}
-
-	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	public static void save(Long id) {
+
+		// Check if the business exists
 		Business business = Business.findById(id);
-		notFoundIfNull(business);
-		checkBusinessAdministrativeRights(business, false);
-		Binder.bind(business, "business", params.all());
-
-		if (business.validateAndSave()) {
-			flashSuccess("business.save.success");
-			flash.keep();
-			Businesses.view(id);
-		} else {
-			flashError("business.save.success");
-			render("@edit", id, business);
+		if (!JSONUtils.mergeFromJson(business, "business", params)) {
+			jsonError("model.business.not.found");
+			// generate JSON error -> Not Found
+			// render error
 		}
-
+		// Validate
+		if (!business.validateAndSave()) {
+			jsonValidationErrors2("business.save.fail", "business");
+		} else {
+			jsonSuccess("business.save.success");
+		}
 	}
 	
+	private static void jsonValidationErrors2(String i18nKey, String varName) {
+		Map<String, List<Error>> validations = Validation.current().errorsMap();
+		
+		Map<String, String[]> jsonErrors = new HashMap<String, String[]>();
+		
+		for (String field : validations.keySet() ) {
+			String errors[] = new String[validations.get(field).size()];
+			int i = 0;
+			for ( Error error : validations.get(field)) {
+				errors[i++] = error.message();
+			}
+			jsonErrors.put(field, errors);
+		}
+		
+		Map<String, Object> jsonOutMap = new HashMap<String, Object>();
+		jsonOutMap.put(JSONUtils.MESSAGE_ERROR, Messages.get(i18nKey));
+		jsonOutMap.put("errors", jsonErrors);
+		String json = new Gson().toJson(jsonOutMap);
+		Logger.debug("ERRORORO: "+json);
+		renderJSON(json);
+	}
+
+	private static void jsonValidationErrors(String i18nKey, String varName) {
+		// Get validation errors
+		Map<String, List<Error>> errors = Validation.current().errorsMap();
+		Pattern p = Pattern.compile("\\w+");
+		Matcher m = null;
+		Map<String, Object> out = new HashMap<String, Object>();
+		
+		for (String field : errors.keySet()) {
+			
+			m = p.matcher(field);
+			List<String> list = new ArrayList<String>();
+			while (m.find()) {
+				if (!m.group().equals(varName)) {
+					list.add(m.group());
+				}
+			}
+			if ( list.size()>0) {
+				handle(list.toArray(new String[list.size()]), out,errors.get(field));
+			}
+			
+		}
+		
+		Map<String, Object> jsonOutMap = new HashMap<String, Object>();
+		jsonOutMap.put(JSONUtils.MESSAGE_ERROR, Messages.get(i18nKey));
+		jsonOutMap.put("errors", out);
+		String json = new Gson().toJson(jsonOutMap);
+		Logger.debug("ERRORORO: "+json);
+		renderJSON(json);
+		
+	}
+
+	
+	private static void handle(String[] array, Map<String, Object> out,
+			List<Error> errors) {
+		
+		if (array.length == 1) {
+			//Have to check if it's in the array already
+			if ( !out.containsKey(array[0])) {
+				out.put(array[0], JSONUtils.getErrorMessages(errors));
+			}
+			
+			
+		} else {
+			// Means that is a inner
+			String leaf = "";
+			String[] nodes = new String[array.length - 1];
+
+			for (int i = 0; i < array.length; i++) {
+				if (i + 1 != array.length) {
+					nodes[i] = array[i];
+				} else {
+					leaf = array[i];
+				}
+			}
+			
+			//For each node create a Map
+			Map<String, Object> nodeContainer = out;
+			for ( int i=0; i<nodes.length; i++ ) {
+				//Check if exists already
+				if ( nodeContainer.containsKey(nodes[i])) {
+					nodeContainer = (Map<String, Object>) nodeContainer.get(nodes[i]);
+				} else {
+					//Add it 
+					nodeContainer.put(nodes[i], new HashMap<String, Object>());
+					nodeContainer = (Map<String, Object>) nodeContainer.get(nodes[i]);
+				}
+			}
+			nodeContainer.put(leaf, JSONUtils.getErrorMessages(errors));
+
+		}
+
+		
+	}
 
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	public static void view(Long id) {
@@ -206,7 +292,7 @@ public class Businesses extends BaseController {
 		}
 
 		if (validation.hasErrors()) {
-			flash.error(Messages.get("business.save.fail"));
+			flash.error(Messages.get("business.create.fail"));
 			logValidationErrors();
 			render("@blank", business);
 		}
@@ -221,7 +307,7 @@ public class Businesses extends BaseController {
 
 		currentUser.get().save();
 
-		flash.success(Messages.get("business.save.success"));
+		flash.success(Messages.get("business.create.success"));
 		Businesses.view(business.id);
 
 	}

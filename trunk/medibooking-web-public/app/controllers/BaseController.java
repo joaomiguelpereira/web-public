@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.Gson;
+
 import annotations.authorization.RequiresEmptyUserSession;
 import annotations.authorization.RequiresUserSession;
+import antlr.Utils;
 import models.BusinessAdministrator;
 import models.User;
 import models.enums.UserType;
@@ -16,6 +19,8 @@ import play.Logger;
 import play.classloading.enhancers.ControllersEnhancer.ControllerSupport;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesNamesTracer;
 import play.classloading.enhancers.LocalvariablesNamesEnhancer.LocalVariablesSupport;
+import play.data.binding.Binder;
+import play.data.binding.Unbinder;
 import play.data.validation.Error;
 import play.data.validation.Validation;
 import play.db.jpa.Model;
@@ -27,6 +32,7 @@ import play.mvc.Scope;
 import play.mvc.Scope.Params;
 import play.mvc.With;
 import play.mvc.Http.Cookie;
+import utils.JSONUtils;
 
 public class BaseController extends Controller {
 
@@ -51,16 +57,16 @@ public class BaseController extends Controller {
 	}
 
 	protected static void inspectParams(Params params) {
-		Map<String, String[]> mapParams =  params.all();
-		Set<String> keys =  mapParams.keySet();
-		
-		for ( String key : keys) {
+		Map<String, String[]> mapParams = params.all();
+		Set<String> keys = mapParams.keySet();
+
+		for (String key : keys) {
 			String[] vals = mapParams.get(key);
-			for ( String value: vals ) {
-				System.err.println("Key: "+key+" -> "+value);
+			for (String value : vals) {
+				System.err.println("Key: " + key + " -> " + value);
 			}
 		}
-		
+
 	}
 
 	/**
@@ -183,12 +189,13 @@ public class BaseController extends Controller {
 	@Before
 	protected static void checkEmptySessionRequirement() {
 		RequiresEmptyUserSession rus = getActionAnnotation(RequiresEmptyUserSession.class);
-		
-		if (rus != null && currentUser.get() != null ) {
+
+		if (rus != null && currentUser.get() != null) {
 			flashWarning("empty.user_session.required.fail");
 			Application.index();
 		}
 	}
+
 	/**
 	 * Check authorization to the action
 	 */
@@ -201,8 +208,8 @@ public class BaseController extends Controller {
 		boolean authorized = false;
 		if (rus != null && currentUser.get() != null) {
 
-			//if no userType is given, then allow
-			if ( rus.userTypes().length != 0 ) {
+			// if no userType is given, then allow
+			if (rus.userTypes().length != 0) {
 				// check if user has what it needs
 				for (UserType ut : rus.userTypes()) {
 					if (ut.equals(currentUser.get().getUserType())) {
@@ -213,7 +220,7 @@ public class BaseController extends Controller {
 			} else {
 				authorized = true;
 			}
-		
+
 		} else if (rus == null) {
 			authorized = true;
 		}
@@ -247,6 +254,20 @@ public class BaseController extends Controller {
 
 	}
 
+	
+	
+	protected static void jsonError(String i18nKey) {
+		renderJSON(JSONUtils.errorMessage(i18nKey));
+	}
+
+	protected static void warningSuccess(String i18nKey) {
+		renderJSON(JSONUtils.warningMessage(i18nKey));
+	}
+
+	protected static void jsonSuccess(String i18nKey) {
+		renderJSON(JSONUtils.successMessage(i18nKey));	
+	}
+	
 	/**
 	 * Remove all auto login cookies from client and clear current user
 	 */

@@ -6,6 +6,7 @@
 	text-align: left;
 	font-weight: bold;
 	padding-top: 3px;
+	vertical-align: top;
 }
 
 .view-data tr.view-field td.field-value {
@@ -119,7 +120,14 @@
 	padding-left: 3px;
 }
 
-.view-data form div span.info,.view-data form div span.error {
+
+.field-value .fieldError {
+	vertical-align: top;
+	font-size: 0.9em;
+	color: #ff0000
+}
+	
+.view-data form div span.info, .view-data form div span.error{
 	display: block;
 	margin-left: 250px;
 	vertical-align: top;
@@ -134,21 +142,21 @@
 	color: #ff0000
 }
 
-.view-data form div input[type='text'] {
+.view-data form div input[type='text'], .view-data table tr.view-field input[type='text']{
 	width: 300px;
 	padding: 3px 4px;
 	border: solid 1px #000;
 	margin: 0 0 0 0;
 }
 
-.view-data form div textarea {
+.view-data form div textarea, .view-data table tr.view-field textarea {
 	width: 300px;
 	padding: 3px 4px;
 	margin: 0 0 0 0;
 	border: solid 1px #000;
 }
 
-form div.hasError input[type='text'],form div.hasError textarea {
+form div.hasError input[type='text'],form div.hasError textarea, .view-data table tr.view-field textarea.hasError, .view-data table tr.view-field input[type='text'].hasError {
 	border-color: red;
 }
 

@@ -15,7 +15,7 @@
 		 		<td class="field-value" >
 		 			<span data-bind="text: business().name"></span>
 		 			<input style="display:none" data-bind="value: business().name" type="text" name="business.name" id="business.name" size="20" maxlength="60" value="" />
-		 			<div class="fieldError" id="business.name.error"></div>
+		 			<div class="error" data-bind="template: { name: 'fieldErrorTemplate' ,data: errors().name}"></div>
 		 		</td>	
 		 	</tr>
 		 			 
@@ -23,8 +23,8 @@
 			 	<td class="field-name">Morada:</td>
 			 	<td class="field-value">
 			 		<span data-bind="text: business().address().addressLineOne"></span>
-			 		<textarea style="display:none" data-bind="value: business().address().addressLineOne" name="business.address.addressLineOne" id="business.address.addressLineOne"></textarea>
-			 		<div class="fieldError" id="business.address.addressLineOne.error"></div>	 	
+			 		<textarea style="display:none" data-bind="value: business().address().addressLineOne" name="business[address[addressLine1]]" id="business[address[addressLine1]]"></textarea>
+			 		<div class="error" data-bind="template: { name: 'fieldErrorTemplate' ,data: errors().address().addressLineOne}"></div>	 	
 			 	</td>
 			 </tr>
 		
@@ -32,8 +32,8 @@
 			 	<td class="field-name">Código Postal:</td>
 			 	<td class="field-value">
 			 		<span data-bind="text: business().address().postalCode"></span>
-			 		<input style="display:none" data-bind="value: business().address().postalCode" type="text" name="business.address.postalCode" id="business.address.postalCode" size="20" maxlength="60" value="" />
-					<div class="fieldError" id="business.address.postalCode.error"></div>
+			 		<input style="display:none" data-bind="value: business().address().postalCode" type="text" name="business[address[postalCode]]" id="business[address[postalCode]]" size="20" maxlength="60" value="" />
+			 		<div class="error" data-bind="template: { name: 'fieldErrorTemplate' ,data: errors().address().postalCode}"></div>	 	
 			 	</td>	 	
 			 </tr>
 		
@@ -41,8 +41,8 @@
 			 	<td class="field-name">Localidade:</td>
 			 	<td class="field-value">
 			 		<span data-bind="text: business().address().city"></span>
-			 		<input style="display:none" data-bind="value: business().address().city" type="text" name="business.address.postalCode" id="business.address.postalCode" size="20" maxlength="60" value="" />
-			 		<div class="fieldError" id="business.address.city.error"></div>
+			 		<input style="display:none" data-bind="value: business().address().city" type="text" name="business[address[postalCode]]" id="city" size="20" maxlength="60" value="" />
+			 		<div class="error" data-bind="template: { name: 'fieldErrorTemplate' ,data: errors().address().city}"></div>	 	
 			 	</td>	 	
 			 </tr>
 		
@@ -54,7 +54,7 @@
 		 	<a href="#" class="cancelOption" style="display:none">Cancelar</a>
 		 </div>
 		
-		<h1>Mais informações...</h1>
+		<h1>Informação Adicional</h1>
 	
 		<table>
 		
@@ -91,6 +91,15 @@
 					postalCode: ko.observable('${business.address.postalCode}'),
 					city: ko.observable('${business.address.city}')
 				})				
+			}),
+			errors : ko.observable({
+				name: ko.observableArray([]),
+				address : ko.observable({
+					addressLineOne: ko.observableArray([]), 
+					postalCode: ko.observableArray([]),
+					city: ko.observableArray([])
+				})
+				
 			})
 	};
 	//Bind element
@@ -115,10 +124,8 @@
 		}	
 	};
 
-	
 	$('#businessBasicInfoOptions a.saveOption').click(function() {
 		jsUtils.startWorkingStatus();
-		
 		//jsUtils.showResultStatus('hey there', jsUtils.messageType.success);
 		//Make ajax call to edit
 		$.post('@{Businesses.save(business.id)}', ko.toJSON(businessViewModel.business), function(data) {
@@ -127,7 +134,9 @@
 			responseBus.handle(data);
 			if (data.success) {
 				businessBasicInfoOptionsUtils.toggle();
-			} 
+			} else if ( data.error ) {
+				businessViewModel.errors(data.errors);
+			}
 		} );
 		return false;
 		
