@@ -35,6 +35,9 @@ public class Business extends BaseModel {
 	
 	{
 		this.administrators = new ArrayList<BusinessAdministrator>();
+		this.phones = new ArrayList<Phone>();
+		this.emails = new ArrayList<Email>();
+		this.webSites = new ArrayList<WebSite>();
 	}
 	
 	
@@ -52,7 +55,7 @@ public class Business extends BaseModel {
 	@OneToMany(cascade=CascadeType.ALL)
 	private List<Email> emails;
 	
-	@OneToMany(cascade=CascadeType.PERSIST)
+	@OneToMany(cascade=CascadeType.ALL)
 	private List<Phone> phones;
 	
 	@OneToMany(cascade=CascadeType.ALL)
@@ -157,6 +160,11 @@ public class Business extends BaseModel {
 
 	public BusinessAdministrator getSuperAdmin() {
 		return superAdmin;
+	}
+
+	public void addPhone(Phone phone) {
+		this.phones.add(phone);
+		
 	}
 	
 	

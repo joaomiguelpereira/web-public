@@ -41,61 +41,113 @@
 			 	<td class="field-name">Localidade:</td>
 			 	<td class="field-value">
 			 		<span data-bind="text: business().address().city"></span>
-			 		<input style="display:none" data-bind="value: business().address().city" type="text" name="business.address.postalCode" id="business.address.postalCode" size="20" maxlength="60" value="" />
+			 		<input style="display:none" data-bind="value: business().address().city" type="text" name="business.address.city" id="business.address.city" size="20" maxlength="60" value="" />
 			 		<div class="fieldError" id="business.address.city.error"></div>
 			 	</td>	 	
 			 </tr>
+					 	
+		 	<tr class="view-field">
+		 		<td class="field-name">Breve Descrição:</td>	
+		 		<td class="field-value">		
+		 			<span data-bind="text: business().shortIntroduction"></span>
+			 		<textarea style="display:none" data-bind="value: business().shortIntroduction" name="business.shortIntroduction" id="business.shortIntroduction"></textarea>
+			 		<div class="fieldError" id="business.shortIntroduction.error"></div>
+		 	 	</td>	 			
+		 	</tr>
 		
 			 
 		</table>
+		
 		<div class="inlineOption" id="businessBasicInfoOptions">
 		 	<a href="#" class="editOption">Editar</a>
 		 	<a href="#" class="saveOption" style="display:none">Guardar</a>
 		 	<a href="#" class="cancelOption" style="display:none">Cancelar</a>
-		 </div>
+		</div>
 		
-		<h1>Mais informações...</h1>
-	
-		<table>
+		<h1>Telefones</h1>
 		
-		 	<tr class="view-field">
-		 		<td class="field-name" colspan="2">Apresentação:</td>	
-		 	</tr>
-		 	<tr class="view-field">
-		 		<td class="field-value" colspan="2">${business.shortIntroduction}</td>	
-		 	</tr>
-			 
+		<table id="businessPhones">
+			<thead>
+				<td>Nome</td>
+				<td>Telefone</td>
+				<td>Descrição</td>
+				<td></td>
+			</thead>
+			<tbody data-bind='template: { name: "phonesTemplate", foreach: businessViewModel.phones() }'>
+			</tbody>
+			
+			
 		</table>
 	</div>
 </div>
 
+<script id="phonesTemplate" type="text/x-jquery-tmpl">
+	
+	<tr class="view-field" data-bind="id: id">
+		<td class="field-value">
+			<span data-bind="text: name"></span>
+			<input data-bind="value: name" type="text" size="20" maxlength="60" value="" />
+			<div class="fieldError" data-bind="id: 'phone.name.'+id+'.error'"></div>
+		</td>
+		 <td class="field-value">
+		 	<span data-bind="text: phone"></span>
 
-
-<script id="fieldErrorTemplate" type="text/x-jquery-tmpl">
- {{each(i, error) $data}}
-	<div data-bind="text: error"></div>
-{{/each}}
-
+			<div class="fieldError" data-bind="id: 'phone.phone.'+id+'.error'"></div>
+		 </td>
+		 		
+		 <td class="field-value">
+		 	<span data-bind="text: description"></span>
+		</td>
+		<td class="field-value">
+			<span><a href="javascript:void(0);" data-bind="onClick: 'businessViewModel.removePhone('+id+')'">Remover</a></span>
+		 	<span><a href="javascript:void(0);">Editar</a></span>
+		</td>
+	</tr>
 </script>
 
 
 <script type="text/javascript">
-
+	
 	//Create model
 	var businessViewModel = {
-			
+			phones: ko.observableArray([]),
 			business : ko.observable({
+				shortIntroduction: ko.observable('${business.shortIntroduction}'),
 				name: ko.observable('${business.name}'),
 				address : ko.observable({
 					addressLineOne: ko.observable('${business.address.addressLineOne}'), 
 					postalCode: ko.observable('${business.address.postalCode}'),
 					city: ko.observable('${business.address.city}')
 				})				
-			})
+			}),
+			
+			removePhone: function(id) {
+				if (window.confirm("Tem a certeza que quer remover este contacto?")) {
+					//Make a server call
+					
+					//TODO
+					world from here
+					$.delete('@{Businesses.removePhone(business.id)}', ko.toJSON(businessViewModel.business), function(data) {
+						jsUtils.endWorkingStatus();
+						//Handle response
+						responseBus.handle(data);
+						if (data.success) {
+							//if server call succeeds, remove it
+							businessViewModel.phones.remove(function(item) { return item.id == id })	
+						} 
+					});	
+				}
+			}
 	};
+	//Initialize phones array
+	#{list business.phones, as:'phone'}	
+		businessViewModel.phones.push({id: '${phone.id}', name: '${phone.name}', phone: '${phone.phone}', description: '${phone.description}'});
+	#{/list}
 	//Bind element
 	var elBasicInfo = document.getElementById('businessBasicInfo');	
+	var elPhones = document.getElementById('businessPhones');	
 	ko.applyBindings(businessViewModel,elBasicInfo);
+	ko.applyBindings(businessViewModel,elPhones);
 	
 	
 	var businessBasicInfoOptionsUtils = {

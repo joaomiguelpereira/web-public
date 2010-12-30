@@ -11,6 +11,7 @@ import models.Address;
 import models.Administrator;
 import models.Business;
 import models.BusinessAdministrator;
+import models.Phone;
 import models.User;
 import models.enums.UserType;
 import models.factories.TestBusinessFactory;
@@ -75,6 +76,14 @@ public class Bootstrap extends Job<String> {
 			business.addAdministrator(oAdmin);
 			business.setSuperAdmin(oAdmin);
 			businesses.add(business);
+			
+			for (int j=0; j < i;j++) {
+				Phone phone = new Phone();
+				phone.setDescription("Some description for phone "+j);
+				phone.setName("Phone"+j);
+				phone.setPhone("12345678"+j);
+				business.addPhone(phone);
+			}
 			
 			
 			oAdmin.addAdministeredBusinesses(business);

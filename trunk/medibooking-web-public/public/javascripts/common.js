@@ -1,8 +1,43 @@
+//Custom KO bindings
+
+ko.bindingHandlers.id = {
+	init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		element.id = valueAccessor();
+		// This will be called when the binding is first applied to an element
+		// Set up any initial state, event handlers, etc. here
+	},
+	update : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		// This will be called once when the binding is first applied to an
+		// element,
+		// and again whenever the associated observable changes value.
+		// Update the DOM element based on the supplied values here.
+		element.id = valueAccessor();
+	}
+};
+
+ko.bindingHandlers.onClick = {
+		init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			$(element).click(function() {
+				eval(valueAccessor());
+			})
+			// This will be called when the binding is first applied to an element
+			// Set up any initial state, event handlers, etc. here
+		},
+		update : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			// This will be called once when the binding is first applied to an
+			// element,
+			// and again whenever the associated observable changes value.
+			// Update the DOM element based on the supplied values here.
+			element.id = valueAccessor();
+		}
+	};
+
 var responseBus = {
 
 	handle : function(data) {
 		formUtils.clearErrors();
 		// check if data is JSON
+
 		if (data.error) {
 			jsUtils.showResultStatus(data.error, jsUtils.messageType.error);
 			if (data.errors) {
@@ -12,6 +47,13 @@ var responseBus = {
 			jsUtils.showResultStatus(data.success, jsUtils.messageType.success);
 		} else if (data.warning) {
 			jsUtils.showResultStatus(data.warning, jsUtils.messageType.warning);
+		}
+
+		// Check if should redirect
+		if (data.redirectTo) {
+			window.location = data.redirectTo;
+
+			// window.alert("Redirect to: " +data.redirectTo);
 		}
 
 		// Check for registered listeners
@@ -30,7 +72,7 @@ var formUtils = {
 		$.each(errors, function(k, v) {
 			var id = '#' + k.replace(/\./g, '\\.');
 			if ($(id)) {
-				
+
 				$(id).addClass("hasError");
 				var errorField = id + "\\.error";
 				var errorText = ""
