@@ -5,8 +5,6 @@
 	<ul>
 		<li class="${currentAction.equals('Businesses.view')?"selected":""}"><a href="@{Businesses.view(business.id)}">Consultar</a></li>
 		
-		<li class="${(currentAction.equals('Businesses.edit') || currentAction.startsWith('Businesses.save'))?"selected":""}"><a href="@{Businesses.edit(business.id)}">Editar</a></li>
-		
 		<li><a id="removeBusinessLink" href="#">Remover</a></li>
 		<li><a href="">Médicos</a></li>
 		<li class="separator"></li>

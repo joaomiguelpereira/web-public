@@ -12,6 +12,8 @@ import play.data.binding.Unbinder;
 import play.data.validation.Error;
 import play.db.jpa.Model;
 import play.i18n.Messages;
+import play.mvc.Router;
+import play.mvc.Router.ActionDefinition;
 import play.mvc.Scope.Params;
 
 public class JSONUtils {
@@ -67,13 +69,19 @@ public class JSONUtils {
 		return result;
 
 	}
-	
-	public static String[] getErrorMessages(List<Error> errors) {
-		String[] errorMessages = new String[errors.size()];
-		int i = 0;
-		for ( play.data.validation.Error error : errors) {
-			errorMessages[i++] = error.message();
-		}
-		return errorMessages;
+
+
+	public static String createRedirectionTo(String url, String i18nKey) {
+		Map<String, String> jsonOut = new HashMap<String, String>();
+		jsonOut.put(MESSAGE_ERROR, Messages.get(i18nKey));
+		ActionDefinition ad = Router.reverse(url);
+		ad.absolute();
+		jsonOut.put("redirectTo",ad.url);
+		
+		return new Gson().toJson(jsonOut);
+		
+		
 	}
+	
+
 }

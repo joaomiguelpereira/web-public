@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import annotations.authorization.RequiresEmptyUserSession;
 import annotations.authorization.RequiresUserSession;
+import annotations.json.ResponseAsJSON;
 import antlr.Utils;
 import models.BusinessAdministrator;
 import models.User;
@@ -28,6 +29,7 @@ import play.i18n.Messages;
 import play.libs.Crypto;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Router;
 import play.mvc.Scope;
 import play.mvc.Scope.Params;
 import play.mvc.With;
@@ -67,6 +69,28 @@ public class BaseController extends Controller {
 			}
 		}
 
+	}
+
+	protected static void jsonValidationErrors(String i18nKey, String varName) {
+		Map<String, List<Error>> validations = Validation.current().errorsMap();
+
+		Map<String, String[]> jsonErrors = new HashMap<String, String[]>();
+
+		for (String field : validations.keySet()) {
+			String errors[] = new String[validations.get(field).size()];
+			int i = 0;
+			for (Error error : validations.get(field)) {
+				errors[i++] = error.message();
+			}
+			jsonErrors.put(field, errors);
+		}
+
+		Map<String, Object> jsonOutMap = new HashMap<String, Object>();
+		jsonOutMap.put(JSONUtils.MESSAGE_ERROR, Messages.get(i18nKey));
+		jsonOutMap.put("errors", jsonErrors);
+		String json = new Gson().toJson(jsonOutMap);
+		Logger.debug("ERRORORO: " + json);
+		renderJSON(json);
 	}
 
 	/**
@@ -202,9 +226,12 @@ public class BaseController extends Controller {
 	@Before
 	protected static void checkActionAuthorization() {
 
-		// Get requested Action/Controller
-
+		
+		//Is the requested action annotated with aut 
 		RequiresUserSession rus = getActionAnnotation(RequiresUserSession.class);
+		//Check if the action response is JSON 
+		ResponseAsJSON raj = getActionAnnotation(ResponseAsJSON.class);
+		
 		boolean authorized = false;
 		if (rus != null && currentUser.get() != null) {
 
@@ -232,14 +259,27 @@ public class BaseController extends Controller {
 
 			if (currentUser.get() != null) {
 
-				flashError("user.not.authorized");
-				Application.index();
+				//flashError("user.not.authorized");
+				if ( raj!=null ) {
+					
+					renderJSON(JSONUtils.createRedirectionTo("Application.index","user.not.authorized"));
+				} else {
+					Application.index();
+				}
+				
 				// forbidden(Messages.get("insufficent.privileges"));
 			} else {
 				// save current location
 				flash.put(Constants.FLASH_LAST_URL,
 						request.method == "GET" ? request.url : "/");
-				Users.login();
+				if ( raj != null ) {
+					
+					renderJSON(JSONUtils.createRedirectionTo("Users.login","user.not.authorized"));
+				} else {
+					Users.login();
+				}
+				
+				
 			}
 
 		}
@@ -254,8 +294,6 @@ public class BaseController extends Controller {
 
 	}
 
-	
-	
 	protected static void jsonError(String i18nKey) {
 		renderJSON(JSONUtils.errorMessage(i18nKey));
 	}
@@ -265,9 +303,9 @@ public class BaseController extends Controller {
 	}
 
 	protected static void jsonSuccess(String i18nKey) {
-		renderJSON(JSONUtils.successMessage(i18nKey));	
+		renderJSON(JSONUtils.successMessage(i18nKey));
 	}
-	
+
 	/**
 	 * Remove all auto login cookies from client and clear current user
 	 */
