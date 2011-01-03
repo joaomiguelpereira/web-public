@@ -137,6 +137,14 @@ public class ApplicationFunctionalTest extends FunctionalTest {
 		
 	}
 
+
+	protected void assertJSONSuccess(Response response, String i18n) {
+		Map<String, String> expectedMap = new HashMap<String, String>();
+		expectedMap.put("success", Messages.get(i18n));
+		assertJSONResponse(response, new Gson().toJson(expectedMap));
+		
+	}
+
 	protected void assertJSONError(Response response, String il18nKey) {
 		//Assert is JSON Response
 		assertTrue(response.contentType.contains("application/json"));

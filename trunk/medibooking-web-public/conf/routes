@@ -7,17 +7,15 @@ GET     /                                       Application.index
 
 
 #Routes for Businesses
-GET /businesses.json                            Businesses.list(format:'json')
 GET /businesses                                 Businesses.list
 GET /businesses/new		                        Businesses.blank
-POST /business/activate/{id}					Businesses.activate(format:'json')
+POST /business/{id}/activate					Businesses.activate(format:'json')
 POST /business/create							Businesses.create
-GET /business/{id}.json							Businesses.view(format:'json')
-DELETE /business/{id}							Businesses.delete
+DELETE /business/{id}/delete					Businesses.delete
 GET /business/{id}								Businesses.view
 GET /businesses/{id}/edit						Businesses.edit
 POST /business/{id}/save						Businesses.save(format:'json')
-
+DELETE /business/{id}/phones/{phoneId}/remove	Businesses.removePhone(format:'json')
 
 
 
