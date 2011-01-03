@@ -19,6 +19,7 @@ import annotations.json.ResponseAsJSON;
 import models.Business;
 import models.BusinessAdministrator;
 import models.Email;
+import models.Phone;
 
 import models.User;
 import models.enums.UserType;
@@ -147,6 +148,31 @@ public class Businesses extends BaseController {
 		}
 	}
 
+	
+	
+	
+	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
+	@ResponseAsJSON
+	public static void removePhone(Long id, Long phoneId) {
+		//Find the phone
+		Phone phone = Phone.findById(phoneId);
+		if ( phone == null ) {
+			jsonError("business.phone.removed.fail.phone.not.found");
+		}
+		//Find the bussiness
+		Business business = Business.findById(id);
+		if (business == null ) {
+			jsonError("business.phone.removed.fail.business.not.found");
+		}
+		
+		if ( !business.getPhones().contains(phone)) {
+			jsonError("business.phone.removed.fail.phone.invalid.parent");
+		}
+		business.getPhones().remove(phone);
+		business.save();
+		jsonSuccess("business.phone.removed.success");
+	}
+	
 	@RequiresUserSession(userTypes = { UserType.BUSINESS_ADMIN })
 	@ResponseAsJSON
 	public static void save(Long id) {	

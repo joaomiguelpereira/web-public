@@ -35,6 +35,157 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 	}
 
 	@Test
+	public void testDeletePhone() {
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		Business business = TestBusinessFactory.createBusiness("Test Business2", ba, true);
+		
+		//add one phone to it
+		List<Phone> phones = new ArrayList<Phone>();
+		Phone phone = new Phone();
+		phone.setDescription("Desc");
+		phone.setName("Principal");
+		phone.setPhone("12345678");
+		phones.add(phone);
+		business.setPhones(phones);
+	
+		//Add short intro
+		business.setShortIntroduction("Some short introductions here");
+		//Save business
+		business.save();
+		assertNotNull(phone.id);
+		
+		//Now create request to remove a phone number. 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", business.id);
+		params.put("phoneId", phone.id);
+		
+		Response response =  DELETE(Router.reverse("Businesses.removePhone", params).url);
+		
+		
+		//Now check response
+		assertJSONSuccess(response, "business.phone.removed.success");
+			
+		Business bu = Business.find("byName", "Test Business2").first();
+		assertEquals(0,bu.getPhones().size());
+		
+	
+	}
+
+	@Test
+	public void testFailDeletePhoneNotExisting() {
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		Business business = TestBusinessFactory.createBusiness("Test Business2", ba, true);
+		business.save();
+				
+		//Now create request to remove a phone number. 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", business.id);
+		params.put("phoneId", 12121212);
+		
+		Response response =  DELETE(Router.reverse("Businesses.removePhone", params).url);
+		
+		
+		//Now check response
+		assertJSONError(response, "business.phone.removed.fail.phone.not.found");
+			
+	
+	}
+	
+	@Test
+	public void testFailDeletePhoneNotExistingBusiness() {
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		Business business = TestBusinessFactory.createBusiness("Test Business2", ba, true);
+		
+		//add one phone to it
+		List<Phone> phones = new ArrayList<Phone>();
+		Phone phone = new Phone();
+		phone.setDescription("Desc");
+		phone.setName("Principal");
+		phone.setPhone("12345678");
+		phones.add(phone);
+		business.setPhones(phones);
+	
+		//Add short intro
+		business.setShortIntroduction("Some short introductions here");
+		//Save business
+		business.save();
+		assertNotNull(phone.id);
+		
+		//Now create request to remove a phone number. 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", 12322);
+		params.put("phoneId", phone.id);
+		
+		Response response =  DELETE(Router.reverse("Businesses.removePhone", params).url);
+		
+		
+		//Now check response
+		assertJSONError(response, "business.phone.removed.fail.business.not.found");
+			
+	
+	}
+
+
+
+	@Test
+	public void testFailDeletePhoneInvalidParentBusiness() {
+		//Authenticate user
+		authenticateUser("oadmin_teste@gmail.com", "12345", false);		
+		//Get the Admin
+		BusinessAdministrator ba = BusinessAdministrator.find("byEmail", "oadmin_teste@gmail.com").first();
+		assertNotNull(ba);
+		//Create a business
+		
+		Business business = TestBusinessFactory.createBusiness("Test Business2", ba, true);
+		Business business0 = TestBusinessFactory.createBusiness("Test Business3", ba, true);
+		
+		//add one phone to it
+		List<Phone> phones = new ArrayList<Phone>();
+		Phone phone = new Phone();
+		phone.setDescription("Desc");
+		phone.setName("Principal");
+		phone.setPhone("12345678");
+		phones.add(phone);
+		business.setPhones(phones);
+	
+		//Add short intro
+		business.setShortIntroduction("Some short introductions here");
+		//Save business
+		business.save();
+		business0.save();
+		
+		assertNotNull(phone.id);
+		
+		//Now create request to remove a phone number. 
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", business0.id);
+		params.put("phoneId", phone.id);
+		
+		Response response =  DELETE(Router.reverse("Businesses.removePhone", params).url);
+		
+		
+		//Now check response
+		assertJSONError(response, "business.phone.removed.fail.phone.invalid.parent");
+			
+	
+	}
+
+	@Test
 	public void testActivateBusiness() {
 
 		//Authenticate user
@@ -219,6 +370,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		// Save the office
 		assertTrue(businessOne.validateAndSave());
 		oAdmin.save();
+		assertNotNull(businessOne.id);
 		// Save the admin new relationship
 		// assertTrue(oAdmin.validateAndSave());
 		// showValidationErrors();
@@ -293,7 +445,7 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 				params));
 
 		assertNoErrorFlashed();
-		assertSuccessFlashed("business.save.success");
+		assertSuccessFlashed("business.create.success");
 		// get the user
 		final BusinessAdministrator oa = User.find("byEmail",
 				"someemail@gmail.com").first();
