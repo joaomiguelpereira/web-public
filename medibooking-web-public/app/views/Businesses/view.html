@@ -108,10 +108,17 @@
 
 <script type="text/javascript">
 	
+	
+
+
+	var currentBusinessId = '${business.id}';
+	var deleteUrlTemplate = '/business/{id}/phones/{phoneId}/remove';
+
 	//Create model
 	var businessViewModel = {
 			phones: ko.observableArray([]),
 			business : ko.observable({
+				id: ko.observable('${business.id}'),
 				shortIntroduction: ko.observable('${business.shortIntroduction}'),
 				name: ko.observable('${business.name}'),
 				address : ko.observable({
@@ -123,25 +130,31 @@
 			
 			removePhone: function(id) {
 				if (window.confirm("Tem a certeza que quer remover este contacto?")) {
-					//Make a server call
+					jsUtils.startWorkingStatus();
+										
+					var removeUrl = deleteUrlTemplate.replace('{id}', currentBusinessId).replace('{phoneId}',id);
+			
 					
-					//TODO
-					world from here
-					$.delete('@{Businesses.removePhone(business.id)}', ko.toJSON(businessViewModel.business), function(data) {
+					$.delete_(removeUrl, null, function(data) {
 						jsUtils.endWorkingStatus();
 						//Handle response
 						responseBus.handle(data);
 						if (data.success) {
 							//if server call succeeds, remove it
+							
 							businessViewModel.phones.remove(function(item) { return item.id == id })	
 						} 
 					});	
 				}
 			}
 	};
+	
 	//Initialize phones array
 	#{list business.phones, as:'phone'}	
-		businessViewModel.phones.push({id: '${phone.id}', name: '${phone.name}', phone: '${phone.phone}', description: '${phone.description}'});
+			
+				
+		businessViewModel.phones.push({ id: '${phone.id}', name: '${phone.name}', phone: '${phone.phone}', description: '${phone.description}'});
+	
 	#{/list}
 	//Bind element
 	var elBasicInfo = document.getElementById('businessBasicInfo');	

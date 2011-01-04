@@ -69,7 +69,7 @@ validation.phone=O número não é válido
 
 #messages for businesses
 business.save.success = Não é possível continuar. Verifique os errors!
-business.save.success = O registo foi concluído com sucesso.
+business.save.success = O registo foi gravado com sucesso.
 
 #Messages for Users
 views.users.register.title = Registar novo utilizador

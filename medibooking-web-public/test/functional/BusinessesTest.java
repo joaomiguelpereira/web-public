@@ -24,6 +24,7 @@ import play.i18n.Messages;
 import play.mvc.Http;
 import play.mvc.Http.Response;
 import play.mvc.Router;
+import play.mvc.Router.Route;
 import play.test.Fixtures;
 
 public class BusinessesTest extends ApplicationFunctionalTest {
@@ -33,7 +34,6 @@ public class BusinessesTest extends ApplicationFunctionalTest {
 		Fixtures.deleteAll();
 		Fixtures.load("users.yml");
 	}
-
 	@Test
 	public void testDeletePhone() {
 		//Authenticate user
