@@ -1,4 +1,28 @@
-//Custom KO bindings
+/* Extend jQuery with functions for PUT and DELETE requests. */
+
+function _ajax_request(url, data, callback, type, method) {
+	if (jQuery.isFunction(data)) {
+		callback = data;
+		data = {};
+	}
+	return jQuery.ajax({
+		type : method,
+		url : url,
+		data : data,
+		success : callback,
+		dataType : type
+	});
+}
+
+jQuery.extend({
+	put : function(url, data, callback, type) {
+		return _ajax_request(url, data, callback, type, 'PUT');
+	},
+	delete_ : function(url, data, callback, type) {
+		return _ajax_request(url, data, callback, type, 'DELETE');
+	}
+});
+// Custom KO bindings
 
 ko.bindingHandlers.id = {
 	init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
@@ -16,21 +40,21 @@ ko.bindingHandlers.id = {
 };
 
 ko.bindingHandlers.onClick = {
-		init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
-			$(element).click(function() {
-				eval(valueAccessor());
-			})
-			// This will be called when the binding is first applied to an element
-			// Set up any initial state, event handlers, etc. here
-		},
-		update : function(element, valueAccessor, allBindingsAccessor, viewModel) {
-			// This will be called once when the binding is first applied to an
-			// element,
-			// and again whenever the associated observable changes value.
-			// Update the DOM element based on the supplied values here.
-			element.id = valueAccessor();
-		}
-	};
+	init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		$(element).click(function() {
+			eval(valueAccessor());
+		})
+		// This will be called when the binding is first applied to an element
+		// Set up any initial state, event handlers, etc. here
+	},
+	update : function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		// This will be called once when the binding is first applied to an
+		// element,
+		// and again whenever the associated observable changes value.
+		// Update the DOM element based on the supplied values here.
+		element.id = valueAccessor();
+	}
+};
 
 var responseBus = {
 
