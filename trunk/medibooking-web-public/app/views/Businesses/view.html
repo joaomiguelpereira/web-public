@@ -113,6 +113,19 @@
 
 	var currentBusinessId = '${business.id}';
 	var deleteUrlTemplate = '/business/{id}/phones/{phoneId}/remove';
+	
+	var removePhoneRouter = #{jsAction @Businesses.removePhone(':id',':phoneId') /}
+	
+	//	var router =  {
+	//		removePhone : function(options) {
+	//			var pattern = '/businesses/removephone?id=:id&phoneId=:phoneId'; 
+	//			for(key in options) { 
+	//				pattern = pattern.replace(':'+key, options[key]); 
+	//			} 
+	//			return pattern ;
+	//		}
+		
+	//}
 
 	//Create model
 	var businessViewModel = {
@@ -132,9 +145,10 @@
 				if (window.confirm("Tem a certeza que quer remover este contacto?")) {
 					jsUtils.startWorkingStatus();
 										
-					var removeUrl = deleteUrlTemplate.replace('{id}', currentBusinessId).replace('{phoneId}',id);
+					//var removeUrl = deleteUrlTemplate.replace('{id}', currentBusinessId).replace('{phoneId}',id);
 			
-					
+					var removeUrl = removePhoneRouter({id:currentBusinessId, phoneId:id});
+					window.alert(removeUrl);
 					$.delete_(removeUrl, null, function(data) {
 						jsUtils.endWorkingStatus();
 						//Handle response
