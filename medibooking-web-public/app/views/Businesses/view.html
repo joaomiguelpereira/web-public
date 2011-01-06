@@ -86,7 +86,7 @@
 	<tr class="view-field" data-bind="id: id">
 		<td class="field-value">
 			<span data-bind="text: name"></span>
-			<input data-bind="value: name" type="text" size="20" maxlength="60" value="" />
+			<input style="display:none" data-bind="value: name" type="text" size="20" maxlength="60" value="" />
 			<div class="fieldError" data-bind="id: 'phone.name.'+id+'.error'"></div>
 		</td>
 		 <td class="field-value">
@@ -117,16 +117,9 @@
 	var removePhoneRouter = #{jsAction @Businesses.removePhone(':id',':phoneId') /}
 	
 	//	var router =  {
-	//		removePhone : function(options) {
-	//			var pattern = '/businesses/removephone?id=:id&phoneId=:phoneId'; 
-	//			for(key in options) { 
-	//				pattern = pattern.replace(':'+key, options[key]); 
-	//			} 
-	//			return pattern ;
-	//		}
-		
+	//		removePhone : #{jsAction @Businesses.removePhone(':id',':phoneId') /}
 	//}
-
+		
 	//Create model
 	var businessViewModel = {
 			phones: ko.observableArray([]),
@@ -140,16 +133,24 @@
 					city: ko.observable('${business.address.city}')
 				})				
 			}),
-			
+			getPhoneById: function(id) {
+				
+				for(var i=0; i< businessViewModel.phones().length; i++) { 
+					
+					if ( businessViewModel.phones()[i].id == id ) {
+						return businessViewModel.phones()[i];
+					}
+					
+				} 
+				return null;
+			},
 			removePhone: function(id) {
-				if (window.confirm("Tem a certeza que quer remover este contacto?")) {
-					jsUtils.startWorkingStatus();
-										
-					//var removeUrl = deleteUrlTemplate.replace('{id}', currentBusinessId).replace('{phoneId}',id);
-			
-					var removeUrl = removePhoneRouter({id:currentBusinessId, phoneId:id});
-					window.alert(removeUrl);
-					$.delete_(removeUrl, null, function(data) {
+				
+				var phone = businessViewModel.getPhoneById(id);
+				
+				if (window.confirm(messages.getMessage("${play.i18n.Messages.get('views.businesses.phones.delete.confirmation')}", {'phone':phone.phone}))) {
+					jsUtils.startWorkingStatus();			
+					$.delete_(removePhoneRouter({id:currentBusinessId, phoneId:id}), null, function(data) {
 						jsUtils.endWorkingStatus();
 						//Handle response
 						responseBus.handle(data);
