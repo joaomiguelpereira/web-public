@@ -24,6 +24,8 @@ jQuery.extend({
 });
 // Custom KO bindings
 
+
+
 ko.bindingHandlers.id = {
 	init : function(element, valueAccessor, allBindingsAccessor, viewModel) {
 		element.id = valueAccessor();
@@ -56,6 +58,14 @@ ko.bindingHandlers.onClick = {
 	}
 };
 
+var messages = {
+	getMessage : function(pattern, options) {
+		for(key in options) { 
+			pattern = pattern.replace(':'+key, options[key]); 
+		} 
+		return pattern;
+	}	
+};
 var responseBus = {
 
 	handle : function(data) {
